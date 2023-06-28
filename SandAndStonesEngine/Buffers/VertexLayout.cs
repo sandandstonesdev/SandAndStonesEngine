@@ -11,10 +11,13 @@ namespace SandAndStonesEngine.Buffers
     {
         const string positionName = "Position";
         const string colorName = "Color";
+        const string texCoordsName = "TexCoords";
 
         public VertexLayoutDescription VertexLayoutPrototype = new VertexLayoutDescription(
                 new VertexElementDescription(positionName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
-                new VertexElementDescription(colorName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4));
+                new VertexElementDescription(colorName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
+                new VertexElementDescription(texCoordsName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2));
+                
 
         private VertexLayoutDescription[] Layouts;
 

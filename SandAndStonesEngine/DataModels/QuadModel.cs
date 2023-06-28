@@ -13,6 +13,7 @@ namespace SandAndStonesEngine.DataModels
 
         private RgbaFloat color;
         private Vector2[] quadPointsInGrid;
+        private Vector2[] quadTextureCoords;
         private ushort[] quadIndexesInGrid;
         public VertexDataFormat[] VerticesPositions
         {
@@ -28,6 +29,7 @@ namespace SandAndStonesEngine.DataModels
 
             this.quadPointsInGrid = quadData.Points;
             this.quadIndexesInGrid = quadData.Indexes;
+            this.quadTextureCoords = quadData.TextureCoords;
             this.quadSizeInCoord = quadGrid.GetQuadSizeInCoordinates();
             this.color = color;;
         }
@@ -49,10 +51,10 @@ namespace SandAndStonesEngine.DataModels
             
             verticesPositions = new[]
             {
-                new VertexDataFormat(leftDown, color),
-                new VertexDataFormat(leftUpper, color),
-                new VertexDataFormat(rightDown, color),
-                new VertexDataFormat(rightUpper, color),
+                new VertexDataFormat(leftDown, color, quadTextureCoords[0]),
+                new VertexDataFormat(leftUpper, color, quadTextureCoords[1]),
+                new VertexDataFormat(rightDown, color, quadTextureCoords[2]),
+                new VertexDataFormat(rightUpper, color, quadTextureCoords[3]),
             };
         }
     }

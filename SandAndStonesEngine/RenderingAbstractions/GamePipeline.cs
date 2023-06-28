@@ -41,8 +41,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = Array.Empty<ResourceLayout>(),
-
+                ResourceLayouts = new ResourceLayout[] { shaderBatch.ResourceLayout }, 
                 ShaderSet = shaderBatch.ShaderSet,
 
                 Outputs = gameGraphicDevice.SwapChain.OutputDescription

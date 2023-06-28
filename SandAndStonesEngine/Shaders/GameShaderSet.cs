@@ -23,6 +23,8 @@ namespace SandAndStonesEngine.Shaders
             { "PS", "pixelShader.ps" }
         };
 
+        public ResourceSet ResourceSet;
+        public ResourceLayout ResourceLayout;
         public GameShaderSet(GameGraphicDevice gameGraphicDevice, GameAssets assets)
         {
             this.gameGraphicDevice = gameGraphicDevice;
@@ -43,6 +45,10 @@ namespace SandAndStonesEngine.Shaders
             ShaderSet = new ShaderSetDescription(
                 vertexLayouts: assets.VertexLayouts,
                 shaders: Shaders);
+
+            ResourceSet = assets.ResourceSet;
+            ResourceLayout = assets.gameTexture.TextureLayout;
+
         }
 
         public void Destroy()

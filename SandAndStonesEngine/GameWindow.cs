@@ -7,7 +7,7 @@ using Veldrid.StartupUtilities;
 
 namespace SandAndStonesEngine
 {
-    internal class GameWindow
+    public class GameWindow
     {
 
         private GameAssets assets;

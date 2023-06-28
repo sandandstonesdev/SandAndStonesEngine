@@ -36,9 +36,10 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.Begin();
             CommandList.SetFramebuffer(gameGraphicDevice.SwapChain);
             CommandList.ClearColorTarget(0, assets.ClearColor);
+            CommandList.SetPipeline(gamePipeline.Pipeline);
             CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
-            CommandList.SetPipeline(gamePipeline.Pipeline);
+            CommandList.SetGraphicsResourceSet(0, assets.ResourceSet);
             CommandList.DrawIndexed(
                 indexCount: assets.IndicesCount,
                 instanceCount: 1,
@@ -46,8 +47,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 vertexOffset: 0,
                 instanceStart: 0);
             CommandList.End();
-            gameGraphicDevice.Flush();
-            gameGraphicDevice.GraphicsDevice.SubmitCommands(CommandList);
+            gameGraphicDevice.Flush(CommandList);
         }
 
         public void Destroy()

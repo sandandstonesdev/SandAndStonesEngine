@@ -8,7 +8,7 @@ using Veldrid.StartupUtilities;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
-    internal class GameGraphicDevice
+    public class GameGraphicDevice
     {
         private readonly GameWindow window;
         public GraphicsDevice GraphicsDevice;
@@ -30,9 +30,11 @@ namespace SandAndStonesEngine.GraphicAbstractions
             GraphicsDevice = VeldridStartup.CreateGraphicsDevice(window.SDLWindow);
         }
 
-        public void Flush()
+        public void Flush(CommandList commandList)
         {
             GraphicsDevice.SwapBuffers();
+            GraphicsDevice.SubmitCommands(commandList);
+            GraphicsDevice.WaitForIdle();
         }
 
         public void Destroy()

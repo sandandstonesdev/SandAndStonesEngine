@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.Utils;
 using Veldrid;
@@ -19,8 +20,9 @@ namespace SandAndStonesEngine.Assets
         public RgbaFloat ClearColor;
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
+        public GameTexture gameTexture;
         public ScreenDivisionForQuads screenDivisionForQuads;
-
+        private ResourceSet resourceSet;
         public DeviceBuffer DeviceVertexBuffer
         {
             get { return VertexBuffer.DeviceBuffer; }
@@ -29,6 +31,17 @@ namespace SandAndStonesEngine.Assets
         {
             get { return VertexBuffer.VertexLayout; }
         }
+
+        public ResourceSet ResourceSet
+        {
+            get { return gameTexture.ResourceSet; }
+        }
+
+        public ResourceLayout ResourceLayout
+        {
+            get { return gameTexture.TextureLayout; }
+        }
+
         public uint IndicesCount
         {
             get { return IndexBuffer.IndicesCount; }
@@ -58,7 +71,7 @@ namespace SandAndStonesEngine.Assets
             List<QuadModel> quadModelList = new List<QuadModel>();
             for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     var positionInQuadCount = new Vector2(i, j);
                     var color = colorRandomizer.GetColor();
@@ -75,10 +88,15 @@ namespace SandAndStonesEngine.Assets
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModelList);
             IndexBuffer.Create();
             IndexBuffer.Bind();
+
+            gameTexture = new GameTexture("wall.png", gameGraphicDevice);
+            gameTexture.Init();
+            gameTexture.UpdateTexture();
         }
 
         public void Destroy()
         {
+            gameTexture.Destroy();
             VertexBuffer.Destroy();
             IndexBuffer.Destroy();
         }

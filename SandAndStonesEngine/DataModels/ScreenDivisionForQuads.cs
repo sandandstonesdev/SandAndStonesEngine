@@ -20,8 +20,8 @@ namespace SandAndStonesEngine.DataModels
 
         public Vector2 GetCoordinateUnitsPerQuad()
         {
-            float xCount = 1.0f / quadCountX;
-            float yCount = 1.0f / quadCountY;
+            float xCount = 2.0f / quadCountX;
+            float yCount = 2.0f / quadCountY;
             return new Vector2(xCount, yCount);
         }
         public Vector2 GetPixelUnitsPerQuad()
