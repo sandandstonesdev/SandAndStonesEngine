@@ -39,7 +39,8 @@ namespace SandAndStonesEngine.DataModels
         {
             var scaledPoint = new Vector2(quadGridPoint.X, -quadGridPoint.Y) * new Vector2(quadSizeInCoord.X, quadSizeInCoord.Y);
             var res = relativePosition + scaledPoint;
-            Debug.WriteLine($"{ res.X} {res.Y}");
+            //res = scaledPoint;
+            //Debug.WriteLine($"{ res.X} {res.Y}");
             return res;
         }
         public void Init()
@@ -51,10 +52,10 @@ namespace SandAndStonesEngine.DataModels
             
             verticesPositions = new[]
             {
-                new VertexDataFormat(leftDown, color, quadTextureCoords[0]),
-                new VertexDataFormat(leftUpper, color, quadTextureCoords[1]),
-                new VertexDataFormat(rightDown, color, quadTextureCoords[2]),
-                new VertexDataFormat(rightUpper, color, quadTextureCoords[3]),
+                new VertexDataFormat(new Vector3(leftDown, 0.0f), color, quadTextureCoords[0]),
+                new VertexDataFormat(new Vector3(leftUpper, 0.0f), color, quadTextureCoords[1]),
+                new VertexDataFormat(new Vector3(rightDown, 0.0f), color, quadTextureCoords[2]),
+                new VertexDataFormat(new Vector3(rightUpper, 0.0f), color, quadTextureCoords[3]),
             };
         }
     }

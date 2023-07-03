@@ -27,8 +27,9 @@ namespace SandAndStonesEngine
             int y = 50;
             int screenWidth = 800;
             int screenHeight = 800;
-            int quadCount = 10;
-            var screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
+            int quadCountX = 8;
+            int quadCountY = 8;
+            var screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCountX, quadCountY);
             window.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test", screenDivision);
         }
 

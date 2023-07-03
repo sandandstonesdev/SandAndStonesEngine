@@ -1,4 +1,4 @@
-﻿namespace SandAndStonesEngine.Buffers
+﻿namespace SandAndStonesEngine.DataGenerators
 {
     public class IndicesGenerator
     {
@@ -14,7 +14,7 @@
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    ushort u = (ushort)((i * 4) + j);
+                    ushort u = (ushort)(i * 4 + j);
                     indices.Add(u);
                 }
             }

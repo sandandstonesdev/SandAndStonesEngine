@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SandAndStonesEngine.GameCamera;
 using SandAndStonesEngine.Shaders;
 using Veldrid;
 using Vulkan;
@@ -14,10 +15,12 @@ namespace SandAndStonesEngine.GraphicAbstractions
         private readonly GameGraphicDevice gameGraphicDevice;
         private readonly GameShaderSet shaderBatch;
         public Pipeline Pipeline;
-        public GamePipeline(GameGraphicDevice gameGraphicDevice, GameShaderSet shaderBatch)
+        public Camera Camera;
+        public GamePipeline(GameGraphicDevice gameGraphicDevice, GameShaderSet shaderBatch, Camera camera)
         {
             this.gameGraphicDevice = gameGraphicDevice;
             this.shaderBatch = shaderBatch;
+            this.Camera = camera;
         }
 
         public void Create()
@@ -41,7 +44,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { shaderBatch.ResourceLayout }, 
+                ResourceLayouts = new ResourceLayout[] { shaderBatch.ResourceLayout, Camera.MatricesLayout, Camera.WorldLayout  }, 
                 ShaderSet = shaderBatch.ShaderSet,
 
                 Outputs = gameGraphicDevice.SwapChain.OutputDescription

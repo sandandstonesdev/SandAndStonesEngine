@@ -13,7 +13,7 @@ namespace SandAndStonesEngineTests
             int y = 50;
             int screenWidth = 400;
             int screenHeight = 400;
-            int quadCount = 20;
+            int quadCount = 4;
             screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
         }
 

@@ -20,10 +20,11 @@ namespace SandAndStonesEngine.Utils
         public ColorRandomizer()
         {
             TimeSpan epochDiff = DateTime.Now - DateTime.UnixEpoch;
-            random = new Random(epochDiff.Milliseconds);
+            random = new Random((int)epochDiff.Ticks);
         }
         public RgbaFloat GetColor()
         {
+            Thread.Sleep(1);
             int colorKey = random.Next() % (colorsToRandomize.Count - 1);
             return colorsToRandomize[colorKey];
         }

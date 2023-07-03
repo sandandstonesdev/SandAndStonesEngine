@@ -1,6 +1,22 @@
 #version 450
 
-layout(location = 0) in vec2 Position;
+layout(set = 1, binding = 0) uniform ProjectionBuffer
+{
+    mat4 Projection;
+};
+
+layout(set = 1, binding = 1) uniform ViewBuffer
+{
+    mat4 View;
+};
+
+layout(set = 2, binding = 0) uniform WorldBuffer
+{
+    mat4 World;
+};
+
+
+layout(location = 0) in vec3 Position;
 layout(location = 1) in vec4 Color;
 layout(location = 2) in vec2 TexCoords;
 
@@ -9,7 +25,12 @@ layout(location = 1) out vec2 fsin_texCoords;
 
 void main()
 {
-    gl_Position = vec4(Position, 0, 1);
+    vec4 objectPosition = vec4(Position, 1);
+    vec4 worldPosition = World * objectPosition;
+    vec4 viewPosition = View * worldPosition;
+    vec4 clipPosition =  Projection * viewPosition;
+    gl_Position = clipPosition;
+    //gl_Position = objectPosition;
     fsin_Color = Color;
     fsin_texCoords = TexCoords;
 }

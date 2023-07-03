@@ -4,6 +4,9 @@ using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.Shaders;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
+using SandAndStonesEngine.GameInput;
+using SandAndStonesEngine.GameCamera;
+using System.Diagnostics;
 
 namespace SandAndStonesEngine
 {
@@ -16,10 +19,10 @@ namespace SandAndStonesEngine
         public Sdl2Window SDLWindow;
         private GameCommandList gameCommandList;
         private GamePipeline gamePipeline;
-
+        private InputDevicesState inputDevicesState;
+        private Camera gameCamera;
         public GameWindow()
         {
-            
         }
 
         public void Start(int x, int y, int width, int height, string title, ScreenDivisionForQuads screenDivisionForQuads)
@@ -36,12 +39,17 @@ namespace SandAndStonesEngine
 
             gameGraphicDevice = new GameGraphicDevice(this);
             gameGraphicDevice.Create();
+
             assets = new GameAssets(gameGraphicDevice, screenDivisionForQuads);
             assets.Create();
 
+            inputDevicesState = new InputDevicesState();
+            gameCamera = new Camera(gameGraphicDevice, inputDevicesState);
+            gameCamera.InitMatricesShaderBinding();
+
             shaderBatch = new GameShaderSet(gameGraphicDevice, assets);
             shaderBatch.Create();
-            gamePipeline = new GamePipeline(gameGraphicDevice, shaderBatch);
+            gamePipeline = new GamePipeline(gameGraphicDevice, shaderBatch, gameCamera);
             gamePipeline.Create();
             gameCommandList = new GameCommandList(gameGraphicDevice, assets, gamePipeline);
             gameCommandList.Create();
@@ -49,11 +57,24 @@ namespace SandAndStonesEngine
 
         public void Loop()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            double previousElapsedTime = sw.Elapsed.Seconds;
+            gameCamera.DisplayMatrices();
             while (SDLWindow.Exists)
             {
-                SDLWindow.PumpEvents();
-                Draw();
+                double newElapsedTime = sw.Elapsed.Seconds;
+                double deltaElapsedTime = newElapsedTime - previousElapsedTime;
+                var snapshot = SDLWindow.PumpEvents();
+                inputDevicesState.Update(snapshot);
+
+                previousElapsedTime = newElapsedTime;
+                gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
+                gameCamera.Update((float)deltaElapsedTime);
+                Draw((float)deltaElapsedTime);
             }
+
+            sw.Stop();
         }
 
         public void Stop()
@@ -61,13 +82,14 @@ namespace SandAndStonesEngine
             DisposeResources();
         }
 
-        private void Draw()
+        private void Draw(float deltaTime)
         {
-            gameCommandList.Draw();
+            gameCommandList.Draw(deltaTime);
         }
 
         private void DisposeResources()
         {
+            gameCamera.Destroy();
             gamePipeline.Destroy();
             gameCommandList.Destroy();
             assets.Destroy();

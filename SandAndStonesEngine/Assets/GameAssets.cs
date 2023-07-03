@@ -69,9 +69,9 @@ namespace SandAndStonesEngine.Assets
             QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
             ColorRandomizer colorRandomizer = new ColorRandomizer();
             List<QuadModel> quadModelList = new List<QuadModel>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     var positionInQuadCount = new Vector2(i, j);
                     var color = colorRandomizer.GetColor();

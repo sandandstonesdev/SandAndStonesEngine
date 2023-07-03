@@ -10,6 +10,7 @@ layout(location = 0) out vec4 fsout_Color;
 
 void main()
 {
-    vec4 texColor = texture(sampler2D(SurfaceTexture, SurfaceSampler), fsin_texCoords);
-    fsout_Color =  vec4(texColor.xyz * fsin_Color.xyz, texColor.w * fsin_Color.w);
+    //vec4 texColor = texture(sampler2D(SurfaceTexture, SurfaceSampler), fsin_texCoords);
+    //fsout_Color =  vec4(texColor.xyz * fsin_Color.xyz, texColor.w * fsin_Color.w);
+    fsout_Color = fsin_Color;
 }
