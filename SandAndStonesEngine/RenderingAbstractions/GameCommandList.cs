@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.Buffers;
 using Veldrid;
@@ -36,10 +37,9 @@ namespace SandAndStonesEngine.GraphicAbstractions
         {
             CommandList.Begin();
 
-            CommandList.UpdateBuffer(gamePipeline.Camera.ProjectionBuffer, 0, gamePipeline.Camera.ProjectionMatrix);
-            CommandList.UpdateBuffer(gamePipeline.Camera.ViewBuffer, 0, gamePipeline.Camera.ViewMatrix);
-            CommandList.UpdateBuffer(gamePipeline.Camera.WorldBuffer, 0, gamePipeline.Camera.WorldMatrix);
-
+            CommandList.UpdateBuffer(gamePipeline.ShaderBatch.ProjectionBuffer, 0, gamePipeline.ShaderBatch.ProjectionMatrix);
+            CommandList.UpdateBuffer(gamePipeline.ShaderBatch.ViewBuffer, 0, gamePipeline.ShaderBatch.ViewMatrix);
+            CommandList.UpdateBuffer(gamePipeline.ShaderBatch.WorldBuffer, 0, gamePipeline.ShaderBatch.WorldMatrix);
             //string debugGroup = "Debug1";
             //CommandList.PushDebugGroup(debugGroup);
             //CommandList.PopDebugGroup();
@@ -51,8 +51,8 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
             CommandList.SetGraphicsResourceSet(0, assets.ResourceSet);
-            CommandList.SetGraphicsResourceSet(1, gamePipeline.Camera.MatricesSet);
-            CommandList.SetGraphicsResourceSet(2, gamePipeline.Camera.WorldSet);
+            CommandList.SetGraphicsResourceSet(1, gamePipeline.ShaderBatch.MatricesSet);
+            CommandList.SetGraphicsResourceSet(2, gamePipeline.ShaderBatch.WorldSet);
             CommandList.DrawIndexed(
                 indexCount: assets.IndicesCount,
                 instanceCount: 1,

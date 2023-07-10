@@ -7,6 +7,7 @@ using Veldrid.StartupUtilities;
 using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameCamera;
 using System.Diagnostics;
+using SandAndStonesEngine.MathModule;
 
 namespace SandAndStonesEngine
 {
@@ -21,6 +22,7 @@ namespace SandAndStonesEngine
         private GamePipeline gamePipeline;
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
+        private Matrices matrices;
         public GameWindow()
         {
         }
@@ -43,11 +45,12 @@ namespace SandAndStonesEngine
             assets = new GameAssets(gameGraphicDevice, screenDivisionForQuads);
             assets.Create();
 
+            matrices = new Matrices(gameGraphicDevice);
+            matrices.Init();
             inputDevicesState = new InputDevicesState();
-            gameCamera = new Camera(gameGraphicDevice, inputDevicesState);
-            gameCamera.InitMatricesShaderBinding();
+            gameCamera = new Camera(gameGraphicDevice, inputDevicesState, matrices);
 
-            shaderBatch = new GameShaderSet(gameGraphicDevice, assets);
+            shaderBatch = new GameShaderSet(gameGraphicDevice, assets, matrices);
             shaderBatch.Create();
             gamePipeline = new GamePipeline(gameGraphicDevice, shaderBatch, gameCamera);
             gamePipeline.Create();
@@ -60,7 +63,7 @@ namespace SandAndStonesEngine
             Stopwatch sw = new Stopwatch();
             sw.Start();
             double previousElapsedTime = sw.Elapsed.Seconds;
-            gameCamera.DisplayMatrices();
+            
             while (SDLWindow.Exists)
             {
                 double newElapsedTime = sw.Elapsed.Seconds;
@@ -89,6 +92,7 @@ namespace SandAndStonesEngine
 
         private void DisposeResources()
         {
+            matrices.Destroy();
             gameCamera.Destroy();
             gamePipeline.Destroy();
             gameCommandList.Destroy();

@@ -13,13 +13,14 @@ namespace SandAndStonesEngine.GraphicAbstractions
     internal class GamePipeline
     {
         private readonly GameGraphicDevice gameGraphicDevice;
-        private readonly GameShaderSet shaderBatch;
+        public GameShaderSet ShaderBatch;
         public Pipeline Pipeline;
         public Camera Camera;
+
         public GamePipeline(GameGraphicDevice gameGraphicDevice, GameShaderSet shaderBatch, Camera camera)
         {
             this.gameGraphicDevice = gameGraphicDevice;
-            this.shaderBatch = shaderBatch;
+            this.ShaderBatch = shaderBatch;
             this.Camera = camera;
         }
 
@@ -44,8 +45,8 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { shaderBatch.ResourceLayout, Camera.MatricesLayout, Camera.WorldLayout  }, 
-                ShaderSet = shaderBatch.ShaderSet,
+                ResourceLayouts = new ResourceLayout[] { ShaderBatch.ResourceLayout, ShaderBatch.MatricesLayout, ShaderBatch.WorldLayout }, 
+                ShaderSet = ShaderBatch.ShaderSet,
 
                 Outputs = gameGraphicDevice.SwapChain.OutputDescription
             };

@@ -22,7 +22,6 @@ namespace SandAndStonesEngine.Assets
         public VertexBuffer VertexBuffer;
         public GameTexture gameTexture;
         public ScreenDivisionForQuads screenDivisionForQuads;
-        private ResourceSet resourceSet;
         public DeviceBuffer DeviceVertexBuffer
         {
             get { return VertexBuffer.DeviceBuffer; }

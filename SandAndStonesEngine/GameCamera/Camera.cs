@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Diagnostics;
 using Vulkan.Xlib;
 using System.Runtime.CompilerServices;
+using SandAndStonesEngine.MathModule;
 
 namespace SandAndStonesEngine.GameCamera
 {
@@ -35,32 +36,19 @@ namespace SandAndStonesEngine.GameCamera
 
         private float yaw = 0.0f;
         private float pitch = 0.0f;
-        
-        private Vector2 previousMousePos;
-
-        public Matrix4x4 ProjectionMatrix; // From camera to projection space (output: vertex on monitor with depth)
-        public Matrix4x4 ViewMatrix; // From world to camera (output: position relative to camera pov)
-        public Matrix4x4 WorldMatrix; // From model to world (output: position object in world)
-
-        public DeviceBuffer ProjectionBuffer;
-        public DeviceBuffer ViewBuffer;
-        public DeviceBuffer WorldBuffer;
 
         GameGraphicDevice graphicDevice;
-        InputDevicesState inputDeviceState;
-
-        public ResourceLayout MatricesLayout;
-        public ResourceLayout WorldLayout;
-        public ResourceSet MatricesSet;
-        public ResourceSet WorldSet;
+        readonly InputDevicesState inputDeviceState;
+        readonly Matrices matrices;
 
         int windowWidth;
         int windowHeight;
 
-        InputMotionMapper inputMotionMapper;
-        public Camera(GameGraphicDevice graphicDevice, InputDevicesState inputDeviceState)
+        CameraInputMotionMapper inputMotionMapper;
+        public Camera(GameGraphicDevice graphicDevice, InputDevicesState inputDeviceState, Matrices matrices)
         {
-            this.inputMotionMapper = new InputMotionMapper(inputDeviceState);
+            this.matrices = matrices;
+            this.inputMotionMapper = new CameraInputMotionMapper(inputDeviceState);
             this.graphicDevice = graphicDevice;
             this.inputDeviceState = inputDeviceState;
             windowWidth = graphicDevice.GameWindow.SDLWindow.Width;
@@ -69,35 +57,17 @@ namespace SandAndStonesEngine.GameCamera
             yaw = 0.0f;
             pitch = 0.0f;
             fov = (float)(fovInDegrees * (Math.PI /180.0f));
-            UpdateWorld();
-            UpdateProjection();
-            UpdateView();
+            matrices.UpdateWorld(position, forward, up);
+            matrices.UpdateProjection(fov, aspectRatio, near, far);
+            matrices.UpdateView(position, GetCameraTarget(), up);
         }
 
-        public void DisplayMatrices()
-        {
-            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
-            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
-            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
-        }
-
-        public void UpdateProjection()
-        {
-            ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(fov, aspectRatio, near, far);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
-        }
-
-        public void UpdateWorld()
-        {
-            WorldMatrix = Matrix4x4.CreateWorld(-position, forward, up);
-        }
-
-        public void UpdateView()
+        private Vector3 GetCameraTarget()
         {
             Vector3 lookDir = GetLookDir();
             lookDirection = lookDir;
             var cameraTarget = position + lookDirection;
-            ViewMatrix = Matrix4x4.CreateLookAt(position, cameraTarget, Vector3.UnitY);
+            return cameraTarget;
         }
 
         private Vector3 GetLookDir()
@@ -124,71 +94,34 @@ namespace SandAndStonesEngine.GameCamera
             
             if (changed)
             {
-                UpdateProjection();
+                matrices.UpdateProjection(fov, aspectRatio, near, far);
                 graphicDevice.ResizeWindow((uint)windowWidth, (uint)windowHeight);
             }
         }
 
-        public void InitMatricesShaderBinding()
-        {
-            var factory = graphicDevice.GraphicsDevice.ResourceFactory;
-            ProjectionBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
-            ViewBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
-            WorldBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
-
-            MatricesLayout = factory.CreateResourceLayout(
-                new ResourceLayoutDescription(
-                    new ResourceLayoutElementDescription("ProjectionBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
-                    new ResourceLayoutElementDescription("ViewBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex)));
-            WorldLayout = factory.CreateResourceLayout(
-                new ResourceLayoutDescription(
-                    new ResourceLayoutElementDescription("WorldBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex)));
-
-
-            MatricesSet = factory.CreateResourceSet(new ResourceSetDescription(
-                MatricesLayout,
-                ProjectionBuffer,
-                ViewBuffer));
-            WorldSet = factory.CreateResourceSet(new ResourceSetDescription(
-                WorldLayout,
-                WorldBuffer));
-        }
-
         public void Update(float deltaSeconds)
         {
-            var motionDir = inputMotionMapper.GetMotionDir();
+            var motionDir = inputMotionMapper.GetRotatedMotionDir(yaw, pitch);
             if (motionDir != Vector3.Zero)
             {
-                motionDir = inputMotionMapper.ApplyRotation(motionDir, yaw, pitch);
                 position += motionDir * moveSpeed;
-                UpdateView();
-                UpdateWorld();
+                matrices.UpdateView(position, GetCameraTarget(), up);
+                matrices.UpdateWorld(position, forward, up);
             }
-
+            
             Vector2 yawPitchVector = inputMotionMapper.GetYawPitchVector();
             if (yawPitchVector != Vector2.Zero)
             {
                 yaw += yawPitchVector.X;
                 pitch += yawPitchVector.Y;
-                UpdateView();
-                UpdateWorld();
+                matrices.UpdateView(position, GetCameraTarget(), up);
+                matrices.UpdateWorld(position, forward, up);
             }
-        }
-
-        private float Clamp(float value, float min, float max)
-        {
-            return value > max
-                ? max
-                : value < min
-                    ? min
-                    : value;
         }
 
         public void Destroy()
         {
-            WorldBuffer.Dispose();
-            ViewBuffer.Dispose();
-            ProjectionBuffer.Dispose();
+
         }
     }
 }

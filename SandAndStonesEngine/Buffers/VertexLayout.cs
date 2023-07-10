@@ -14,7 +14,7 @@ namespace SandAndStonesEngine.Buffers
         const string texCoordsName = "TexCoords";
 
         public VertexLayoutDescription VertexLayoutPrototype = new VertexLayoutDescription(
-                new VertexElementDescription(positionName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
+                new VertexElementDescription(positionName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
                 new VertexElementDescription(colorName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
                 new VertexElementDescription(texCoordsName, VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2));
                 
