@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Vulkan.Xlib;
 using System.Runtime.CompilerServices;
 using SandAndStonesEngine.MathModule;
+using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngine.GameCamera
 {
@@ -39,17 +40,16 @@ namespace SandAndStonesEngine.GameCamera
         CameraInputMotionMapper inputMotionMapper;
         WorldViewTransformator worldViewTransformator;
 
-        public Camera(GameGraphicDevice graphicDevice, InputDevicesState inputDeviceState, Matrices matrices)
+        public Camera(InputDevicesState inputDeviceState, Matrices matrices)
         {
-            this.graphicDevice = graphicDevice;
             this.matrices = matrices;
             this.inputDeviceState = inputDeviceState;
             this.inputMotionMapper = new CameraInputMotionMapper(inputDeviceState);
             var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector2(0, 0), 0.002f);
             this.worldViewTransformator = new WorldViewTransformator(transformatorData, matrices, inputMotionMapper);
             
-            windowWidth = graphicDevice.GameWindow.SDLWindow.Width;
-            windowHeight = graphicDevice.GameWindow.SDLWindow.Height;
+            windowWidth = GameWindow.Instance.SDLWindow.Width;
+            windowHeight = GameWindow.Instance.SDLWindow.Height;
             aspectRatio = windowWidth / windowHeight;
             fov = (float)(fovInDegrees * (Math.PI /180.0f));
             matrices.UpdateProjection(fov, aspectRatio, near, far);
@@ -73,13 +73,14 @@ namespace SandAndStonesEngine.GameCamera
             if (changed)
             {
                 matrices.UpdateProjection(fov, aspectRatio, near, far);
+                var graphicDevice = Factory.Instance.GetGameGraphicDevice();
                 graphicDevice.ResizeWindow((uint)windowWidth, (uint)windowHeight);
             }
         }
 
         public void Update(float deltaSeconds)
         {
-            worldViewTransformator.Update();
+            //worldViewTransformator.Update();
         }
 
         public void Destroy()

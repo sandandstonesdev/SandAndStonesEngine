@@ -8,23 +8,27 @@ using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameCamera;
 using System.Diagnostics;
 using SandAndStonesEngine.MathModule;
+using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngine
 {
     public class GameWindow
     {
+        private static readonly Lazy<GameWindow> lazyInstance = new Lazy<GameWindow>(() => new GameWindow());
+        public static GameWindow Instance => lazyInstance.Value;
 
         private GameAssets assets;
         private GameGraphicDevice gameGraphicDevice;
-        private GameShaderSet shaderBatch;
+        private GameShaderSet shaderSet;
         public Sdl2Window SDLWindow;
         private GameCommandList gameCommandList;
         private GamePipeline gamePipeline;
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
         private Matrices matrices;
-        public GameWindow()
+        private GameWindow()
         {
+            
         }
 
         public void Start(int x, int y, int width, int height, string title, ScreenDivisionForQuads screenDivisionForQuads)
@@ -39,21 +43,18 @@ namespace SandAndStonesEngine
             };
             SDLWindow = VeldridStartup.CreateWindow(ref windowCI);
 
-            gameGraphicDevice = new GameGraphicDevice(this);
-            gameGraphicDevice.Create();
-
-            matrices = new Matrices(gameGraphicDevice);
+            matrices = new Matrices();
             matrices.Create();
             inputDevicesState = new InputDevicesState();
-            gameCamera = new Camera(gameGraphicDevice, inputDevicesState, matrices);
-
-            assets = new GameAssets(gameGraphicDevice, screenDivisionForQuads, matrices, inputDevicesState);
+            gameCamera = new Camera(inputDevicesState, matrices);
+            assets = new GameAssets(screenDivisionForQuads, matrices, inputDevicesState);
             assets.Create();
-            shaderBatch = new GameShaderSet(gameGraphicDevice, assets, matrices);
-            shaderBatch.Create();
-            gamePipeline = new GamePipeline(gameGraphicDevice, shaderBatch, gameCamera);
+
+            shaderSet = new GameShaderSet(assets, matrices);
+            shaderSet.Create();
+            gamePipeline = new GamePipeline(shaderSet, assets, matrices);
             gamePipeline.Create();
-            gameCommandList = new GameCommandList(gameGraphicDevice, assets, gamePipeline);
+            gameCommandList = new GameCommandList(assets, gamePipeline);
             gameCommandList.Create();
         }
 
@@ -99,7 +100,7 @@ namespace SandAndStonesEngine
             gamePipeline.Destroy();
             gameCommandList.Destroy();
             assets.Destroy();
-            shaderBatch.Destroy();
+            shaderSet.Destroy();
             gameGraphicDevice.Destroy();
         }
     }

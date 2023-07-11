@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.GraphicAbstractions;
+﻿using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GraphicAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,13 @@ namespace SandAndStonesEngine.MathModule
         public ResourceSet MatricesSet;
         public ResourceSet WorldSet;
 
-        public Matrices(GameGraphicDevice graphicDevice)
+        public Matrices()
         {
-            this.graphicDevice = graphicDevice;
         }
 
         public void Create() // Prepare shader binding
         {
-            var factory = graphicDevice.GraphicsDevice.ResourceFactory;
+            var factory = Factory.Instance.GetResourceFactory();
             ProjectionBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
             ViewBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
             WorldBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
@@ -74,12 +74,6 @@ namespace SandAndStonesEngine.MathModule
             ViewMatrix = Matrix4x4.CreateLookAt(position, cameraTarget, upVector);
         }
 
-        public void DisplayMatrices()
-        {
-            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
-            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
-            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
-        }
         public void Destroy()
         {
             WorldBuffer.Dispose();

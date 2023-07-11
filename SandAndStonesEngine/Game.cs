@@ -10,15 +10,19 @@ using System.Numerics;
 using Veldrid.SPIRV;
 using Vulkan;
 using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngine
 {
     public class Game
     {
-        readonly GameWindow window;
+        private static readonly Lazy<Game> lazyFactoryInstance = new Lazy<Game>(() => new Game());
+        public static Game Instance => lazyFactoryInstance.Value;
+
+        public readonly GameWindow Window;
         public Game()
         {
-            window = new GameWindow();
+            Window = GameWindow.Instance;
         }
 
         public void Start()
@@ -30,16 +34,16 @@ namespace SandAndStonesEngine
             int quadCountX = 8;
             int quadCountY = 8;
             var screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCountX, quadCountY);
-            window.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test", screenDivision);
+            Window.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test", screenDivision);
         }
 
         public void Loop()
         {
-            window.Loop();
+            Window.Loop();
         }
         public void Stop()
         {
-            window.Stop();
+            Window.Stop();
         }
 
     }

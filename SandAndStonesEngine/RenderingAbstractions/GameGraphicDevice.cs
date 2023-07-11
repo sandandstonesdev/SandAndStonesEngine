@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SandAndStonesEngine.GameFactories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,16 @@ namespace SandAndStonesEngine.GraphicAbstractions
 {
     public class GameGraphicDevice
     {
-        private readonly GameWindow window;
+        private static readonly Lazy<GameGraphicDevice> lazyInstance = new Lazy<GameGraphicDevice>(() => 
+        {   
+            GameGraphicDevice gameGraphicDevice = new GameGraphicDevice();
+            gameGraphicDevice.Create();
+            return gameGraphicDevice;
+        });
+        public static GameGraphicDevice Instance => lazyInstance.Value;
+
         public GraphicsDevice GraphicsDevice;
 
-        public GameWindow GameWindow
-        {
-            get { return window; }
-        }
         public Framebuffer SwapChain
         {
             get { return GraphicsDevice.SwapchainFramebuffer; }
@@ -25,14 +29,17 @@ namespace SandAndStonesEngine.GraphicAbstractions
         {
             get { return GraphicsDevice.ResourceFactory; }
         }
-        public GameGraphicDevice(GameWindow window)
+
+        public bool Initialized = false;
+        public GameGraphicDevice()
         {
-            this.window = window;
         }
         public void Create()
         {
             GraphicsDeviceOptions options = new GraphicsDeviceOptions(true);
-            GraphicsDevice = VeldridStartup.CreateGraphicsDevice(window.SDLWindow, options);
+            GameWindow gameWindow = Factory.Instance.GetGameWindow();
+            GraphicsDevice = VeldridStartup.CreateGraphicsDevice(gameWindow.SDLWindow, options);
+            Initialized = true;
         }
 
         public void Flush(CommandList commandList)

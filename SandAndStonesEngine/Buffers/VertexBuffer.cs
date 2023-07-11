@@ -9,12 +9,12 @@ namespace SandAndStonesEngine.Buffers
     {
         public DeviceBuffer DeviceBuffer;
         readonly GraphicsDevice graphicsDevice;
-        public VertexLayoutDescription[] VertexLayout
+        public VertexLayoutDescription VertexLayout
         {
             get 
             {
-                var VertexLayouts = new VertexLayouts(1);
-                return VertexLayouts.GetAll();
+                var VertexLayouts = new VertexLayouts();
+                return VertexLayouts.Get();
             }
         }
 

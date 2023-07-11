@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SixLabors.ImageSharp.Advanced;
 using Vortice.Win32;
+using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngine.GameTextures
 {
@@ -41,17 +42,18 @@ namespace SandAndStonesEngine.GameTextures
         public ResourceSet ResourceSet;
         int bitDepth = 24;
         string fileName;
-        GameGraphicDevice gameGraphicDevice;
         AutoPinner imageBytesPinner;
-        public GameTexture(string fileName, GameGraphicDevice gameGraphicDevice)
+
+        GameGraphicDevice gameGraphicDevice;
+        public GameTexture(string fileName)
         {
             this.textureImage = GetImage(fileName);
             this.fileName = fileName;
-            this.gameGraphicDevice = gameGraphicDevice;
         }
 
         public void Init()
         {
+            gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
             TextureDescription texDesc = new TextureDescription()
             {
                 Width = (uint)textureImage.Width,
@@ -64,7 +66,8 @@ namespace SandAndStonesEngine.GameTextures
                 Type = TextureType.Texture2D,
             };
 
-            ResourceFactory factory = gameGraphicDevice.ResourceFactory;
+            ResourceFactory factory = Factory.Instance.GetResourceFactory();
+
             Texture = factory.CreateTexture(texDesc);
             TextureView = factory.CreateTextureView(Texture);
 

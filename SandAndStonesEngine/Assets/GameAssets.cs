@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameCamera;
+using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
@@ -23,14 +24,13 @@ namespace SandAndStonesEngine.Assets
         public VertexBuffer VertexBuffer;
         public GameTexture gameTexture;
         public ScreenDivisionForQuads screenDivisionForQuads;
-        public Matrices matrices;
         public DeviceBuffer DeviceVertexBuffer
         {
             get { return VertexBuffer.DeviceBuffer; }
         }
         public VertexLayoutDescription[] VertexLayouts
         {
-            get { return VertexBuffer.VertexLayout; }
+            get { return new VertexLayoutDescription[] { VertexBuffer.VertexLayout }; }
         }
 
         public ResourceSet ResourceSet
@@ -61,21 +61,23 @@ namespace SandAndStonesEngine.Assets
         InputDevicesState inputDeviceState;
         InputMotionMapperBase inputMotionMapper;
         WorldViewTransformator transformations;
-        public GameAssets(GameGraphicDevice gameGraphicDevice, ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState)
+        public Matrices Matrices;
+        public GameAssets(ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState)
         {
-            this.gameGraphicDevice = gameGraphicDevice;
             this.ClearColor = RgbaFloat.Black;
             this.screenDivisionForQuads = screenDivisionForQuads;
-            this.matrices = matrices;
+            this.Matrices = matrices;
             this.inputDeviceState = inputDeviceState;
         }
 
         
         public void Create()
         {
+            var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+
             inputMotionMapper = new QuadInputMotionMapper(inputDeviceState);
 
-            GameAsset = new GameAsset(screenDivisionForQuads, inputMotionMapper, matrices);
+            GameAsset = new GameAsset(screenDivisionForQuads, inputMotionMapper, Matrices);
             GameAsset.Create();
 
             VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, GameAsset.QuadModelList);
@@ -86,14 +88,14 @@ namespace SandAndStonesEngine.Assets
             IndexBuffer.Create();
             IndexBuffer.Bind();
 
-            gameTexture = new GameTexture("wall.png", gameGraphicDevice);
+            gameTexture = new GameTexture("wall.png");
             gameTexture.Init();
             gameTexture.UpdateTexture();
         }
 
         public void Update()
         {
-            //GameAsset.Update();
+            GameAsset.Update();
         }
 
         public void Destroy()

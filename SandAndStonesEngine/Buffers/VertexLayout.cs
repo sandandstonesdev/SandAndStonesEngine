@@ -21,7 +21,7 @@ namespace SandAndStonesEngine.Buffers
 
         private VertexLayoutDescription[] Layouts;
 
-        public VertexLayouts(int vertexLayoutsToCreate)
+        public VertexLayouts(int vertexLayoutsToCreate = 1)
         {
             List<VertexLayoutDescription> VertexLayoutList = new List<VertexLayoutDescription>();
             for (int i = 0; i < vertexLayoutsToCreate; i++)
@@ -32,9 +32,9 @@ namespace SandAndStonesEngine.Buffers
             Layouts = VertexLayoutList.ToArray();
         }
 
-        public VertexLayoutDescription[] GetAll()
+        public VertexLayoutDescription Get()
         {
-            return Layouts;
+            return Layouts[0];
         }
     }
 }

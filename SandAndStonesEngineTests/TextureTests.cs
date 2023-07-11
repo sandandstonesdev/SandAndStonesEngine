@@ -11,10 +11,10 @@ namespace SandAndStonesEngineTests
         [TestMethod]
         public void ReadTextureBytesIsCorrect()
         {
-            GameTexture texture1 = new GameTexture("wall.png", null);
+            GameTexture texture1 = new GameTexture("wall.png");
             var textureBytes1 = texture1.GetImageBytes();
             texture1.WriteTextureToOutFile(textureBytes1);
-            GameTexture texture2 = new GameTexture("wall.png", null);
+            GameTexture texture2 = new GameTexture("wall.png");
             var textureBytes2 = texture2.GetImageBytes();
             CollectionAssert.AreEquivalent(textureBytes1, textureBytes2);
         }
