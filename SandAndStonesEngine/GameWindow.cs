@@ -42,14 +42,13 @@ namespace SandAndStonesEngine
             gameGraphicDevice = new GameGraphicDevice(this);
             gameGraphicDevice.Create();
 
-            assets = new GameAssets(gameGraphicDevice, screenDivisionForQuads);
-            assets.Create();
-
             matrices = new Matrices(gameGraphicDevice);
-            matrices.Init();
+            matrices.Create();
             inputDevicesState = new InputDevicesState();
             gameCamera = new Camera(gameGraphicDevice, inputDevicesState, matrices);
 
+            assets = new GameAssets(gameGraphicDevice, screenDivisionForQuads, matrices, inputDevicesState);
+            assets.Create();
             shaderBatch = new GameShaderSet(gameGraphicDevice, assets, matrices);
             shaderBatch.Create();
             gamePipeline = new GamePipeline(gameGraphicDevice, shaderBatch, gameCamera);
@@ -74,6 +73,9 @@ namespace SandAndStonesEngine
                 previousElapsedTime = newElapsedTime;
                 gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
                 gameCamera.Update((float)deltaElapsedTime);
+
+                assets.Update();
+
                 Draw((float)deltaElapsedTime);
             }
 

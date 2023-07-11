@@ -34,6 +34,10 @@ namespace SandAndStonesEngine.GameCamera
 
         protected InputDevicesState inputDevicesState;
 
+        public InputMotionMapperBase(InputDevicesState inputDevicesState)
+        {
+            this.inputDevicesState = inputDevicesState;
+        }
         abstract public Vector3 GetMotionDir();
         abstract public Vector3 GetRotatedMotionDir(float yaw, float pitch);
         abstract public Vector2 GetYawPitchVector();

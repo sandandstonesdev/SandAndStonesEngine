@@ -6,9 +6,8 @@ namespace SandAndStonesEngine.GameCamera
 {
     public class CameraInputMotionMapper : InputMotionMapperBase
     {
-        public CameraInputMotionMapper(InputDevicesState inputDevicesState)
+        public CameraInputMotionMapper(InputDevicesState inputDevicesState) : base(inputDevicesState)
         {
-            this.inputDevicesState = inputDevicesState;
         }
 
         public override Vector3 GetMotionDir()

@@ -33,7 +33,7 @@ namespace SandAndStonesEngine.MathModule
             this.graphicDevice = graphicDevice;
         }
 
-        public void Init() // Prepare shader binding
+        public void Create() // Prepare shader binding
         {
             var factory = graphicDevice.GraphicsDevice.ResourceFactory;
             ProjectionBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));

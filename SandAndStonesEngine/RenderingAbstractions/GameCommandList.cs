@@ -40,10 +40,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.UpdateBuffer(gamePipeline.ShaderBatch.ProjectionBuffer, 0, gamePipeline.ShaderBatch.ProjectionMatrix);
             CommandList.UpdateBuffer(gamePipeline.ShaderBatch.ViewBuffer, 0, gamePipeline.ShaderBatch.ViewMatrix);
             CommandList.UpdateBuffer(gamePipeline.ShaderBatch.WorldBuffer, 0, gamePipeline.ShaderBatch.WorldMatrix);
-            //string debugGroup = "Debug1";
-            //CommandList.PushDebugGroup(debugGroup);
-            //CommandList.PopDebugGroup();
-
+            
             CommandList.SetFramebuffer(gameGraphicDevice.SwapChain);
             CommandList.ClearColorTarget(0, assets.ClearColor);
             //CommandList.ClearDepthStencil(1f);

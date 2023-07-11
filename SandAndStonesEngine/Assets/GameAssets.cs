@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.GameCamera;
+using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.Utils;
+using SandAndStonesEngine.MathModule;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets
 {
-    internal class GameAssets
+    public class GameAssets
     {
         private readonly GameGraphicDevice gameGraphicDevice;
         public RgbaFloat ClearColor;
@@ -22,6 +23,7 @@ namespace SandAndStonesEngine.Assets
         public VertexBuffer VertexBuffer;
         public GameTexture gameTexture;
         public ScreenDivisionForQuads screenDivisionForQuads;
+        public Matrices matrices;
         public DeviceBuffer DeviceVertexBuffer
         {
             get { return VertexBuffer.DeviceBuffer; }
@@ -55,42 +57,43 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        public GameAssets(GameGraphicDevice gameGraphicDevice, ScreenDivisionForQuads screenDivisionForQuads)
+        GameAsset GameAsset;
+        InputDevicesState inputDeviceState;
+        InputMotionMapperBase inputMotionMapper;
+        WorldViewTransformator transformations;
+        public GameAssets(GameGraphicDevice gameGraphicDevice, ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState)
         {
             this.gameGraphicDevice = gameGraphicDevice;
             this.ClearColor = RgbaFloat.Black;
             this.screenDivisionForQuads = screenDivisionForQuads;
+            this.matrices = matrices;
+            this.inputDeviceState = inputDeviceState;
         }
 
         
         public void Create()
         {
-            QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
-            ColorRandomizer colorRandomizer = new ColorRandomizer();
-            List<QuadModel> quadModelList = new List<QuadModel>();
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    var positionInQuadCount = new Vector2(i, j);
-                    var color = colorRandomizer.GetColor();
-                    var quadModel = new QuadModel(positionInQuadCount, color, quadGrid);
-                    quadModel.Init();
-                    quadModelList.Add(quadModel);
-                }
-            }
+            inputMotionMapper = new QuadInputMotionMapper(inputDeviceState);
 
-            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, quadModelList);
+            GameAsset = new GameAsset(screenDivisionForQuads, inputMotionMapper, matrices);
+            GameAsset.Create();
+
+            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, GameAsset.QuadModelList);
             VertexBuffer.Create();
             VertexBuffer.Bind();
 
-            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModelList);
+            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, GameAsset.QuadModelList);
             IndexBuffer.Create();
             IndexBuffer.Bind();
 
             gameTexture = new GameTexture("wall.png", gameGraphicDevice);
             gameTexture.Init();
             gameTexture.UpdateTexture();
+        }
+
+        public void Update()
+        {
+            //GameAsset.Update();
         }
 
         public void Destroy()
