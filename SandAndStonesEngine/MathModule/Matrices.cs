@@ -18,8 +18,6 @@ namespace SandAndStonesEngine.MathModule
         public Matrix4x4 ViewMatrix; // From world to camera (output: position relative to camera pov)
         public Matrix4x4 WorldMatrix; // From model to world (output: position object in world)
 
-
-
         public DeviceBuffer ProjectionBuffer;
         public DeviceBuffer ViewBuffer;
         public DeviceBuffer WorldBuffer;
@@ -64,14 +62,22 @@ namespace SandAndStonesEngine.MathModule
             DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
         }
 
+        public void UpdateOrtographic(float width, float height, float near, float far)
+        {
+            ProjectionMatrix = Matrix4x4.CreateOrthographic(2, 2, near, far);
+            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix (Orthographic)");
+        }
+
         public void UpdateWorld(Vector3 position, Vector3 forward, Vector3 up)
         {
             WorldMatrix = Matrix4x4.CreateWorld(-position, forward, up);
+            DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
         }
 
         public void UpdateView(Vector3 position, Vector3 cameraTarget, Vector3 upVector)
         {
             ViewMatrix = Matrix4x4.CreateLookAt(position, cameraTarget, upVector);
+            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
         }
 
         public void Destroy()

@@ -22,17 +22,16 @@ namespace SandAndStonesEngine.DataModels
             this.quadId = 0;
         }
 
-        public QuadData GetQuadData(int xQuad, int yQuad)
+        public QuadData GetQuadData(int xQuad, int yQuad, int zQuad)
         {
-            Vector2[] quadPoints = new Vector2[4];
+            Vector3[] quadPoints = new Vector3[4];
             int upperPointGridIndex = (yQuad + xQuad * pointColumns);
             int lowerPointGridIndex = (yQuad + (xQuad + 1) * pointRows);
-            quadPoints[0] = PointGrid[upperPointGridIndex]; // Upper Left
-            quadPoints[1] = PointGrid[upperPointGridIndex + 1]; // Upper Right
-            quadPoints[2] = PointGrid[lowerPointGridIndex]; // Lower Left
-            quadPoints[3] = PointGrid[lowerPointGridIndex + 1]; // Lower Right
+            quadPoints[0] = new Vector3(PointGrid[upperPointGridIndex], (float)zQuad); // Upper Left
+            quadPoints[1] = new Vector3(PointGrid[upperPointGridIndex + 1], (float)zQuad); // Upper Right
+            quadPoints[2] = new Vector3(PointGrid[lowerPointGridIndex], (float)zQuad); // Lower Left
+            quadPoints[3] = new Vector3(PointGrid[lowerPointGridIndex + 1], (float)zQuad); // Lower Right
 
-            //// OpenGL
             Vector2[] texturePoints = new Vector2[4];
             texturePoints[0] = new Vector2(0, 1);// Upper Left => quadPoints[1]
             texturePoints[1] = new Vector2(0, 0);// Lower Left => quadPoints[0]
@@ -43,14 +42,20 @@ namespace SandAndStonesEngine.DataModels
             IIndexGenerator indexGenerator = new TriangleListIndexGenerator(quadId, pointColumns, pointRows);
             indexGenerator.Generate();
             var indices = indexGenerator.Points;
-            quadId++;
+            
             QuadData quadData = new QuadData(quadId, quadPoints, indices, texturePoints);
+            quadId++;
             return quadData;
         }
 
-        public Vector2 GetQuadSizeInCoordinates()
+        public Vector3 GetQuadSizeInCoordinates()
         {
             return screenDivision.GetCoordinateUnitsPerQuad();
+        }
+
+        public Vector3 GetPixelSizeInCoordinates()
+        {
+            return screenDivision.GetCoordinateUnitsPerPixel();
         }
     }
 }

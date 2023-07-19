@@ -35,7 +35,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
 
             GraphicsPipelineDescription pipelineDescription = new()
             {
-                BlendState = BlendStateDescription.SingleOverrideBlend,
+                BlendState = BlendStateDescription.SingleAlphaBlend,
 
                 DepthStencilState = new DepthStencilStateDescription(
                 depthTestEnabled: true,

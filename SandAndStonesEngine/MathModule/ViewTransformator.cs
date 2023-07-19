@@ -1,20 +1,19 @@
 ﻿using SandAndStonesEngine.GameCamera;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace SandAndStonesEngine.MathModule
 {
-    public class WorldViewTransformator
+    public class ViewTransformator
     {
         InputMotionMapperBase inputMotionMapper;
         Matrices matrices;
         TransformatorData transformatorData;
-        public WorldViewTransformator(TransformatorData transformatorData, Matrices matrices, InputMotionMapperBase inputMotionMapper)
+        public ViewTransformator(Matrices matrices, InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {
-            this.transformatorData = transformatorData;
             this.matrices = matrices;
             this.inputMotionMapper = inputMotionMapper;
-            UpdateWorldView(transformatorData.Position, transformatorData.Forward, transformatorData.Up, transformatorData.Target);
+            this.transformatorData = transformatorData;
+            matrices.UpdateView(transformatorData.Position, transformatorData.Target, transformatorData.Up);
         }
 
         public void Update()
@@ -23,21 +22,15 @@ namespace SandAndStonesEngine.MathModule
             if (motionDir != Vector3.Zero)
             {
                 transformatorData.Position += motionDir * transformatorData.MoveSpeed;
-                UpdateWorldView(transformatorData.Position, transformatorData.Forward, transformatorData.Up, transformatorData.Target);
+                matrices.UpdateView(transformatorData.Position, transformatorData.Target, transformatorData.Up);
             }
 
             Vector2 yawPitchVector = inputMotionMapper.GetYawPitchVector();
             if (yawPitchVector != Vector2.Zero)
             {
                 transformatorData.Rotation += yawPitchVector;
-                UpdateWorldView(transformatorData.Position, transformatorData.Forward, transformatorData.Up, transformatorData.Target);
+                matrices.UpdateView(transformatorData.Position, transformatorData.Target, transformatorData.Up);
             }
-        }
-
-        private void UpdateWorldView(Vector3 position, Vector3 forward, Vector3 up, Vector3 target)
-        {
-            matrices.UpdateView(position, target, up);
-            matrices.UpdateWorld(position, forward, up);
         }
     }
 }

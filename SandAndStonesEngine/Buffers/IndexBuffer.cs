@@ -44,7 +44,7 @@ namespace SandAndStonesEngine.Buffers
             DeviceBuffer = factory.CreateBuffer(new BufferDescription(GetNeededBufSize(QuadIndexes), BufferUsage.IndexBuffer));
         }
 
-        public void Bind()
+        public void Update()
         {
             graphicsDevice.UpdateBuffer(DeviceBuffer, 0, QuadIndexes);
         }

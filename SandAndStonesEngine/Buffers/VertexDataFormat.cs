@@ -1,19 +1,23 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
 {
     public struct VertexDataFormat
     {
-        public Vector4 Position;
-        public RgbaFloat Color; // Vertex Color
-        public Vector2 TextureCoords;
-        public VertexDataFormat(Vector3 position, RgbaFloat color, Vector2 textureCoords)
+        public Vector4 Position { get; set; }
+        public RgbaFloat Color { get; }
+        public Vector2 TextureCoords { get; }
+        public int TextureId { get; }
+        public VertexDataFormat(Vector3 position, RgbaFloat color, Vector2 textureCoords, int textureId)
         {
             Position = new Vector4(position, 1);
             Color = color;
             TextureCoords = textureCoords;
+            TextureId = textureId;
         }
-        public const uint SizeInBytes = (4 + 1 + 2) * 8;
+        //public static uint SizeInBytes { get; } = (uint)Unsafe.SizeOf<VertexDataFormat>();
+        public const uint SizeInBytes = ((4 + 1 + 2) * 8) + 4;
     }
 }

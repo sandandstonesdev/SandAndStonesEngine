@@ -23,12 +23,7 @@ namespace SandAndStonesEngine.GameCamera
         private float far = 100f; // Far plane z
         const float fovInDegrees = 55; // Full view
         private float fov = 1f; // Field of view
-
-        
         private float aspectRatio; // (right - left) / (top - bottom) = right/top
-
-        // Camera info
-        private Vector3 lookDirection = new Vector3(0f, 0f, -1f);
 
         GameGraphicDevice graphicDevice;
         readonly InputDevicesState inputDeviceState;
@@ -38,21 +33,21 @@ namespace SandAndStonesEngine.GameCamera
         int windowHeight;
 
         CameraInputMotionMapper inputMotionMapper;
-        WorldViewTransformator worldViewTransformator;
+        ViewTransformator viewTransformator;
 
-        public Camera(InputDevicesState inputDeviceState, Matrices matrices)
+        public Camera(InputDevicesState inputDeviceState, Matrices matrices, TransformatorData transformatorData)
         {
             this.matrices = matrices;
             this.inputDeviceState = inputDeviceState;
             this.inputMotionMapper = new CameraInputMotionMapper(inputDeviceState);
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector2(0, 0), 0.002f);
-            this.worldViewTransformator = new WorldViewTransformator(transformatorData, matrices, inputMotionMapper);
+            this.viewTransformator = new ViewTransformator(matrices, inputMotionMapper, transformatorData);
             
             windowWidth = GameWindow.Instance.SDLWindow.Width;
             windowHeight = GameWindow.Instance.SDLWindow.Height;
             aspectRatio = windowWidth / windowHeight;
             fov = (float)(fovInDegrees * (Math.PI /180.0f));
-            matrices.UpdateProjection(fov, aspectRatio, near, far);
+            //matrices.UpdateProjection(fov, aspectRatio, near, far);
+            matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);
         }
 
         public void WindowResized(int width, int height)
@@ -72,15 +67,16 @@ namespace SandAndStonesEngine.GameCamera
             
             if (changed)
             {
-                matrices.UpdateProjection(fov, aspectRatio, near, far);
                 var graphicDevice = Factory.Instance.GetGameGraphicDevice();
                 graphicDevice.ResizeWindow((uint)windowWidth, (uint)windowHeight);
+                matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);
+                //matrices.UpdateProjection(fov, aspectRatio, near, far);
             }
         }
 
         public void Update(float deltaSeconds)
         {
-            //worldViewTransformator.Update();
+            viewTransformator.Update();
         }
 
         public void Destroy()

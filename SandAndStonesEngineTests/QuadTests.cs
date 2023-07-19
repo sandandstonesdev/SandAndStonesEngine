@@ -25,9 +25,9 @@ namespace SandAndStonesEngineTests
             ushort[] indexesPattern2 = new ushort[] { 4, 5, 6, 5, 7, 6 };
             ushort[] indexesPattern3 = new ushort[] { 8, 9, 10, 9, 11, 10 };
             QuadGrid quadGrid = new QuadGrid(screenDivision);
-            QuadData quadData1 = quadGrid.GetQuadData(1, 1);
-            QuadData quadData2 = quadGrid.GetQuadData(1, 2);
-            QuadData quadData3 = quadGrid.GetQuadData(1, 3);
+            QuadData quadData1 = quadGrid.GetQuadData(1, 1, 0);
+            QuadData quadData2 = quadGrid.GetQuadData(1, 2, 0);
+            QuadData quadData3 = quadGrid.GetQuadData(1, 3, 0);
             
             Assert.AreEqual(quadData1.Indexes.Length, indexesPattern1.Length);
             bool isEqual = Enumerable.SequenceEqual(quadData1.Indexes, indexesPattern1);
@@ -46,7 +46,7 @@ namespace SandAndStonesEngineTests
             SetUp();
             const int verticesPerQuad = 4;
             QuadGrid quadGrid = new QuadGrid(screenDivision);
-            QuadData quadData1 = quadGrid.GetQuadData(1, 1);
+            QuadData quadData1 = quadGrid.GetQuadData(1, 1, 0);
 
             Assert.AreEqual(quadData1.Points.Length, verticesPerQuad);
             bool AreLeftXsEqual = quadData1.Points[0].X == quadData1.Points[1].X;

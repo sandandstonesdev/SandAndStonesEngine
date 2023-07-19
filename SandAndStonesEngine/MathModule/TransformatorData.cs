@@ -23,8 +23,10 @@ namespace SandAndStonesEngine.MathModule
             get { return Position + LookDir; }
         }
 
+        private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f);
         public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector2 rotation, float moveSpeed)
         {
+            //position = relativePosition + position;
             SetDirections(position, forward, up);
             SetSpeed(moveSpeed);
             SetRotation(rotation);

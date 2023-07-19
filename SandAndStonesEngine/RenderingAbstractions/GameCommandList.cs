@@ -48,6 +48,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.SetPipeline(gamePipeline.Pipeline);
             CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
+
             CommandList.SetGraphicsResourceSet(0, assets.ResourceSet);
             CommandList.SetGraphicsResourceSet(1, assets.Matrices.MatricesSet);
             CommandList.SetGraphicsResourceSet(2, assets.Matrices.WorldSet);

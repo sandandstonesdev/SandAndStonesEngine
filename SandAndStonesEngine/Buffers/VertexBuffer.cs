@@ -13,8 +13,8 @@ namespace SandAndStonesEngine.Buffers
         {
             get 
             {
-                var VertexLayouts = new VertexLayouts();
-                return VertexLayouts.Get();
+                var VertexLayout = new VertexLayout();
+                return VertexLayout.Layout;
             }
         }
 
@@ -42,6 +42,7 @@ namespace SandAndStonesEngine.Buffers
             uint bufSize = (uint)vertexData.Length * VertexDataFormat.SizeInBytes;
             return bufSize;
         }
+
         public void Create()
         {
             ResourceFactory factory = graphicsDevice.ResourceFactory;
@@ -49,8 +50,15 @@ namespace SandAndStonesEngine.Buffers
             DeviceBuffer = factory.CreateBuffer(new BufferDescription(GetNeededBufSize(VertexData), BufferUsage.VertexBuffer));
         }
 
-        public void Bind()
+        public void Update()
         {
+            //int i = 0;
+            //VertexDataFormat[] vertexData = new VertexDataFormat[VertexData.Length];
+            //foreach (var v in VertexData)
+            //{
+            //    vertexData[i] = (VertexDataFormat)v;
+            //}
+            VertexData = CollectAllVerticesFromQuads();
             graphicsDevice.UpdateBuffer(DeviceBuffer, 0, VertexData);
         }
 

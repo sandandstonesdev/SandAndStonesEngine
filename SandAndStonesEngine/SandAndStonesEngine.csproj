@@ -25,16 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="GameTextures\Images\wall.bmp">
+    <None Update="GameTextures\Images\char1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="GameTextures\Images\wall.jpg">
+    <None Update="GameTextures\Images\char2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="GameTextures\Images\wall.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="GameTextures\Images\wood plank 2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Shaders\ShaderPrograms\pixelShader.ps">

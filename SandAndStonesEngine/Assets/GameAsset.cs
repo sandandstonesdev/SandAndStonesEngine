@@ -1,8 +1,10 @@
 ﻿using System.Numerics;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameCamera;
+using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.Utils;
+using Veldrid;
 
 namespace SandAndStonesEngine.Assets
 {
@@ -11,35 +13,48 @@ namespace SandAndStonesEngine.Assets
         ScreenDivisionForQuads screenDivision;
         public List<QuadModel> QuadModelList = new List<QuadModel>();
         float scale = 1.0f;
-        private WorldViewTransformator worldViewTransformator;
-        private TransformatorData transformatorData;
-        public GameAsset(ScreenDivisionForQuads screenDivision, InputMotionMapperBase inputMotionMapper, Matrices matrices)
+        public float Depth;
+        public int TextureId;
+        public GameTextureData GameTextureData;
+        
+        public GameAsset(int textureId, ScreenDivisionForQuads screenDivision, float depth)
         {
             this.screenDivision = screenDivision;
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector2(0, 0), 0.002f);
-            this.worldViewTransformator = new WorldViewTransformator(transformatorData, matrices, inputMotionMapper);
+            this.TextureId = textureId;
+            this.Depth = depth;
         }
 
-        public void Create()
+        public void Create(int start, int end, QuadGrid quadGrid, string textureName)
         {
-            QuadGrid quadGrid = new QuadGrid(screenDivision);
+            GameTextureData = new GameTextureData(TextureId, textureName);
+            GameTextureData.Init();
+
             ColorRandomizer colorRandomizer = new ColorRandomizer();
-            for (int i = 0; i < 4; i++)
+            for (int i = start; i < end; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = start; j < end; j++)
                 {
-                    var positionInQuadCount = new Vector2(i, j);
+                    var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();
-                    var quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid);
+                    QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid, TextureId);
                     quadModel.Create();
                     QuadModelList.Add(quadModel);
                 }
             }
         }
 
-        public void Update()
+        public void Update(double delta)
         {
-            worldViewTransformator.Update();
+            //foreach (var quadModel in QuadModelList)
+            //{
+            //    //quadModel.Move(movementVector);
+            //}
+            ////Thread.Sleep(5);
+        }
+
+        public void Destroy()
+        {
+            GameTextureData.Destroy();
         }
     }
 }

@@ -9,6 +9,7 @@ using SandAndStonesEngine.GameCamera;
 using System.Diagnostics;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.GameFactories;
+using System.Numerics;
 
 namespace SandAndStonesEngine
 {
@@ -26,6 +27,7 @@ namespace SandAndStonesEngine
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
         private Matrices matrices;
+        ScreenDivisionForQuads screenDivisionForQuads;
         private GameWindow()
         {
             
@@ -46,8 +48,11 @@ namespace SandAndStonesEngine
             matrices = new Matrices();
             matrices.Create();
             inputDevicesState = new InputDevicesState();
-            gameCamera = new Camera(inputDevicesState, matrices);
-            assets = new GameAssets(screenDivisionForQuads, matrices, inputDevicesState);
+
+            this.screenDivisionForQuads = screenDivisionForQuads;
+            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector2(0, 0), 0.002f);
+            gameCamera = new Camera(inputDevicesState, matrices, transformatorData);
+            assets = new GameAssets(screenDivisionForQuads, matrices, inputDevicesState, transformatorData);
             assets.Create();
 
             shaderSet = new GameShaderSet(assets, matrices);
@@ -73,9 +78,10 @@ namespace SandAndStonesEngine
 
                 previousElapsedTime = newElapsedTime;
                 gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
+                screenDivisionForQuads.Resize(SDLWindow.Width, SDLWindow.Height);
                 gameCamera.Update((float)deltaElapsedTime);
 
-                assets.Update();
+                assets.Update(deltaElapsedTime);
 
                 Draw((float)deltaElapsedTime);
             }
@@ -101,7 +107,7 @@ namespace SandAndStonesEngine
             gameCommandList.Destroy();
             assets.Destroy();
             shaderSet.Destroy();
-            gameGraphicDevice.Destroy();
+            //gameGraphicDevice.Destroy();
         }
     }
 }
