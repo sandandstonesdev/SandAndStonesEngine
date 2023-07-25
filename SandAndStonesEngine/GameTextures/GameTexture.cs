@@ -25,8 +25,8 @@ namespace SandAndStonesEngine.GameTextures
 
         GameGraphicDevice gameGraphicDevice;
 
-        List<GameTextureData> textureDataList;
-        public GameTextureSurface(List<GameTextureData> textureDataList, int width, int height)
+        List<ITextureData> textureDataList;
+        public GameTextureSurface(List<ITextureData> textureDataList, int width, int height)
         {
             this.width = width;
             this.height = height;
@@ -72,12 +72,12 @@ namespace SandAndStonesEngine.GameTextures
 
         }
 
-        public void UpdateTextureArray()
+        public void UpdateTextureArray(uint baseLayerId = 0)
         {
-            uint layerIdx = 0;
+            uint layerIdx = baseLayerId;
             foreach (var texData in textureDataList)
             {
-                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texData.PinnedImageBytes, (uint)texData.BytesCount, 0, 0, 0, (uint)width, (uint)height, 1, 0, layerIdx++);
+                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texData.PinnedImageBytes, (uint)texData.BytesCount, 0, 0, 0, (uint)texData.Width, (uint)texData.Height, 1, 0, layerIdx++);
             }
         }
 

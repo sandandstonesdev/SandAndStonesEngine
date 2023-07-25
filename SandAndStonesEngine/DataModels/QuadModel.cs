@@ -32,7 +32,8 @@ namespace SandAndStonesEngine.DataModels
             this.quadIndexesInGrid = quadData.Indexes;
             this.quadTextureCoords = quadData.TextureCoords;
             this.textureId = textureId;// quadData.TextureId;
-            this.quadSizeInCoord = quadGrid.GetQuadSizeInCoordinates() * quadScale;
+            Vector3 quadSizeTemp = quadGrid.GetQuadSizeInCoordinates();
+            this.quadSizeInCoord = new Vector3(quadSizeTemp.X * quadScale, quadSizeTemp.Y * quadScale, quadSizeTemp.Z);
             this.pixelSizeInCoord = quadGrid.GetPixelSizeInCoordinates();
             this.color = color;
         }

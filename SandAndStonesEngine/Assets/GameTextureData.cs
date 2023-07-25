@@ -6,13 +6,17 @@ using Vortice.D3DCompiler;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameTextureData
+
+    public class GameTextureData : ITextureData
     {
         public int Id;
         string fileName;
         //private Image textureImage;
-        public AutoPinner PinnedImageBytes;
-        public int BytesCount;
+        public AutoPinner PinnedImageBytes { get; private set; }
+        public int BytesCount { get; private set; }
+
+        public int Width { get; private set; }
+        public int Height { get; private set; }
         public GameTextureData(int id, string fileName)
         {
             this.Id = id;
@@ -41,6 +45,8 @@ namespace SandAndStonesEngine.Assets
             var imagePath = GetTextureImageFilePath(filename);
             FileStream inputImageStream = File.OpenRead(imagePath);
             Image image = Image.Load(inputImageStream);
+            this.Width = image.Width;
+            this.Height = image.Height;
             return image;
         }
 
@@ -48,6 +54,8 @@ namespace SandAndStonesEngine.Assets
         {
             var outputImagePath = GetTextureImageFilePath(fileName);
             using Image<Rgba32> imagePixels = Image.Load<Rgba32>(outputImagePath);
+            this.Width = imagePixels.Width;
+            this.Height = imagePixels.Height;
             IMemoryGroup<Rgba32> memoryGroup = imagePixels.GetPixelMemoryGroup();
             var _memoryGroup = memoryGroup.ToArray()[0];
             var pixelData = MemoryMarshal.AsBytes(_memoryGroup.Span).ToArray();

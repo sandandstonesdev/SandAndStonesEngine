@@ -67,6 +67,7 @@ namespace SandAndStonesEngine.Assets
 
         public TransformatorData transformatorData;
 
+        public GameFontAsset GameFontAsset1;
         public GameAssets(ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState, TransformatorData transformatorData)
         {
             this.ClearColor = RgbaFloat.Black;
@@ -98,10 +99,15 @@ namespace SandAndStonesEngine.Assets
             GameAsset2 = new GameAsset(assetTextureId, screenDivisionForQuads, 1);
             GameAsset2.Create(1, 2, quadGrid, "char2.png");
 
+            assetTextureId++;
+            GameFontAsset1 = new GameFontAsset(assetTextureId, screenDivisionForQuads, 1);
+            GameFontAsset1.Create(0, 1, quadGrid, "letters.png");
+
             List<QuadModel> quadModels = new List<QuadModel>();
             quadModels.AddRange(BackgroundAsset.QuadModelList);
             quadModels.AddRange(GameAsset1.QuadModelList);
             quadModels.AddRange(GameAsset2.QuadModelList);
+            quadModels.AddRange(GameFontAsset1.QuadModelList);
 
             VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
             VertexBuffer.Create();
@@ -114,14 +120,25 @@ namespace SandAndStonesEngine.Assets
             var Tex1Data = BackgroundAsset.GameTextureData;
             var Tex2Data = GameAsset1.GameTextureData;
             var Tex3Data = GameAsset2.GameTextureData;
-            List<GameTextureData> textureDataList = new List<GameTextureData>();
+            var Tex4Data = GameFontAsset1.GameTextureData;
+
+            List<ITextureData> textureDataList = new List<ITextureData>();
             textureDataList.Add(Tex1Data);
             textureDataList.Add(Tex2Data);
             textureDataList.Add(Tex3Data);
+            textureDataList.Add(Tex4Data);
 
             gameTexture = new GameTextureSurface(textureDataList, 256, 256);
             gameTexture.Init();
-            gameTexture.UpdateTextureArray();
+            gameTexture.UpdateTextureArray(0);
+
+            // Fonts
+            //List<ITextureData> fontTextureDataList = new List<ITextureData>();
+            //fontTextureDataList.Add(Tex4Data);
+
+            //gameTexture = new GameTextureSurface(fontTextureDataList, 128, 128);
+            //gameTexture.Init();
+            //gameTexture.UpdateTextureArray(4);
         }
 
         public void Update(double delta)
@@ -129,6 +146,7 @@ namespace SandAndStonesEngine.Assets
             worldTransformator.Update();
             GameAsset1.Update(delta);
             GameAsset2.Update(delta);
+            GameFontAsset1.Update(delta);
             VertexBuffer.Update();
         }
 
