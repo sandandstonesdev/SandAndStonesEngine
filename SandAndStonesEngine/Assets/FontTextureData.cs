@@ -4,10 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class FontTextureData : ITextureData
+    public class FontTextureData : ITextureData, IDisposable
     {
         public int Id;
-        //private Image textureImage;
         public AutoPinner PinnedImageBytes { get; private set; }
         public int BytesCount { get; private set; }
 
@@ -15,6 +14,8 @@ namespace SandAndStonesEngine.Assets
         public int Height { get; private set; }
 
         public string text = "ABCDEFGHIJKLMNOPRSTUVWXYZ0123456789";
+        private bool disposedValue;
+
         public FontTextureData(int id, string fileName)
         {
             this.Id = id;
@@ -62,9 +63,28 @@ namespace SandAndStonesEngine.Assets
             return bitmapBytes;
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            PinnedImageBytes.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                PinnedImageBytes.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~FontTextureData()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

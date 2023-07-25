@@ -79,7 +79,7 @@ namespace SandAndStonesEngine.GameCamera
             viewTransformator.Update();
         }
 
-        public void Destroy()
+        public void Dispose()
         {
 
         }

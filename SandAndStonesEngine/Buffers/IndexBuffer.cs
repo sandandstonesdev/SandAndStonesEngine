@@ -4,7 +4,7 @@ using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
 {
-    public class IndexBuffer
+    public class IndexBuffer : IDisposable
     {
         public IndexFormat IndexBufferFormat = IndexFormat.UInt16;
         public DeviceBuffer DeviceBuffer;
@@ -13,9 +13,11 @@ namespace SandAndStonesEngine.Buffers
         {
             get { return (uint)QuadIndexes.Length; }
         }
-        List<QuadModel> quadModelList;
+        List<IQuadModel> quadModelList;
         ushort[] QuadIndexes;
-        public IndexBuffer(GraphicsDevice graphicsDevice, List<QuadModel> quadModelList)
+        private bool disposedValue;
+
+        public IndexBuffer(GraphicsDevice graphicsDevice, List<IQuadModel> quadModelList)
         {
             this.quadModelList = quadModelList;
             this.graphicsDevice = graphicsDevice;
@@ -49,9 +51,29 @@ namespace SandAndStonesEngine.Buffers
             graphicsDevice.UpdateBuffer(DeviceBuffer, 0, QuadIndexes);
         }
 
-        public void Destroy()
+
+        protected virtual void Dispose(bool disposing)
         {
-            DeviceBuffer.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                DeviceBuffer.Dispose();
+
+                disposedValue = true;
+            }
+        }
+        ~IndexBuffer()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

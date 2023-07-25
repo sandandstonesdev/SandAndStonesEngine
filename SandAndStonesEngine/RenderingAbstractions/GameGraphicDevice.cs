@@ -9,12 +9,12 @@ using Veldrid.StartupUtilities;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
-    public class GameGraphicDevice
+    public class GameGraphicDevice : IDisposable
     {
         private static readonly Lazy<GameGraphicDevice> lazyInstance = new Lazy<GameGraphicDevice>(() => 
         {   
             GameGraphicDevice gameGraphicDevice = new GameGraphicDevice();
-            gameGraphicDevice.Create();
+            gameGraphicDevice.Init();
             return gameGraphicDevice;
         });
         public static GameGraphicDevice Instance => lazyInstance.Value;
@@ -31,10 +31,12 @@ namespace SandAndStonesEngine.GraphicAbstractions
         }
 
         public bool Initialized = false;
+        private bool disposedValue;
+
         public GameGraphicDevice()
         {
         }
-        public void Create()
+        public void Init()
         {
             GraphicsDeviceOptions options = new GraphicsDeviceOptions(true);
             GameWindow gameWindow = Factory.Instance.GetGameWindow();
@@ -54,9 +56,30 @@ namespace SandAndStonesEngine.GraphicAbstractions
             GraphicsDevice.ResizeMainWindow(width, height);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            GraphicsDevice.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                GraphicsDevice.Dispose();
+                GameWindow gameWindow = Factory.Instance.GetGameWindow();
+                gameWindow.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameGraphicDevice()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

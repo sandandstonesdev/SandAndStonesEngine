@@ -10,10 +10,8 @@ using Veldrid;
 
 namespace SandAndStonesEngine.MathModule
 {
-    public class Matrices
+    public class Matrices : IDisposable
     {
-        readonly GameGraphicDevice graphicDevice;
-
         public Matrix4x4 ProjectionMatrix; // From camera to projection space (output: vertex on monitor with depth)
         public Matrix4x4 ViewMatrix; // From world to camera (output: position relative to camera pov)
         public Matrix4x4 WorldMatrix; // From model to world (output: position object in world)
@@ -26,6 +24,7 @@ namespace SandAndStonesEngine.MathModule
         public ResourceLayout WorldLayout;
         public ResourceSet MatricesSet;
         public ResourceSet WorldSet;
+        private bool disposedValue;
 
         public Matrices()
         {
@@ -80,11 +79,30 @@ namespace SandAndStonesEngine.MathModule
             DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            WorldBuffer.Dispose();
-            ViewBuffer.Dispose();
-            ProjectionBuffer.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                WorldBuffer.Dispose();
+                ViewBuffer.Dispose();
+                ProjectionBuffer.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~Matrices()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

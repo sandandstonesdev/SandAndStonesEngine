@@ -7,11 +7,12 @@ using Vortice.D3DCompiler;
 namespace SandAndStonesEngine.Assets
 {
 
-    public class GameTextureData : ITextureData
+    public class GameTextureData : ITextureData, IDisposable
     {
         public int Id;
         string fileName;
-        //private Image textureImage;
+        private bool disposedValue;
+
         public AutoPinner PinnedImageBytes { get; private set; }
         public int BytesCount { get; private set; }
 
@@ -21,7 +22,6 @@ namespace SandAndStonesEngine.Assets
         {
             this.Id = id;
             this.fileName = fileName;
-            //this.textureImage = GetImage(fileName);
         }
 
         public void Init()
@@ -71,9 +71,28 @@ namespace SandAndStonesEngine.Assets
             file.Write(bytes);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            PinnedImageBytes.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                PinnedImageBytes.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameTextureData()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

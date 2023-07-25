@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SandAndStonesEngine.Assets;
+﻿using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using Veldrid;
 using Veldrid.SPIRV;
 
 namespace SandAndStonesEngine.Shaders
 {
-    internal class GameShaderSet
+    internal class GameShaderSet : IDisposable
     {
         public Shader[] Shaders { get; private set; }
         private readonly GameAssets assets;
         public ShaderSetDescription ShaderSet;
+        private bool disposedValue;
         readonly Dictionary<string, string> shaderFileNames = new Dictionary<string, string>
         {
             { "VS", "vertexShader.vs"},
@@ -48,12 +41,31 @@ namespace SandAndStonesEngine.Shaders
                 shaders: Shaders);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            foreach (var shader in Shaders)
+            if (!disposedValue)
             {
-                shader.Dispose();
+                if (disposing)
+                {
+                }
+
+                foreach (var shader in Shaders)
+                {
+                    shader?.Dispose();
+                }
+                disposedValue = true;
             }
+        }
+
+        ~GameShaderSet()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

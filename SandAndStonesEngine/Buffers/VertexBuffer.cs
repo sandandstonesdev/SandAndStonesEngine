@@ -5,7 +5,7 @@ using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
 {
-    public class VertexBuffer
+    public class VertexBuffer : IDisposable
     {
         public DeviceBuffer DeviceBuffer;
         readonly GraphicsDevice graphicsDevice;
@@ -18,14 +18,15 @@ namespace SandAndStonesEngine.Buffers
             }
         }
 
-        List<QuadModel> quadModelList;
-        public VertexBuffer(GraphicsDevice graphicDevice, List<QuadModel> quadModelList)
+        List<IQuadModel> quadModelList;
+        public VertexBuffer(GraphicsDevice graphicDevice, List<IQuadModel> quadModelList)
         {
             this.graphicsDevice = graphicDevice;
             this.quadModelList = quadModelList;
         }
 
         VertexDataFormat[] VertexData;
+        private bool disposedValue;
 
         private VertexDataFormat[] CollectAllVerticesFromQuads()
         {
@@ -43,7 +44,7 @@ namespace SandAndStonesEngine.Buffers
             return bufSize;
         }
 
-        public void Create()
+        public void Init()
         {
             ResourceFactory factory = graphicsDevice.ResourceFactory;
             VertexData = CollectAllVerticesFromQuads();
@@ -52,19 +53,32 @@ namespace SandAndStonesEngine.Buffers
 
         public void Update()
         {
-            //int i = 0;
-            //VertexDataFormat[] vertexData = new VertexDataFormat[VertexData.Length];
-            //foreach (var v in VertexData)
-            //{
-            //    vertexData[i] = (VertexDataFormat)v;
-            //}
             VertexData = CollectAllVerticesFromQuads();
             graphicsDevice.UpdateBuffer(DeviceBuffer, 0, VertexData);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            DeviceBuffer.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                DeviceBuffer.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~VertexBuffer()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

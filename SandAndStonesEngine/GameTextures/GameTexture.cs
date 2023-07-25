@@ -9,8 +9,9 @@ using SandAndStonesEngine.Assets;
 
 namespace SandAndStonesEngine.GameTextures
 {
-    public class GameTextureSurface // Asociated with SurfaceSampler
+    public class GameTextureSurface : IDisposable
     {
+        // Associated with SurfaceSampler
         public int Id;
         public TextureView TextureView;
         private Texture Texture;
@@ -21,11 +22,12 @@ namespace SandAndStonesEngine.GameTextures
         int width;
         int height;
         string fileName;
-        AutoPinner imageBytesPinner;
 
         GameGraphicDevice gameGraphicDevice;
 
         List<ITextureData> textureDataList;
+        private bool disposedValue;
+
         public GameTextureSurface(List<ITextureData> textureDataList, int width, int height)
         {
             this.width = width;
@@ -81,11 +83,29 @@ namespace SandAndStonesEngine.GameTextures
             }
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            TextureView.Dispose();
-            Texture.Dispose();
-            imageBytesPinner.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                TextureView.Dispose();
+                Texture.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameTextureSurface()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

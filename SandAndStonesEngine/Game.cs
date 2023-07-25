@@ -44,7 +44,7 @@ namespace SandAndStonesEngine
         }
         public void Stop()
         {
-            Window.Stop();
+            Window.Dispose();
         }
 
     }

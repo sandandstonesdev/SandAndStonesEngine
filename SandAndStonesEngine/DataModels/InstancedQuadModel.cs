@@ -10,7 +10,7 @@ using Veldrid;
 
 namespace SandAndStonesEngine.DataModels
 {
-    public class InstancedQuadModel : IQuadModel
+    public class InstancedQuadModel
     {
         private IVertexFormat[] verticesPositions = new IVertexFormat[4];
         private Vector2 relativePosition = new Vector2(-1.00f, 1.00f);

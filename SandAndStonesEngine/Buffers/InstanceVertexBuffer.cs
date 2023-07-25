@@ -35,7 +35,7 @@ namespace SandAndStonesEngine.Buffers
             List<IVertexFormat> quadsVerticesData = new List<IVertexFormat>();
             foreach (var quadModel in quadModelList)
             {
-                quadsVerticesData.AddRange(quadModel.VerticesPositions);
+                //quadsVerticesData.AddRange(quadModel.VerticesPositions);
             }
             return quadsVerticesData.ToArray();
         }

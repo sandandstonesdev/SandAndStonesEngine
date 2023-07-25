@@ -14,10 +14,10 @@ using Vulkan.Xlib;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
-    internal class GameCommandList
+    internal class GameCommandList : IDisposable
     {
         public CommandList CommandList;
-
+        private bool disposedValue;
         private readonly GameAssets assets;
         private readonly GamePipeline gamePipeline;
         public GameCommandList(GameAssets assets, GamePipeline gamePipeline)
@@ -26,7 +26,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
             this.gamePipeline = gamePipeline;
         }
 
-        public void Create()
+        public void Init()
         {
             ResourceFactory factory = Factory.Instance.GetResourceFactory();
             CommandList = factory.CreateCommandList();
@@ -41,10 +41,10 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.UpdateBuffer(assets.Matrices.ProjectionBuffer, 0, assets.Matrices.ProjectionMatrix);
             CommandList.UpdateBuffer(assets.Matrices.ViewBuffer, 0, assets.Matrices.ViewMatrix);
             CommandList.UpdateBuffer(assets.Matrices.WorldBuffer, 0, assets.Matrices.WorldMatrix);
-            
+
             CommandList.SetFramebuffer(gameGraphicDevice.SwapChain);
             CommandList.ClearColorTarget(0, assets.ClearColor);
-            //CommandList.ClearDepthStencil(1f);
+
             CommandList.SetPipeline(gamePipeline.Pipeline);
             CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
@@ -62,9 +62,28 @@ namespace SandAndStonesEngine.GraphicAbstractions
             gameGraphicDevice.Flush(CommandList);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            CommandList.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                CommandList.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameCommandList()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

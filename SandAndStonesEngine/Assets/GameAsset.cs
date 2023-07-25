@@ -8,23 +8,24 @@ using Veldrid;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameAsset
+    public class GameAsset : IGameAsset, IDisposable
     {
-        ScreenDivisionForQuads screenDivision;
-        public List<QuadModel> QuadModelList = new List<QuadModel>();
-        float scale = 1.0f;
-        public float Depth;
-        public int TextureId;
-        public GameTextureData GameTextureData;
-        
-        public GameAsset(int textureId, ScreenDivisionForQuads screenDivision, float depth)
+        public List<IQuadModel> QuadModelList { get; private set; }
+        public ITextureData GameTextureData { get; private set; }
+        private float scale;
+        private float Depth;
+        private int TextureId;
+        private bool disposedValue;
+
+        public GameAsset(int textureId, float depth, float scale = 1.0f)
         {
-            this.screenDivision = screenDivision;
+            this.QuadModelList = new List<IQuadModel>();
             this.TextureId = textureId;
             this.Depth = depth;
+            this.scale = scale;
         }
 
-        public void Create(int start, int end, QuadGrid quadGrid, string textureName)
+        public void Init(int start, int end, QuadGrid quadGrid, string textureName)
         {
             GameTextureData = new GameTextureData(TextureId, textureName);
             GameTextureData.Init();
@@ -36,7 +37,7 @@ namespace SandAndStonesEngine.Assets
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();
-                    QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid, TextureId);
+                    IQuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid, TextureId);
                     quadModel.Create();
                     QuadModelList.Add(quadModel);
                 }
@@ -45,16 +46,32 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(double delta)
         {
-            //foreach (var quadModel in QuadModelList)
-            //{
-            //    //quadModel.Move(movementVector);
-            //}
-            ////Thread.Sleep(5);
+
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            GameTextureData.Destroy();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                IDisposable? toDispose = GameTextureData as IDisposable;
+                toDispose?.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameAsset()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

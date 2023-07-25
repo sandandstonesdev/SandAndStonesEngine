@@ -17,7 +17,7 @@ using Veldrid;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameAssets
+    public class GameAssets : IDisposable
     {
         private readonly GameGraphicDevice gameGraphicDevice;
         public RgbaFloat ClearColor;
@@ -32,7 +32,6 @@ namespace SandAndStonesEngine.Assets
         {
             get { return new VertexLayoutDescription[] { VertexBuffer.VertexLayout }; }
         }
-
         public uint IndicesCount
         {
             get { return IndexBuffer.IndicesCount; }
@@ -47,27 +46,24 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        GameAsset GameAsset1;
-        GameAsset GameAsset2;
-        GameAsset BackgroundAsset;
         InputDevicesState inputDeviceState;
         InputMotionMapperBase inputMotionMapper;
         public Matrices Matrices;
-        public GameTextureSurface gameTexture;
+        public GameTextureSurface gameTextureSurface;
 
         public ResourceSet ResourceSet
         {
-            get { return gameTexture.ResourceSet; }
+            get { return gameTextureSurface.ResourceSet; }
         }
 
         public ResourceLayout ResourceLayout
         {
-            get { return gameTexture.TextureLayout; }
+            get { return gameTextureSurface.TextureLayout; }
         }
 
         public TransformatorData transformatorData;
 
-        public GameFontAsset GameFontAsset1;
+        public List<IGameAsset> gameAssets = new List<IGameAsset>();
         public GameAssets(ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState, TransformatorData transformatorData)
         {
             this.ClearColor = RgbaFloat.Black;
@@ -78,6 +74,30 @@ namespace SandAndStonesEngine.Assets
         }
 
         WorldTransformator worldTransformator;
+        private bool disposedValue;
+
+        private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
+        {
+            int assetId = 0;
+            List<IGameAsset> assets = new List<IGameAsset>();
+
+            var BackgroundAsset = new GameAsset(assetId++, -1);
+            BackgroundAsset.Init(0, 4, quadGrid, "wall.png");
+            assets.Add(BackgroundAsset);
+
+            var GameAsset1 = new GameAsset(assetId++, 1, 0.5f);
+            GameAsset1.Init(0, 1, quadGrid, "char1.png");
+            assets.Add(GameAsset1);
+
+            var GameAsset2 = new GameAsset(assetId++, 0.5f);
+            GameAsset2.Init(1, 2, quadGrid, "char2.png");
+            assets.Add(GameAsset2);
+
+            var GameFontAsset1 = new GameFontAsset(assetId++, 1);
+            GameFontAsset1.Init(0, 1, quadGrid, "letters.png");
+            assets.Add(GameFontAsset1);
+            return assets;
+        }
         public void Create()
         {
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
@@ -87,73 +107,66 @@ namespace SandAndStonesEngine.Assets
             QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
             worldTransformator = new WorldTransformator(Matrices, inputMotionMapper, transformatorData);
 
-            int assetTextureId = 0;
-            BackgroundAsset = new GameAsset(assetTextureId, screenDivisionForQuads, -1);
-            BackgroundAsset.Create(0, 4, quadGrid, "wall.png");
+            gameAssets = InitGameAssets(quadGrid);
 
-            assetTextureId++;
-            GameAsset1 = new GameAsset(assetTextureId, screenDivisionForQuads, 1);
-            GameAsset1.Create(0, 1, quadGrid, "char1.png");
-
-            assetTextureId++;
-            GameAsset2 = new GameAsset(assetTextureId, screenDivisionForQuads, 1);
-            GameAsset2.Create(1, 2, quadGrid, "char2.png");
-
-            assetTextureId++;
-            GameFontAsset1 = new GameFontAsset(assetTextureId, screenDivisionForQuads, 1);
-            GameFontAsset1.Create(0, 1, quadGrid, "letters.png");
-
-            List<QuadModel> quadModels = new List<QuadModel>();
-            quadModels.AddRange(BackgroundAsset.QuadModelList);
-            quadModels.AddRange(GameAsset1.QuadModelList);
-            quadModels.AddRange(GameAsset2.QuadModelList);
-            quadModels.AddRange(GameFontAsset1.QuadModelList);
-
+            List<IQuadModel> quadModels = new List<IQuadModel>();
+            gameAssets.ForEach(a => quadModels.AddRange(a.QuadModelList));
+            
             VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
-            VertexBuffer.Create();
-            VertexBuffer.Update();
+            VertexBuffer.Init();
 
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
             IndexBuffer.Create();
-            IndexBuffer.Update();
-
-            var Tex1Data = BackgroundAsset.GameTextureData;
-            var Tex2Data = GameAsset1.GameTextureData;
-            var Tex3Data = GameAsset2.GameTextureData;
-            var Tex4Data = GameFontAsset1.GameTextureData;
 
             List<ITextureData> textureDataList = new List<ITextureData>();
-            textureDataList.Add(Tex1Data);
-            textureDataList.Add(Tex2Data);
-            textureDataList.Add(Tex3Data);
-            textureDataList.Add(Tex4Data);
+            gameAssets.ForEach(a => textureDataList.Add(a.GameTextureData));
 
-            gameTexture = new GameTextureSurface(textureDataList, 256, 256);
-            gameTexture.Init();
-            gameTexture.UpdateTextureArray(0);
-
-            // Fonts
-            //List<ITextureData> fontTextureDataList = new List<ITextureData>();
-            //fontTextureDataList.Add(Tex4Data);
-
-            //gameTexture = new GameTextureSurface(fontTextureDataList, 128, 128);
-            //gameTexture.Init();
-            //gameTexture.UpdateTextureArray(4);
+            gameTextureSurface = new GameTextureSurface(textureDataList, 256, 256);
+            gameTextureSurface.Init();
         }
 
         public void Update(double delta)
         {
             worldTransformator.Update();
-            GameAsset1.Update(delta);
-            GameAsset2.Update(delta);
-            GameFontAsset1.Update(delta);
+            gameAssets.ForEach(e => e.Update(delta));
+            IndexBuffer.Update();
             VertexBuffer.Update();
+            gameTextureSurface.UpdateTextureArray(0);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            VertexBuffer.Destroy();
-            IndexBuffer.Destroy();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                gameAssets.ForEach(e =>
+                {
+                    var disposableAssets = e as IDisposable;
+                    disposableAssets?.Dispose();
+                });
+
+                var disposableTextureSurface = gameTextureSurface as IDisposable;
+                disposableTextureSurface?.Dispose();
+                var disposableVertexBuffer = VertexBuffer as IDisposable;
+                disposableVertexBuffer?.Dispose();
+                var disposableIndexBuffer = IndexBuffer as IDisposable;
+                disposableIndexBuffer?.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameAssets()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

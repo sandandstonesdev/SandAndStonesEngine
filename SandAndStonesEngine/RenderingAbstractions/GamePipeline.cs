@@ -13,12 +13,13 @@ using Vulkan;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
-    internal class GamePipeline
+    internal class GamePipeline : IDisposable
     {
         public GameAssets gameAssets;
         public Pipeline Pipeline;
         public Matrices matrices;
         GameShaderSet shaderSet;
+        private bool disposedValue;
 
         public GamePipeline(GameShaderSet shaderSet, GameAssets gameAssets, Matrices matrices)
         {
@@ -58,9 +59,28 @@ namespace SandAndStonesEngine.GraphicAbstractions
             Pipeline = factory.CreateGraphicsPipeline(pipelineDescription);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            Pipeline.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                Pipeline.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GamePipeline()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

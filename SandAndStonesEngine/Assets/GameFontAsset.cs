@@ -10,26 +10,24 @@ using System.Threading.Tasks;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameFontAsset
+    public class GameFontAsset : IGameAsset, IDisposable
     {
+        public List<IQuadModel> QuadModelList { get; private set; }
+        public ITextureData GameTextureData { get; private set; }
+        private float scale;
+        private float depth;
+        private int TextureId;
+        private bool disposedValue;
 
-        ScreenDivisionForQuads screenDivision;
-        public List<QuadModel> QuadModelList = new List<QuadModel>();
-        float scale = 4.0f;
-        public float Depth;
-        public int TextureId;
-        public FontTextureData GameTextureData;
-        public AutoPinner PinnedImageBytes;
-        public int BytesCount;
-
-        public GameFontAsset(int textureId, ScreenDivisionForQuads screenDivision, float depth)
+        public GameFontAsset(int textureId, float depth=1, float scale= 4.0f)
         {
-            this.screenDivision = screenDivision;
+            this.QuadModelList = new List<IQuadModel>();
             this.TextureId = textureId;
-            this.Depth = 1;
+            this.depth = depth;
+            this.scale = scale;
         }
 
-        public void Create(int start, int end, QuadGrid quadGrid, string textureName)
+        public void Init(int start, int end, QuadGrid quadGrid, string textureName)
         {
             GameTextureData = new FontTextureData(TextureId, textureName);
             GameTextureData.Init();
@@ -39,7 +37,7 @@ namespace SandAndStonesEngine.Assets
             {
                 for (int j = start; j < end; j++)
                 {
-                    var positionInQuadCount = new Vector3(i, j, Depth);
+                    var positionInQuadCount = new Vector3(i, j, depth);
                     var color = colorRandomizer.GetColor();
                     QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid, TextureId);
                     quadModel.Create();
@@ -50,16 +48,32 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(double delta)
         {
-            //foreach (var quadModel in QuadModelList)
-            //{
-            //    //quadModel.Move(movementVector);
-            //}
-            ////Thread.Sleep(5);
         }
 
-        public void Destroy()
+        protected virtual void Dispose(bool disposing)
         {
-            GameTextureData.Destroy();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    
+                }
+
+                IDisposable? toDispose = GameTextureData as IDisposable;
+                toDispose?.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        ~GameFontAsset()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

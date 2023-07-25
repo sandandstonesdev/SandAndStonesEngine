@@ -13,13 +13,12 @@ using System.Numerics;
 
 namespace SandAndStonesEngine
 {
-    public class GameWindow
+    public class GameWindow : IDisposable
     {
         private static readonly Lazy<GameWindow> lazyInstance = new Lazy<GameWindow>(() => new GameWindow());
         public static GameWindow Instance => lazyInstance.Value;
 
         private GameAssets assets;
-        private GameGraphicDevice gameGraphicDevice;
         private GameShaderSet shaderSet;
         public Sdl2Window SDLWindow;
         private GameCommandList gameCommandList;
@@ -28,6 +27,8 @@ namespace SandAndStonesEngine
         private Camera gameCamera;
         private Matrices matrices;
         ScreenDivisionForQuads screenDivisionForQuads;
+        private bool disposedValue;
+
         private GameWindow()
         {
             
@@ -60,7 +61,7 @@ namespace SandAndStonesEngine
             gamePipeline = new GamePipeline(shaderSet, assets, matrices);
             gamePipeline.Create();
             gameCommandList = new GameCommandList(assets, gamePipeline);
-            gameCommandList.Create();
+            gameCommandList.Init();
         }
 
         public void Loop()
@@ -89,25 +90,39 @@ namespace SandAndStonesEngine
             sw.Stop();
         }
 
-        public void Stop()
-        {
-            DisposeResources();
-        }
-
         private void Draw(float deltaTime)
         {
             gameCommandList.Draw(deltaTime);
         }
 
-        private void DisposeResources()
+        protected virtual void Dispose(bool disposing)
         {
-            matrices.Destroy();
-            gameCamera.Destroy();
-            gamePipeline.Destroy();
-            gameCommandList.Destroy();
-            assets.Destroy();
-            shaderSet.Destroy();
-            //gameGraphicDevice.Destroy();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+                matrices.Dispose();
+                gameCamera.Dispose();
+                gamePipeline.Dispose();
+                gameCommandList.Dispose();
+                var disposableAssets = assets as IDisposable;
+                disposableAssets?.Dispose();
+                shaderSet?.Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        ~GameWindow()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

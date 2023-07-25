@@ -5,7 +5,7 @@ using Veldrid;
 namespace SandAndStonesEngine.DataModels
 {
 
-    public class QuadModel
+    public class QuadModel : IQuadModel
     {
         private VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
         private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f);
