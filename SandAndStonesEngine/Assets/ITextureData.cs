@@ -8,6 +8,7 @@ namespace SandAndStonesEngine.Assets
         int BytesCount { get; }
 
         void Init();
+        void Update(object param);
         int Width { get; }
         int Height { get; }
     }

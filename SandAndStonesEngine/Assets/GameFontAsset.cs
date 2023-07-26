@@ -3,6 +3,7 @@ using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -18,9 +19,15 @@ namespace SandAndStonesEngine.Assets
         private float depth;
         private int TextureId;
         private bool disposedValue;
-
+        readonly string newLineChar = System.Environment.NewLine;
+        string text = string.Empty;
+        FPSCalculator fpsCalculator;
+        UpdateScheduler updateScheduler;
         public GameFontAsset(int textureId, float depth=1, float scale= 4.0f)
         {
+            fpsCalculator = new FPSCalculator(10);
+            updateScheduler = new UpdateScheduler();
+            this.text = $"AAAAAAAAAA{newLineChar}BBBBBBBB{newLineChar}CCCCCCCC{newLineChar}DDDDDDD";
             this.QuadModelList = new List<IQuadModel>();
             this.TextureId = textureId;
             this.depth = depth;
@@ -29,7 +36,7 @@ namespace SandAndStonesEngine.Assets
 
         public void Init(int start, int end, QuadGrid quadGrid, string textureName)
         {
-            GameTextureData = new FontTextureData(TextureId, textureName);
+            GameTextureData = new FontTextureData(text, TextureId, textureName);
             GameTextureData.Init();
 
             ColorRandomizer colorRandomizer = new ColorRandomizer();
@@ -46,8 +53,21 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
+        private void SetText(string text)
+        {
+            this.text = text;
+        }
+
         public void Update(double delta)
         {
+            fpsCalculator.AddNextDelta(delta);
+            
+            if (updateScheduler.DoUpdate(delta))
+            {
+                int fps = (int)fpsCalculator.GetResult();
+                string text = $"FPS: {fps}";
+                GameTextureData.Update(text);
+            }
         }
 
         protected virtual void Dispose(bool disposing)

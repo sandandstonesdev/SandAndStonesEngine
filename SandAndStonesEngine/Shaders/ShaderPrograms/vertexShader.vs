@@ -27,10 +27,20 @@ layout(location = 1) out vec3 fsin_TexCoords;
 void main()
 {
     vec4 objectPosition = vec4(Position);
-    vec4 worldPosition = World * objectPosition;
-    vec4 viewPosition = View * worldPosition;
-    vec4 clipPosition =  Projection * viewPosition;
-    gl_Position = clipPosition;
-    fsin_Color = Color;
+    
+    if (TextureId < 3)
+    {
+        vec4 worldPosition = World * objectPosition;
+        vec4 viewPosition = View * worldPosition;
+        vec4 clipPosition =  Projection * viewPosition;
+        gl_Position = clipPosition;
+        fsin_Color = Color;
+    }
+    else
+    {
+        gl_Position = objectPosition;
+        fsin_Color = vec4(1, 1, 1, 1);
+    }
+    
     fsin_TexCoords = vec3(TexCoords, TextureId);
 }

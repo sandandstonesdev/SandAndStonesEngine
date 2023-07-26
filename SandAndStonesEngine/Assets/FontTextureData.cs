@@ -1,4 +1,5 @@
 ﻿using SandAndStonesEngine.GameTextures;
+using SharpGen.Runtime;
 using SkiaSharp;
 using System.Runtime.InteropServices;
 
@@ -13,23 +14,20 @@ namespace SandAndStonesEngine.Assets
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public string text = "ABCDEFGHIJKLMNOPRSTUVWXYZ0123456789";
         private bool disposedValue;
-
-        public FontTextureData(int id, string fileName)
+        public FontTextureData(string textToRender, int id, string fileName)
         {
             this.Id = id;
         }
 
         public void Init()
         {
-            var fontTextBytes = GetTextBitmap();
-            BytesCount = fontTextBytes.Length;
-            PinnedImageBytes = new AutoPinner(fontTextBytes);
+            Update("");
         }
 
-        private byte[] GetTextBitmap(float textSize = 10.0f, int bitmapSize = 256)
+        private byte[] GetTextBitmap(string text = "", int colNumber = 0, int rowNumber = 0, float textSize = 10.0f, int bitmapSize = 256)
         {
+            var textLinesToRender = text.Split(System.Environment.NewLine).ToList();
             byte[] bitmapBytes = null;
             var info = new SKImageInfo(bitmapSize, bitmapSize, SKColorType.Rgba8888);
             using (var surface = SKSurface.Create(info))
@@ -48,7 +46,14 @@ namespace SandAndStonesEngine.Assets
                     paint.Color = color;
                     paint.IsStroke = false;
 
-                    canvas.DrawText(text, 0, textSize * 2, paint);
+                    float xTextPos = textSize * colNumber;
+                    float yTextPos = textSize + textSize * rowNumber;
+                    int rowCount = rowNumber;
+                    foreach (var textLine in textLinesToRender)
+                    {
+                        yTextPos = textSize * ++rowCount;
+                        canvas.DrawText(textLine, xTextPos, yTextPos, paint);
+                    }
                     canvas.Flush();
                 }
 
@@ -61,6 +66,20 @@ namespace SandAndStonesEngine.Assets
             }
 
             return bitmapBytes;
+        }
+
+        public void Update(object param)
+        {
+            var text = param as string;
+            if (text == null)
+                return;
+            var fontTextBytes = GetTextBitmap(text, 0, 0);
+            BytesCount = fontTextBytes.Length;
+            if (PinnedImageBytes != null)
+            {
+                PinnedImageBytes.Dispose();
+            }
+            PinnedImageBytes = new AutoPinner(fontTextBytes);
         }
 
         protected virtual void Dispose(bool disposing)

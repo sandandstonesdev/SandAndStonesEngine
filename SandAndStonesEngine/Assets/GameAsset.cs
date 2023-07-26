@@ -46,7 +46,6 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(double delta)
         {
-
         }
 
         protected virtual void Dispose(bool disposing)

@@ -68,16 +68,19 @@ namespace SandAndStonesEngine
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            double previousElapsedTime = sw.Elapsed.Seconds;
+            long deltaElapsedTime = 0;
+            long newElapsedTime = sw.Elapsed.Milliseconds;
+            long previousElapsedTime = 0;
             
             while (SDLWindow.Exists)
             {
-                double newElapsedTime = sw.Elapsed.Seconds;
-                double deltaElapsedTime = newElapsedTime - previousElapsedTime;
+                newElapsedTime = Math.Max(0, sw.ElapsedMilliseconds);
+                deltaElapsedTime = newElapsedTime - previousElapsedTime;
+                previousElapsedTime = newElapsedTime;
+
                 var snapshot = SDLWindow.PumpEvents();
                 inputDevicesState.Update(snapshot);
 
-                previousElapsedTime = newElapsedTime;
                 gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
                 screenDivisionForQuads.Resize(SDLWindow.Width, SDLWindow.Height);
                 gameCamera.Update((float)deltaElapsedTime);

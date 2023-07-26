@@ -32,6 +32,11 @@ namespace SandAndStonesEngine.Assets
             PinnedImageBytes = new AutoPinner(imageBytes);
         }
 
+        public void Update(object param)
+        {
+
+        }
+
         private string GetTextureImageFilePath(string fileName)
         {
             const string textureImagesPath = "GameTextures\\Images";
