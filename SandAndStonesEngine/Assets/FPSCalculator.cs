@@ -4,6 +4,7 @@
     {
         int sampleCount;
         LinkedList<double> deltasBuffer = new LinkedList<double>();
+        UpdateFPSScheduler updateScheduler = new UpdateFPSScheduler();
         public FPSCalculator(int sampleCount)
         {
             this.sampleCount = sampleCount;
@@ -17,6 +18,11 @@
         {
             deltasBuffer.RemoveLast();
             deltasBuffer.AddFirst(delta);
+        }
+
+        public bool CanDoUpdate(double delta)
+        {
+            return updateScheduler.DoUpdate(delta);
         }
 
         public double GetResult()

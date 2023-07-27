@@ -1,30 +1,49 @@
-﻿using System;
+﻿using SandAndStonesEngine.Assets;
+using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GraphicAbstractions;
+using SandAndStonesEngine.MathModule;
+using SandAndStonesEngine.Shaders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SandAndStonesEngine.Assets;
-using SandAndStonesEngine.GameCamera;
-using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.MathModule;
-using SandAndStonesEngine.Shaders;
 using Veldrid;
-using Vulkan;
 
-namespace SandAndStonesEngine.GraphicAbstractions
+namespace SandAndStonesEngine.RenderingAbstractions
 {
-    internal class GamePipeline : IDisposable
+    public class StatusBarPipeline : IDisposable
     {
-        private GameAssets gameAssets;
+        private GameStatusBarAssets gameAssets;
         private Matrices matrices;
         private GameShaderSet shaderSet;
-        private bool disposedValue;
         public Pipeline Pipeline;
-        public GamePipeline(GameShaderSet shaderSet, GameAssets gameAssets, Matrices matrices)
+        private bool disposedValue;
+
+        public StatusBarPipeline(GameShaderSet shaderSet, GameStatusBarAssets gameAssets, Matrices matrices)
         {
             this.gameAssets = gameAssets;
             this.matrices = matrices;
-            this.shaderSet = shaderSet;    
+            this.shaderSet = shaderSet;
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+                Pipeline.Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        ~StatusBarPipeline()
+        {
+            Dispose(disposing: false);
         }
 
         public void Create()
@@ -49,30 +68,12 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { gameAssets.ResourceLayout, matrices.MatricesLayout, matrices.WorldLayout }, 
+                ResourceLayouts = new ResourceLayout[] { gameAssets.ResourceLayout, matrices.MatricesLayout, matrices.WorldLayout },
                 ShaderSet = shaderSet.ShaderSet,
 
                 Outputs = gameGraphicDevice.SwapChain.OutputDescription
             };
             Pipeline = factory.CreateGraphicsPipeline(pipelineDescription);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                }
-
-                Pipeline.Dispose();
-                disposedValue = true;
-            }
-        }
-
-        ~GamePipeline()
-        {
-            Dispose(disposing: false);
         }
 
         public void Dispose()

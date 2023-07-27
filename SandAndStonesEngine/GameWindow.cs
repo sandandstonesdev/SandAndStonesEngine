@@ -10,6 +10,8 @@ using System.Diagnostics;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.GameFactories;
 using System.Numerics;
+using SandAndStonesEngine.RenderingAbstractions;
+using SandAndStonesEngine.GameTextures;
 
 namespace SandAndStonesEngine
 {
@@ -19,14 +21,17 @@ namespace SandAndStonesEngine
         public static GameWindow Instance => lazyInstance.Value;
 
         private GameAssets assets;
+        private GameStatusBarAssets statusBarAssets;
         private GameShaderSet shaderSet;
         public Sdl2Window SDLWindow;
         private GameCommandList gameCommandList;
         private GamePipeline gamePipeline;
+        private StatusBarPipeline statusBarPipeline;
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
         private Matrices matrices;
         ScreenDivisionForQuads screenDivisionForQuads;
+        public GameTextureSurface gameTextureSurface;
         private bool disposedValue;
 
         private GameWindow()
@@ -53,14 +58,23 @@ namespace SandAndStonesEngine
             this.screenDivisionForQuads = screenDivisionForQuads;
             var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector2(0, 0), 0.002f);
             gameCamera = new Camera(inputDevicesState, matrices, transformatorData);
-            assets = new GameAssets(screenDivisionForQuads, matrices, inputDevicesState, transformatorData);
-            assets.Create();
 
+            gameTextureSurface = new GameTextureSurface(256, 256);
+            gameTextureSurface.Init();
+
+            assets = new GameAssets(gameTextureSurface, screenDivisionForQuads, matrices, inputDevicesState, transformatorData);
+            assets.Create();
             shaderSet = new GameShaderSet(assets, matrices);
             shaderSet.Create();
             gamePipeline = new GamePipeline(shaderSet, assets, matrices);
             gamePipeline.Create();
-            gameCommandList = new GameCommandList(assets, gamePipeline);
+
+            statusBarAssets = new GameStatusBarAssets(gameTextureSurface, screenDivisionForQuads, matrices, inputDevicesState, transformatorData);
+            statusBarAssets.Create();
+            statusBarPipeline = new StatusBarPipeline(shaderSet, statusBarAssets, matrices);
+            statusBarPipeline.Create();
+
+            gameCommandList = new GameCommandList(assets, statusBarAssets, gamePipeline, statusBarPipeline);
             gameCommandList.Init();
         }
 
@@ -68,10 +82,11 @@ namespace SandAndStonesEngine
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            long deltaElapsedTime = 0;
-            long newElapsedTime = sw.Elapsed.Milliseconds;
-            long previousElapsedTime = 0;
             
+            long newElapsedTime = Math.Max(0, sw.Elapsed.Milliseconds);
+            long previousElapsedTime = 0;
+            long deltaElapsedTime = newElapsedTime - previousElapsedTime;
+
             while (SDLWindow.Exists)
             {
                 newElapsedTime = Math.Max(0, sw.ElapsedMilliseconds);
@@ -86,6 +101,7 @@ namespace SandAndStonesEngine
                 gameCamera.Update((float)deltaElapsedTime);
 
                 assets.Update(deltaElapsedTime);
+                statusBarAssets.Update(deltaElapsedTime);
 
                 Draw((float)deltaElapsedTime);
             }
@@ -108,9 +124,12 @@ namespace SandAndStonesEngine
                 matrices.Dispose();
                 gameCamera.Dispose();
                 gamePipeline.Dispose();
+                statusBarPipeline.Dispose();
                 gameCommandList.Dispose();
                 var disposableAssets = assets as IDisposable;
                 disposableAssets?.Dispose();
+                var disposableStatusBarAssets = statusBarAssets as IDisposable;
+                disposableStatusBarAssets?.Dispose();
                 shaderSet?.Dispose();
 
                 disposedValue = true;

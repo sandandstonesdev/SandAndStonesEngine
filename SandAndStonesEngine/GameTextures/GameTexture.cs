@@ -28,11 +28,11 @@ namespace SandAndStonesEngine.GameTextures
         List<ITextureData> textureDataList;
         private bool disposedValue;
 
-        public GameTextureSurface(List<ITextureData> textureDataList, int width, int height)
+        public GameTextureSurface(int width, int height)
         {
             this.width = width;
             this.height = height;
-            this.textureDataList = textureDataList;
+            this.textureDataList = new List<ITextureData>();
         }
 
         public void Init()
@@ -44,7 +44,7 @@ namespace SandAndStonesEngine.GameTextures
                 Height = (uint)height,
                 Depth = 1,
                 MipLevels = 1,
-                ArrayLayers = (uint)textureDataList.Count,
+                ArrayLayers = (uint)6,//textureDataList.Count,
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
                 Type = TextureType.Texture2D,
@@ -69,17 +69,16 @@ namespace SandAndStonesEngine.GameTextures
 
         }
 
-        private void GetAllTextureData()
+        public void AddToTextureDataList(ITextureData textureData)
         {
-
+            textureDataList.Add(textureData);
         }
-
-        public void UpdateTextureArray(uint baseLayerId = 0)
+        public void UpdateTextureArray(uint baseLayerId = 0, uint lastLayer=3)
         {
-            uint layerIdx = baseLayerId;
-            foreach (var texData in textureDataList)
+            for (uint layerIdx = baseLayerId; layerIdx <= lastLayer; layerIdx++)
             {
-                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texData.PinnedImageBytes, (uint)texData.BytesCount, 0, 0, 0, (uint)texData.Width, (uint)texData.Height, 1, 0, layerIdx++);
+                var texData = textureDataList[(int)layerIdx];
+                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texData.PinnedImageBytes, (uint)texData.BytesCount, 0, 0, 0, (uint)texData.Width, (uint)texData.Height, 1, 0, layerIdx);
             }
         }
 

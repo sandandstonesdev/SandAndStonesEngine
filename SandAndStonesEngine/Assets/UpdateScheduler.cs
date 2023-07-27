@@ -1,10 +1,10 @@
 ﻿namespace SandAndStonesEngine.Assets
 {
-    public class UpdateScheduler
+    public class UpdateFPSScheduler
     {
         double totalDelta = 0;
         double maxTotalDelta = 0;
-        public UpdateScheduler(int maxTotalDelta = 1000)
+        public UpdateFPSScheduler(int maxTotalDelta = 1000)
         {
             this.maxTotalDelta = 1000;
         }

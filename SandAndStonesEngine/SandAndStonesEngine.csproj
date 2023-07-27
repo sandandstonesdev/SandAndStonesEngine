@@ -33,6 +33,12 @@
     <None Update="GameTextures\Images\char2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="GameTextures\Images\char3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GameTextures\Images\status.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="GameTextures\Images\wall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

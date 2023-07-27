@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameFontAsset : IGameAsset, IDisposable
+    public class GameFontAsset : ITextAsset, IGameAsset, IDisposable
     {
         public List<IQuadModel> QuadModelList { get; private set; }
         public ITextureData GameTextureData { get; private set; }
@@ -22,11 +22,9 @@ namespace SandAndStonesEngine.Assets
         readonly string newLineChar = System.Environment.NewLine;
         string text = string.Empty;
         FPSCalculator fpsCalculator;
-        UpdateScheduler updateScheduler;
         public GameFontAsset(int textureId, float depth=1, float scale= 4.0f)
         {
             fpsCalculator = new FPSCalculator(10);
-            updateScheduler = new UpdateScheduler();
             this.text = $"AAAAAAAAAA{newLineChar}BBBBBBBB{newLineChar}CCCCCCCC{newLineChar}DDDDDDD";
             this.QuadModelList = new List<IQuadModel>();
             this.TextureId = textureId;
@@ -34,15 +32,15 @@ namespace SandAndStonesEngine.Assets
             this.scale = scale;
         }
 
-        public void Init(int start, int end, QuadGrid quadGrid, string textureName)
+        public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
         {
             GameTextureData = new FontTextureData(text, TextureId, textureName);
             GameTextureData.Init();
 
             ColorRandomizer colorRandomizer = new ColorRandomizer();
-            for (int i = start; i < end; i++)
+            for (int i = startX; i < end; i++)
             {
-                for (int j = start; j < end; j++)
+                for (int j = startY; j < end; j++)
                 {
                     var positionInQuadCount = new Vector3(i, j, depth);
                     var color = colorRandomizer.GetColor();
@@ -53,21 +51,14 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
-        private void SetText(string text)
+        public void SetText(string text)
         {
             this.text = text;
         }
 
         public void Update(double delta)
         {
-            fpsCalculator.AddNextDelta(delta);
-            
-            if (updateScheduler.DoUpdate(delta))
-            {
-                int fps = (int)fpsCalculator.GetResult();
-                string text = $"FPS: {fps}";
-                GameTextureData.Update(text);
-            }
+            GameTextureData.Update(this.text);
         }
 
         protected virtual void Dispose(bool disposing)

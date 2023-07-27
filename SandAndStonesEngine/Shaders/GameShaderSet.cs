@@ -6,7 +6,7 @@ using Veldrid.SPIRV;
 
 namespace SandAndStonesEngine.Shaders
 {
-    internal class GameShaderSet : IDisposable
+    public class GameShaderSet : IDisposable
     {
         public Shader[] Shaders { get; private set; }
         private readonly GameAssets assets;

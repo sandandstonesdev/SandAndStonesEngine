@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SandAndStonesEngine.Buffers;
+﻿using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameCamera;
 using SandAndStonesEngine.GameFactories;
@@ -13,17 +6,25 @@ using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Veldrid;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameAssets : IDisposable
+    public class GameStatusBarAssets : IDisposable
     {
         private readonly GameGraphicDevice gameGraphicDevice;
         public RgbaFloat ClearColor;
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
         public ScreenDivisionForQuads screenDivisionForQuads;
+        private bool disposedValue;
+
         public DeviceBuffer DeviceVertexBuffer
         {
             get { return VertexBuffer.DeviceBuffer; }
@@ -49,6 +50,7 @@ namespace SandAndStonesEngine.Assets
         InputDevicesState inputDeviceState;
         InputMotionMapperBase inputMotionMapper;
         public Matrices Matrices;
+        public GameTextureSurface gameTextureSurface;
 
         public ResourceSet ResourceSet
         {
@@ -62,14 +64,10 @@ namespace SandAndStonesEngine.Assets
 
         public TransformatorData transformatorData;
         private WorldTransformator worldTransformator;
-        private bool disposedValue;
 
         public List<IGameAsset> gameAssets = new List<IGameAsset>();
-        GameTextureSurface gameTextureSurface;
-        FPSCalculator fpsCalculator;
-        public GameAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState, TransformatorData transformatorData)
+        public GameStatusBarAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState, TransformatorData transformatorData)
         {
-            this.fpsCalculator = new FPSCalculator(10);
             this.ClearColor = RgbaFloat.Black;
             this.transformatorData = transformatorData;
             this.screenDivisionForQuads = screenDivisionForQuads;
@@ -80,20 +78,12 @@ namespace SandAndStonesEngine.Assets
 
         private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
         {
-            int assetId = 0;
+            int assetId = 4;
             List<IGameAsset> assets = new List<IGameAsset>();
 
-            var BackgroundAsset = new GameAsset(assetId++, -1);
-            BackgroundAsset.Init(0, 0, 4, quadGrid, "wall.png");
-            assets.Add(BackgroundAsset);
-
-            var GameAsset1 = new GameAsset(assetId++, 1, 0.5f);
-            GameAsset1.Init(0, 0, 1, quadGrid, "char1.png");
+            var GameAsset1 = new GameAsset(assetId++, 0);
+            GameAsset1.Init(0, 0, 4, quadGrid, "status.png");
             assets.Add(GameAsset1);
-
-            var GameAsset2 = new GameAsset(assetId++, 0.5f);
-            GameAsset2.Init(1, 1, 2, quadGrid, "char2.png");
-            assets.Add(GameAsset2);
 
             var GameFontAsset1 = new GameFontAsset(assetId++, 1);
             GameFontAsset1.Init(0, 0, 1, quadGrid, "letters.png");
@@ -105,15 +95,15 @@ namespace SandAndStonesEngine.Assets
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
 
             inputMotionMapper = new QuadInputMotionMapper(inputDeviceState);
-
             QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
+
             worldTransformator = new WorldTransformator(Matrices, inputMotionMapper, transformatorData);
 
             gameAssets = InitGameAssets(quadGrid);
 
             List<IQuadModel> quadModels = new List<IQuadModel>();
             gameAssets.ForEach(a => quadModels.AddRange(a.QuadModelList));
-            
+
             VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
             VertexBuffer.Init();
 
@@ -125,26 +115,22 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(double delta)
         {
-            fpsCalculator.AddNextDelta(delta);
+            //worldTransformator.Update();
 
-            if (fpsCalculator.CanDoUpdate(delta))
+            var textAssets = gameAssets.Select(e =>
             {
-                int fps = (int)fpsCalculator.GetResult();
-                string text = $"FPS: {fps}";
-                var textAssets = gameAssets.Select(e =>
-                {
-                    var textAsset = e as ITextAsset;
-                    textAsset?.SetText(text);
-                    return e;
-                }).ToList();
-            }
+                var textAsset = e as ITextAsset;
+                string text = "Points: 100000";
+                textAsset?.SetText(text);
+                return e;
+            }).ToList();
 
-            worldTransformator.Update();
             gameAssets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();
             VertexBuffer.Update();
-            gameTextureSurface.UpdateTextureArray(0, 3);
+            gameTextureSurface.UpdateTextureArray(4, 5);
         }
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -153,12 +139,6 @@ namespace SandAndStonesEngine.Assets
                 if (disposing)
                 {
                 }
-
-                gameAssets.ForEach(e =>
-                {
-                    var disposableAssets = e as IDisposable;
-                    disposableAssets?.Dispose();
-                });
 
                 var disposableTextureSurface = gameTextureSurface as IDisposable;
                 disposableTextureSurface?.Dispose();
@@ -170,7 +150,7 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
-        ~GameAssets()
+        ~GameStatusBarAssets()
         {
             Dispose(disposing: false);
         }

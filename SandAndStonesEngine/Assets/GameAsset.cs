@@ -25,15 +25,15 @@ namespace SandAndStonesEngine.Assets
             this.scale = scale;
         }
 
-        public void Init(int start, int end, QuadGrid quadGrid, string textureName)
+        public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
         {
             GameTextureData = new GameTextureData(TextureId, textureName);
             GameTextureData.Init();
 
             ColorRandomizer colorRandomizer = new ColorRandomizer();
-            for (int i = start; i < end; i++)
+            for (int i = startX; i < end; i++)
             {
-                for (int j = start; j < end; j++)
+                for (int j = startY; j < end; j++)
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();
