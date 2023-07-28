@@ -10,6 +10,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameAsset : IGameAsset, IDisposable
     {
+        public int Id { get; }
         public List<IQuadModel> QuadModelList { get; private set; }
         public ITextureData GameTextureData { get; private set; }
         private float scale;
@@ -27,7 +28,7 @@ namespace SandAndStonesEngine.Assets
 
         public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
         {
-            GameTextureData = new GameTextureData(TextureId, textureName);
+            GameTextureData = new GameTextureData(Id, TextureId, textureName);
             GameTextureData.Init();
 
             ColorRandomizer colorRandomizer = new ColorRandomizer();

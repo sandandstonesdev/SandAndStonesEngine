@@ -7,7 +7,8 @@ namespace SandAndStonesEngine.Assets
 {
     public class FontTextureData : ITextureData, IDisposable
     {
-        public int Id;
+        public int AssetId { get; private set; }
+        public int Id { get; private set; }
         public AutoPinner PinnedImageBytes { get; private set; }
         public int BytesCount { get; private set; }
 
@@ -15,9 +16,10 @@ namespace SandAndStonesEngine.Assets
         public int Height { get; private set; }
 
         private bool disposedValue;
-        public FontTextureData(string textToRender, int id, string fileName)
+        public FontTextureData(int assetId, int id)
         {
             this.Id = id;
+            this.AssetId = assetId;
         }
 
         public void Init()
@@ -41,7 +43,7 @@ namespace SandAndStonesEngine.Assets
                 {
                     paint.TextSize = textSize;
                     paint.IsAntialias = true;
-                    SKColor.TryParse("FFFFFF", out SKColor color);
+                    SKColor.TryParse("FFFF00", out SKColor color);
 
                     paint.Color = color;
                     paint.IsStroke = false;

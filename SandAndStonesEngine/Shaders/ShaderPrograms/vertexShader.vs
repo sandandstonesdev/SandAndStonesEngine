@@ -39,7 +39,7 @@ void main()
     else
     {
         gl_Position = objectPosition;
-        fsin_Color = vec4(1, 1, 1, 1);
+        fsin_Color = vec4(0.5, 0.5, 0.5, 0.5);
     }
     
     fsin_TexCoords = vec3(TexCoords, TextureId);

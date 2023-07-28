@@ -9,7 +9,8 @@ namespace SandAndStonesEngine.Assets
 
     public class GameTextureData : ITextureData, IDisposable
     {
-        public int Id;
+        public int AssetId { get; private set; }
+        public int Id { get; private set; }
         string fileName;
         private bool disposedValue;
 
@@ -18,9 +19,10 @@ namespace SandAndStonesEngine.Assets
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public GameTextureData(int id, string fileName)
+        public GameTextureData(int id, int assetId, string fileName)
         {
             this.Id = id;
+            this.AssetId = assetId;
             this.fileName = fileName;
         }
 

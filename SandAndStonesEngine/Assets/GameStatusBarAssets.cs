@@ -18,7 +18,6 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameStatusBarAssets : IDisposable
     {
-        private readonly GameGraphicDevice gameGraphicDevice;
         public RgbaFloat ClearColor;
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
@@ -47,9 +46,6 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        InputDevicesState inputDeviceState;
-        InputMotionMapperBase inputMotionMapper;
-        public Matrices Matrices;
         public GameTextureSurface gameTextureSurface;
 
         public ResourceSet ResourceSet
@@ -62,17 +58,11 @@ namespace SandAndStonesEngine.Assets
             get { return gameTextureSurface.TextureLayout; }
         }
 
-        public TransformatorData transformatorData;
-        private WorldTransformator worldTransformator;
-
         public List<IGameAsset> gameAssets = new List<IGameAsset>();
-        public GameStatusBarAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState, TransformatorData transformatorData)
+        public GameStatusBarAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads)
         {
             this.ClearColor = RgbaFloat.Black;
-            this.transformatorData = transformatorData;
             this.screenDivisionForQuads = screenDivisionForQuads;
-            this.Matrices = matrices;
-            this.inputDeviceState = inputDeviceState;
             this.gameTextureSurface = gameTextureSurface;
         }
 
@@ -93,12 +83,7 @@ namespace SandAndStonesEngine.Assets
         public void Create()
         {
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-
-            inputMotionMapper = new QuadInputMotionMapper(inputDeviceState);
             QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
-
-            worldTransformator = new WorldTransformator(Matrices, inputMotionMapper, transformatorData);
-
             gameAssets = InitGameAssets(quadGrid);
 
             List<IQuadModel> quadModels = new List<IQuadModel>();
@@ -115,8 +100,6 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(double delta)
         {
-            //worldTransformator.Update();
-
             var textAssets = gameAssets.Select(e =>
             {
                 var textAsset = e as ITextAsset;

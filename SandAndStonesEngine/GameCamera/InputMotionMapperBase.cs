@@ -40,6 +40,6 @@ namespace SandAndStonesEngine.GameCamera
         }
         abstract public Vector3 GetMotionDir();
         abstract public Vector3 GetRotatedMotionDir(float yaw, float pitch);
-        abstract public Vector2 GetYawPitchVector();
+        abstract public Vector3 GetYawPitchVector();
     }
 }

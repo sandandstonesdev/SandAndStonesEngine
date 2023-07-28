@@ -7,29 +7,25 @@ namespace SandAndStonesEngine.MathModule
     {
         InputMotionMapperBase inputMotionMapper;
         Matrices matrices;
-        TransformatorData transformatorData;
-        public ViewTransformator(Matrices matrices, InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
+        public TransformatorData TransformatorData;
+        public ViewTransformator(InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {
-            this.matrices = matrices;
             this.inputMotionMapper = inputMotionMapper;
-            this.transformatorData = transformatorData;
-            matrices.UpdateView(transformatorData.Position, transformatorData.Target, transformatorData.Up);
+            this.TransformatorData = transformatorData;
         }
 
         public void Update()
         {
-            var motionDir = inputMotionMapper.GetRotatedMotionDir(transformatorData.Rotation.X, transformatorData.Rotation.Y);
-            if (motionDir != Vector3.Zero)
+            Vector3 yawPitchVector = inputMotionMapper.GetYawPitchVector();
+            if (yawPitchVector != Vector3.Zero)
             {
-                transformatorData.Position += motionDir * transformatorData.MoveSpeed;
-                matrices.UpdateView(transformatorData.Position, transformatorData.Target, transformatorData.Up);
+                TransformatorData.Rotation += yawPitchVector;
             }
 
-            Vector2 yawPitchVector = inputMotionMapper.GetYawPitchVector();
-            if (yawPitchVector != Vector2.Zero)
+            var motionDir = inputMotionMapper.GetRotatedMotionDir(TransformatorData.Rotation.X, TransformatorData.Rotation.Y);
+            if (motionDir != Vector3.Zero)
             {
-                transformatorData.Rotation += yawPitchVector;
-                matrices.UpdateView(transformatorData.Position, transformatorData.Target, transformatorData.Up);
+                TransformatorData.Position += motionDir * TransformatorData.MoveSpeed;
             }
         }
     }

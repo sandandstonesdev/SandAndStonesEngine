@@ -13,6 +13,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameFontAsset : ITextAsset, IGameAsset, IDisposable
     {
+        public int Id { get; }
         public List<IQuadModel> QuadModelList { get; private set; }
         public ITextureData GameTextureData { get; private set; }
         private float scale;
@@ -24,8 +25,7 @@ namespace SandAndStonesEngine.Assets
         FPSCalculator fpsCalculator;
         public GameFontAsset(int textureId, float depth=1, float scale= 4.0f)
         {
-            fpsCalculator = new FPSCalculator(10);
-            this.text = $"AAAAAAAAAA{newLineChar}BBBBBBBB{newLineChar}CCCCCCCC{newLineChar}DDDDDDD";
+            this.fpsCalculator = new FPSCalculator(10);
             this.QuadModelList = new List<IQuadModel>();
             this.TextureId = textureId;
             this.depth = depth;
@@ -34,7 +34,7 @@ namespace SandAndStonesEngine.Assets
 
         public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
         {
-            GameTextureData = new FontTextureData(text, TextureId, textureName);
+            GameTextureData = new FontTextureData(Id, TextureId);
             GameTextureData.Init();
 
             ColorRandomizer colorRandomizer = new ColorRandomizer();

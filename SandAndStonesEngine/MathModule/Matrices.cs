@@ -25,12 +25,16 @@ namespace SandAndStonesEngine.MathModule
         public ResourceSet MatricesSet;
         public ResourceSet WorldSet;
         private bool disposedValue;
-
-        public Matrices()
+        WorldTransformator worldTransformator;
+        ViewTransformator viewTransformator;
+        public Matrices(WorldTransformator worldTransformator, ViewTransformator viewTransformator)
         {
+            this.worldTransformator = worldTransformator;
+            this.viewTransformator = viewTransformator;
+            UpdateViewWorld();
         }
 
-        public void Create() // Prepare shader binding
+        public void Init() // Prepare shader binding
         {
             var factory = Factory.Instance.GetResourceFactory();
             ProjectionBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
@@ -55,28 +59,36 @@ namespace SandAndStonesEngine.MathModule
                 WorldBuffer));
         }
 
-        public void UpdateProjection(float fov, float aspectRatio, float near, float far)
+        public void UpdateView()
         {
-            ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(fov, aspectRatio, near, far);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
+            var viewTransformatorData = viewTransformator.TransformatorData;
+            ViewMatrix = Matrix4x4.CreateLookAt(viewTransformatorData.Position, viewTransformatorData.Target, viewTransformatorData.Up);
+            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
+        }
+        public void UpdateWorld()
+        {
+            var worldTransformatorData = worldTransformator.TransformatorData;
+            WorldMatrix = Matrix4x4.CreateWorld(-worldTransformatorData.Position, worldTransformatorData.Forward, worldTransformatorData.Up);
+            DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
         }
 
+        public void UpdateViewWorld()
+        {
+            UpdateWorld();
+            UpdateView();
+        }
         public void UpdateOrtographic(float width, float height, float near, float far)
         {
+            float w = (width / height) * 2.0f;
+            float h = (height / width) * 2.0f;
             ProjectionMatrix = Matrix4x4.CreateOrthographic(2, 2, near, far);
             DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix (Orthographic)");
         }
 
-        public void UpdateWorld(Vector3 position, Vector3 forward, Vector3 up)
+        public void UpdateProjection(float fov, float aspectRatio, float near, float far)
         {
-            WorldMatrix = Matrix4x4.CreateWorld(-position, forward, up);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
-        }
-
-        public void UpdateView(Vector3 position, Vector3 cameraTarget, Vector3 upVector)
-        {
-            ViewMatrix = Matrix4x4.CreateLookAt(position, cameraTarget, upVector);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
+            ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(fov, aspectRatio, near, far);
+            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
         }
 
         protected virtual void Dispose(bool disposing)
@@ -90,6 +102,10 @@ namespace SandAndStonesEngine.MathModule
                 WorldBuffer.Dispose();
                 ViewBuffer.Dispose();
                 ProjectionBuffer.Dispose();
+                MatricesLayout.Dispose();
+                WorldLayout.Dispose();
+                MatricesSet.Dispose();
+                WorldSet.Dispose();
                 disposedValue = true;
             }
         }

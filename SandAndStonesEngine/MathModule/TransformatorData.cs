@@ -8,12 +8,14 @@ namespace SandAndStonesEngine.MathModule
         public Vector3 Forward;
         public Vector3 Up;
         public float MoveSpeed;
-        public Vector2 Rotation;
+        public Vector3 Rotation;
         public Vector3 LookDir
         {
             get
             {
-                Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, 0f);
+                Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z);
+                //Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(0f, 0f, 0f);
+
                 Vector3 lookDir = Vector3.Transform(Forward, lookRotation);
                 return lookDir;
             }
@@ -24,7 +26,7 @@ namespace SandAndStonesEngine.MathModule
         }
 
         private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f);
-        public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector2 rotation, float moveSpeed)
+        public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector3 rotation, float moveSpeed)
         {
             //position = relativePosition + position;
             SetDirections(position, forward, up);
@@ -41,7 +43,7 @@ namespace SandAndStonesEngine.MathModule
         {
             MoveSpeed = moveSpeed;
         }
-        public void SetRotation(Vector2 rotation) // yaw/pitch
+        public void SetRotation(Vector3 rotation) // yaw/pitch
         {
             Rotation = rotation;
         }

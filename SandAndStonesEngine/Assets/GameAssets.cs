@@ -46,36 +46,32 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        InputDevicesState inputDeviceState;
-        InputMotionMapperBase inputMotionMapper;
-        public Matrices Matrices;
-
         public ResourceSet ResourceSet
         {
-            get { return gameTextureSurface.ResourceSet; }
+            get { return GameTextureSurface.ResourceSet; }
         }
 
         public ResourceLayout ResourceLayout
         {
-            get { return gameTextureSurface.TextureLayout; }
+            get { return GameTextureSurface.TextureLayout; }
         }
 
-        public TransformatorData transformatorData;
-        private WorldTransformator worldTransformator;
         private bool disposedValue;
 
         public List<IGameAsset> gameAssets = new List<IGameAsset>();
         GameTextureSurface gameTextureSurface;
+        GameTextureSurface GameTextureSurface
+        {
+            get { return gameTextureSurface; }
+            set { gameTextureSurface = value; }
+        }
         FPSCalculator fpsCalculator;
-        public GameAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads, Matrices matrices, InputDevicesState inputDeviceState, TransformatorData transformatorData)
+        public GameAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads)
         {
             this.fpsCalculator = new FPSCalculator(10);
             this.ClearColor = RgbaFloat.Black;
-            this.transformatorData = transformatorData;
             this.screenDivisionForQuads = screenDivisionForQuads;
-            this.Matrices = matrices;
-            this.inputDeviceState = inputDeviceState;
-            this.gameTextureSurface = gameTextureSurface;
+            this.GameTextureSurface = gameTextureSurface;
         }
 
         private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
@@ -103,12 +99,7 @@ namespace SandAndStonesEngine.Assets
         public void Create()
         {
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-
-            inputMotionMapper = new QuadInputMotionMapper(inputDeviceState);
-
             QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
-            worldTransformator = new WorldTransformator(Matrices, inputMotionMapper, transformatorData);
-
             gameAssets = InitGameAssets(quadGrid);
 
             List<IQuadModel> quadModels = new List<IQuadModel>();
@@ -120,7 +111,7 @@ namespace SandAndStonesEngine.Assets
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
             IndexBuffer.Create();
 
-            gameAssets.ForEach(a => gameTextureSurface.AddToTextureDataList(a.GameTextureData));
+            gameAssets.ForEach(a => GameTextureSurface.AddToTextureDataList(a.GameTextureData));
         }
 
         public void Update(double delta)
@@ -139,11 +130,10 @@ namespace SandAndStonesEngine.Assets
                 }).ToList();
             }
 
-            worldTransformator.Update();
             gameAssets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();
             VertexBuffer.Update();
-            gameTextureSurface.UpdateTextureArray(0, 3);
+            GameTextureSurface.UpdateTextureArray(0, 3);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -160,7 +150,7 @@ namespace SandAndStonesEngine.Assets
                     disposableAssets?.Dispose();
                 });
 
-                var disposableTextureSurface = gameTextureSurface as IDisposable;
+                var disposableTextureSurface = GameTextureSurface as IDisposable;
                 disposableTextureSurface?.Dispose();
                 var disposableVertexBuffer = VertexBuffer as IDisposable;
                 disposableVertexBuffer?.Dispose();

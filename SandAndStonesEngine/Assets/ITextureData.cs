@@ -4,6 +4,8 @@ namespace SandAndStonesEngine.Assets
 {
     public interface ITextureData
     {
+        public int AssetId { get; }
+        public int Id { get; }
         AutoPinner PinnedImageBytes { get; }
         int BytesCount { get; }
 

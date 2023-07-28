@@ -6,26 +6,28 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Veldrid;
+using Veldrid.Sdl2;
 using Vortice.Direct3D11;
 
 namespace SandAndStonesEngine.GameInput
 {
     public class InputDevicesState
     {
+        Vector2 ClientRegionPos;
+
         private HashSet<Key> prevKeys = new HashSet<Key>();
         private HashSet<Key> currentKeys = new HashSet<Key>();
 
         private HashSet<MouseButton> prevMouseKeys = new HashSet<MouseButton>();
         private HashSet<MouseButton> currentMouseKeys = new HashSet<MouseButton>();
 
-
         private Vector2 lastMousePosition;
         public Vector2 MousePosition;
         public Vector2 MouseDelta;
 
-        public InputDevicesState()
+        public InputDevicesState(Vector2 ClientRegionPos)
         {
-
+            this.ClientRegionPos = ClientRegionPos;
         }
 
         public void Update(InputSnapshot snapshot)
@@ -51,14 +53,27 @@ namespace SandAndStonesEngine.GameInput
         {
             bool mouseButtonAdded = false;
             currentMouseKeys.Clear();
-
             lastMousePosition = MousePosition;
             MousePosition = snapshot.MousePosition;
+            if (MousePosition.Y < ClientRegionPos.Y)
+            {
+                MouseUp(MouseButton.Left);
+                MouseUp(MouseButton.Right);
+                return mouseButtonAdded;
+            }
+
             MouseDelta = MousePosition - lastMousePosition;
+            if (MouseDelta != Vector2.Zero)
+            {
+                
+            }
             var mouseEvents = snapshot.MouseEvents;
             foreach (var mouseEvent in mouseEvents)
             {
-                mouseButtonAdded = mouseEvent.Down ? MouseDown(mouseEvent.MouseButton) : MouseUp(mouseEvent.MouseButton);
+                if (mouseEvent.Down)
+                    mouseButtonAdded = MouseDown(mouseEvent.MouseButton);
+                else
+                    MouseUp(mouseEvent.MouseButton);
             }
 
             return mouseButtonAdded;

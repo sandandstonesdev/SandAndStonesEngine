@@ -16,12 +16,21 @@ namespace SandAndStonesEngine.GameTextures
         public TextureView TextureView;
         private Texture Texture;
 
-        public ResourceLayout TextureLayout;
-        public ResourceSet ResourceSet;
-        int bitDepth = 24;
+        private ResourceLayout textureLayout;
+        public ResourceLayout TextureLayout 
+        { 
+            get { return textureLayout; }
+            private set { textureLayout = value; }
+        }
+        private ResourceSet resourceSet;
+        public ResourceSet ResourceSet
+        { 
+            get { return resourceSet; }
+            private set { resourceSet = value; }
+        }
+        
         int width;
         int height;
-        string fileName;
 
         GameGraphicDevice gameGraphicDevice;
 
@@ -34,7 +43,6 @@ namespace SandAndStonesEngine.GameTextures
             this.height = height;
             this.textureDataList = new List<ITextureData>();
         }
-
         public void Init()
         {
             gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
@@ -44,7 +52,7 @@ namespace SandAndStonesEngine.GameTextures
                 Height = (uint)height,
                 Depth = 1,
                 MipLevels = 1,
-                ArrayLayers = (uint)6,//textureDataList.Count,
+                ArrayLayers = 6, // (uint)textureDataList.Count,
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
                 Type = TextureType.Texture2D,

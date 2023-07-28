@@ -45,9 +45,9 @@ namespace SandAndStonesEngine.GameCamera
             return rotatedMotionDir;
         }
 
-        public override Vector2 GetYawPitchVector()
+        public override Vector3 GetYawPitchVector()
         {
-            Vector2 mouseRotationResult = new Vector2();
+            Vector3 mouseRotationResult = Vector3.Zero;
             foreach (var mouseButtonToCheck in mouseButtonPressedMap)
             {
                 mouseButtonPressedMap[mouseButtonToCheck.Key] = inputDevicesState.GetMouseButton(mouseButtonToCheck.Key);

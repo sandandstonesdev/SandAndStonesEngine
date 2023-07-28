@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.RenderingAbstractions;
 using Veldrid;
 using Vulkan;
@@ -25,8 +26,10 @@ namespace SandAndStonesEngine.GraphicAbstractions
         private readonly GamePipeline gamePipeline;
         private readonly StatusBarPipeline statusBarPipeline;
         private readonly GameStatusBarAssets statusBarAssets;
-        public GameCommandList(GameAssets assets, GameStatusBarAssets statusBarAssets, GamePipeline gamePipeline, StatusBarPipeline statusBarPipeline)
+        private readonly Matrices matrices;
+        public GameCommandList(Matrices matrices, GameAssets assets, GameStatusBarAssets statusBarAssets, GamePipeline gamePipeline, StatusBarPipeline statusBarPipeline)
         {
+            this.matrices = matrices;
             this.assets = assets;
             this.statusBarAssets = statusBarAssets;
             this.gamePipeline = gamePipeline;
@@ -45,9 +48,9 @@ namespace SandAndStonesEngine.GraphicAbstractions
 
             CommandList.Begin();
 
-            CommandList.UpdateBuffer(assets.Matrices.ProjectionBuffer, 0, assets.Matrices.ProjectionMatrix);
-            CommandList.UpdateBuffer(assets.Matrices.ViewBuffer, 0, assets.Matrices.ViewMatrix);
-            CommandList.UpdateBuffer(assets.Matrices.WorldBuffer, 0, assets.Matrices.WorldMatrix);
+            CommandList.UpdateBuffer(matrices.ProjectionBuffer, 0, matrices.ProjectionMatrix);
+            CommandList.UpdateBuffer(matrices.ViewBuffer, 0, matrices.ViewMatrix);
+            CommandList.UpdateBuffer(matrices.WorldBuffer, 0, matrices.WorldMatrix);
 
             CommandList.SetFramebuffer(gameGraphicDevice.SwapChain);
 
@@ -61,8 +64,8 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
 
             CommandList.SetGraphicsResourceSet(0, assets.ResourceSet);
-            CommandList.SetGraphicsResourceSet(1, assets.Matrices.MatricesSet);
-            CommandList.SetGraphicsResourceSet(2, assets.Matrices.WorldSet);
+            CommandList.SetGraphicsResourceSet(1, matrices.MatricesSet);
+            CommandList.SetGraphicsResourceSet(2, matrices.WorldSet);
             CommandList.DrawIndexed(
                 indexCount: assets.IndicesCount,
                 instanceCount: 1,
@@ -78,8 +81,8 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.SetIndexBuffer(statusBarAssets.DeviceIndexBuffer, statusBarAssets.IndexBufferFormat);
 
             CommandList.SetGraphicsResourceSet(0, statusBarAssets.ResourceSet);
-            CommandList.SetGraphicsResourceSet(1, statusBarAssets.Matrices.MatricesSet);
-            CommandList.SetGraphicsResourceSet(2, statusBarAssets.Matrices.WorldSet);
+            CommandList.SetGraphicsResourceSet(1, matrices.MatricesSet);
+            CommandList.SetGraphicsResourceSet(2, matrices.WorldSet);
             CommandList.DrawIndexed(
                 indexCount: statusBarAssets.IndicesCount,
                 instanceCount: 1,

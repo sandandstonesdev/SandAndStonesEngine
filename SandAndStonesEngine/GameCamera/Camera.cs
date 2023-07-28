@@ -32,21 +32,14 @@ namespace SandAndStonesEngine.GameCamera
         int windowWidth;
         int windowHeight;
 
-        CameraInputMotionMapper inputMotionMapper;
-        ViewTransformator viewTransformator;
-
-        public Camera(InputDevicesState inputDeviceState, Matrices matrices, TransformatorData transformatorData)
+        public Camera(Matrices matrices)
         {
             this.matrices = matrices;
-            this.inputDeviceState = inputDeviceState;
-            this.inputMotionMapper = new CameraInputMotionMapper(inputDeviceState);
-            this.viewTransformator = new ViewTransformator(matrices, inputMotionMapper, transformatorData);
             
             windowWidth = GameWindow.Instance.SDLWindow.Width;
             windowHeight = GameWindow.Instance.SDLWindow.Height;
             aspectRatio = windowWidth / windowHeight;
             fov = (float)(fovInDegrees * (Math.PI /180.0f));
-            //matrices.UpdateProjection(fov, aspectRatio, near, far);
             matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);
         }
 
@@ -61,22 +54,21 @@ namespace SandAndStonesEngine.GameCamera
             
             if (windowHeight != height)
             {
-                changed = true;
                 windowHeight = height;
+                changed = true;
             }
             
             if (changed)
             {
                 var graphicDevice = Factory.Instance.GetGameGraphicDevice();
-                graphicDevice.ResizeWindow((uint)windowWidth, (uint)windowHeight);
                 matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);
-                //matrices.UpdateProjection(fov, aspectRatio, near, far);
+                graphicDevice.ResizeWindow((uint)windowWidth, (uint)windowHeight);
             }
         }
 
-        public void Update(float deltaSeconds)
+        public void Update(long deltaSeconds)
         {
-            viewTransformator.Update();
+            matrices.UpdateView();
         }
 
         public void Dispose()
