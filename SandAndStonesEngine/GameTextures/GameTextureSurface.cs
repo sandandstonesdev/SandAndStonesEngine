@@ -36,15 +36,26 @@ namespace SandAndStonesEngine.GameTextures
 
         List<ITextureData> textureDataList;
         private bool disposedValue;
+        List<IGameAsset> gameAssets;
 
-        public GameTextureSurface(int width, int height)
+        public GameTextureSurface(List<IGameAsset> gameAssets, int width, int height)
         {
+            this.gameAssets = gameAssets;
             this.width = width;
             this.height = height;
             this.textureDataList = new List<ITextureData>();
         }
         public void Init()
         {
+            foreach(var asset in gameAssets)
+            {
+                var textureData = asset.GameTextureData;
+                if (textureDataList.All(e => e.Id != textureData.Id))
+                {
+                    textureDataList.Add(asset.GameTextureData);
+                }
+            }
+
             gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
             TextureDescription texDesc = new TextureDescription()
             {
@@ -52,7 +63,7 @@ namespace SandAndStonesEngine.GameTextures
                 Height = (uint)height,
                 Depth = 1,
                 MipLevels = 1,
-                ArrayLayers = 6, // (uint)textureDataList.Count,
+                ArrayLayers = (uint)textureDataList.Count,
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
                 Type = TextureType.Texture2D,
@@ -76,17 +87,11 @@ namespace SandAndStonesEngine.GameTextures
 
 
         }
-
-        public void AddToTextureDataList(ITextureData textureData)
+        public void Update()
         {
-            textureDataList.Add(textureData);
-        }
-        public void UpdateTextureArray(uint baseLayerId = 0, uint lastLayer=3)
-        {
-            for (uint layerIdx = baseLayerId; layerIdx <= lastLayer; layerIdx++)
+            foreach (var texture in textureDataList)
             {
-                var texData = textureDataList[(int)layerIdx];
-                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texData.PinnedImageBytes, (uint)texData.BytesCount, 0, 0, 0, (uint)texData.Width, (uint)texData.Height, 1, 0, layerIdx);
+                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texture.PinnedImageBytes, (uint)texture.BytesCount, 0, 0, 0, (uint)texture.Width, (uint)texture.Height, 1, 0, (uint)texture.Id);
             }
         }
 

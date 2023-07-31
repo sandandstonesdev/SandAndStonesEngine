@@ -30,6 +30,7 @@ namespace SandAndStonesEngine.Assets
             this.TextureId = textureId;
             this.depth = depth;
             this.scale = scale;
+            this.Id = IdManager.GetAssetId();
         }
 
         public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)

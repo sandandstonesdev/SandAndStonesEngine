@@ -1,5 +1,6 @@
 ﻿using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.Shaders;
@@ -14,15 +15,15 @@ namespace SandAndStonesEngine.RenderingAbstractions
 {
     public class StatusBarPipeline : IDisposable
     {
-        private GameStatusBarAssets gameAssets;
         private Matrices matrices;
         private GameShaderSet shaderSet;
+        private GameTextureSurface gameTextureSurface;
         public Pipeline Pipeline;
         private bool disposedValue;
 
-        public StatusBarPipeline(GameShaderSet shaderSet, GameStatusBarAssets gameAssets, Matrices matrices)
+        public StatusBarPipeline(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
         {
-            this.gameAssets = gameAssets;
+            this.gameTextureSurface = gameTextureSurface;
             this.matrices = matrices;
             this.shaderSet = shaderSet;
         }
@@ -68,7 +69,7 @@ namespace SandAndStonesEngine.RenderingAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { gameAssets.ResourceLayout, matrices.MatricesLayout, matrices.WorldLayout },
+                ResourceLayouts = new ResourceLayout[] { gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout },
                 ShaderSet = shaderSet.ShaderSet,
 
                 Outputs = gameGraphicDevice.SwapChain.OutputDescription

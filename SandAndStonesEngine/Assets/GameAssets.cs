@@ -46,32 +46,15 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        public ResourceSet ResourceSet
-        {
-            get { return GameTextureSurface.ResourceSet; }
-        }
-
-        public ResourceLayout ResourceLayout
-        {
-            get { return GameTextureSurface.TextureLayout; }
-        }
-
         private bool disposedValue;
 
         public List<IGameAsset> gameAssets = new List<IGameAsset>();
-        GameTextureSurface gameTextureSurface;
-        GameTextureSurface GameTextureSurface
-        {
-            get { return gameTextureSurface; }
-            set { gameTextureSurface = value; }
-        }
         FPSCalculator fpsCalculator;
-        public GameAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads)
+        public GameAssets(ScreenDivisionForQuads screenDivisionForQuads)
         {
             this.fpsCalculator = new FPSCalculator(10);
             this.ClearColor = RgbaFloat.Black;
             this.screenDivisionForQuads = screenDivisionForQuads;
-            this.GameTextureSurface = gameTextureSurface;
         }
 
         private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
@@ -110,8 +93,6 @@ namespace SandAndStonesEngine.Assets
 
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
             IndexBuffer.Create();
-
-            gameAssets.ForEach(a => GameTextureSurface.AddToTextureDataList(a.GameTextureData));
         }
 
         public void Update(double delta)
@@ -133,7 +114,7 @@ namespace SandAndStonesEngine.Assets
             gameAssets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();
             VertexBuffer.Update();
-            GameTextureSurface.UpdateTextureArray(0, 3);
+            
         }
 
         protected virtual void Dispose(bool disposing)
@@ -150,8 +131,6 @@ namespace SandAndStonesEngine.Assets
                     disposableAssets?.Dispose();
                 });
 
-                var disposableTextureSurface = GameTextureSurface as IDisposable;
-                disposableTextureSurface?.Dispose();
                 var disposableVertexBuffer = VertexBuffer as IDisposable;
                 disposableVertexBuffer?.Dispose();
                 var disposableIndexBuffer = IndexBuffer as IDisposable;

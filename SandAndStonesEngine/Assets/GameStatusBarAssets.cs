@@ -46,24 +46,11 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        public GameTextureSurface gameTextureSurface;
-
-        public ResourceSet ResourceSet
-        {
-            get { return gameTextureSurface.ResourceSet; }
-        }
-
-        public ResourceLayout ResourceLayout
-        {
-            get { return gameTextureSurface.TextureLayout; }
-        }
-
         public List<IGameAsset> gameAssets = new List<IGameAsset>();
-        public GameStatusBarAssets(GameTextureSurface gameTextureSurface, ScreenDivisionForQuads screenDivisionForQuads)
+        public GameStatusBarAssets(ScreenDivisionForQuads screenDivisionForQuads)
         {
             this.ClearColor = RgbaFloat.Black;
             this.screenDivisionForQuads = screenDivisionForQuads;
-            this.gameTextureSurface = gameTextureSurface;
         }
 
         private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
@@ -94,8 +81,6 @@ namespace SandAndStonesEngine.Assets
 
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
             IndexBuffer.Create();
-
-            gameAssets.ForEach(a => gameTextureSurface.AddToTextureDataList(a.GameTextureData));
         }
 
         public void Update(double delta)
@@ -111,7 +96,6 @@ namespace SandAndStonesEngine.Assets
             gameAssets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();
             VertexBuffer.Update();
-            gameTextureSurface.UpdateTextureArray(4, 5);
         }
 
 
@@ -123,8 +107,6 @@ namespace SandAndStonesEngine.Assets
                 {
                 }
 
-                var disposableTextureSurface = gameTextureSurface as IDisposable;
-                disposableTextureSurface?.Dispose();
                 var disposableVertexBuffer = VertexBuffer as IDisposable;
                 disposableVertexBuffer?.Dispose();
                 var disposableIndexBuffer = IndexBuffer as IDisposable;

@@ -10,7 +10,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameAsset : IGameAsset, IDisposable
     {
-        public int Id { get; }
+        public int Id { get; private set; }
         public List<IQuadModel> QuadModelList { get; private set; }
         public ITextureData GameTextureData { get; private set; }
         private float scale;
@@ -24,6 +24,7 @@ namespace SandAndStonesEngine.Assets
             this.TextureId = textureId;
             this.Depth = depth;
             this.scale = scale;
+            this.Id = IdManager.GetAssetId();
         }
 
         public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)

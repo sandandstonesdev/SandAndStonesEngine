@@ -71,22 +71,27 @@ namespace SandAndStonesEngine
             this.screenDivisionForQuads = screenDivisionForQuads;
             gameCamera = new Camera(matrices);
 
-            gameTextureSurface = new GameTextureSurface(256, 256);
-            gameTextureSurface.Init();
-
-            assets = new GameAssets(gameTextureSurface, screenDivisionForQuads);
+            
+            assets = new GameAssets(screenDivisionForQuads);
             assets.Create();
+            statusBarAssets = new GameStatusBarAssets(screenDivisionForQuads);
+            statusBarAssets.Create();
+
             shaderSet = new GameShaderSet(assets, matrices);
             shaderSet.Create();
-            gamePipeline = new GamePipeline(shaderSet, assets, matrices);
-            gamePipeline.Create();
 
-            statusBarAssets = new GameStatusBarAssets(gameTextureSurface, screenDivisionForQuads);
-            statusBarAssets.Create();
-            statusBarPipeline = new StatusBarPipeline(shaderSet, statusBarAssets, matrices);
+            List<IGameAsset> gameAssets = new List<IGameAsset>();
+            gameAssets.AddRange(assets.gameAssets);
+            gameAssets.AddRange(statusBarAssets.gameAssets);
+            gameTextureSurface = new GameTextureSurface(gameAssets, 256, 256);
+            gameTextureSurface.Init();
+
+            gamePipeline = new GamePipeline(shaderSet, gameTextureSurface, matrices);
+            gamePipeline.Create();
+            statusBarPipeline = new StatusBarPipeline(shaderSet, gameTextureSurface, matrices);
             statusBarPipeline.Create();
 
-            gameCommandList = new GameCommandList(matrices, assets, statusBarAssets, gamePipeline, statusBarPipeline);
+            gameCommandList = new GameCommandList(matrices, gameTextureSurface, assets, statusBarAssets, gamePipeline, statusBarPipeline);
             gameCommandList.Init();
         }
 
@@ -120,6 +125,7 @@ namespace SandAndStonesEngine
                 gameCamera.Update(deltaElapsedTime);
                 assets.Update(deltaElapsedTime);
                 statusBarAssets.Update(deltaElapsedTime);
+                gameTextureSurface.Update();
 
                 Draw((float)deltaElapsedTime);
             }
@@ -149,7 +155,8 @@ namespace SandAndStonesEngine
                 var disposableStatusBarAssets = statusBarAssets as IDisposable;
                 disposableStatusBarAssets?.Dispose();
                 shaderSet?.Dispose();
-
+                var disposableGameTextureSurface = gameTextureSurface as IDisposable;
+                gameTextureSurface?.Dispose();
                 disposedValue = true;
             }
         }

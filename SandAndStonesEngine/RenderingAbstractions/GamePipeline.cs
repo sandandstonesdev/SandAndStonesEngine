@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.GameCamera;
 using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.Shaders;
 using Veldrid;
@@ -18,11 +19,12 @@ namespace SandAndStonesEngine.GraphicAbstractions
         private GameAssets gameAssets;
         private Matrices matrices;
         private GameShaderSet shaderSet;
+        private GameTextureSurface gameTextureSurface;
         private bool disposedValue;
         public Pipeline Pipeline;
-        public GamePipeline(GameShaderSet shaderSet, GameAssets gameAssets, Matrices matrices)
+        public GamePipeline(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
         {
-            this.gameAssets = gameAssets;
+            this.gameTextureSurface = gameTextureSurface;
             this.matrices = matrices;
             this.shaderSet = shaderSet;    
         }
@@ -49,7 +51,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { gameAssets.ResourceLayout, matrices.MatricesLayout, matrices.WorldLayout }, 
+                ResourceLayouts = new ResourceLayout[] { gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout }, 
                 ShaderSet = shaderSet.ShaderSet,
 
                 Outputs = gameGraphicDevice.SwapChain.OutputDescription

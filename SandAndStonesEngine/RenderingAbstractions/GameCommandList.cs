@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.RenderingAbstractions;
 using Veldrid;
@@ -27,9 +28,11 @@ namespace SandAndStonesEngine.GraphicAbstractions
         private readonly StatusBarPipeline statusBarPipeline;
         private readonly GameStatusBarAssets statusBarAssets;
         private readonly Matrices matrices;
-        public GameCommandList(Matrices matrices, GameAssets assets, GameStatusBarAssets statusBarAssets, GamePipeline gamePipeline, StatusBarPipeline statusBarPipeline)
+        private readonly GameTextureSurface gameTextureSurface;
+        public GameCommandList(Matrices matrices, GameTextureSurface gameTextureSurface, GameAssets assets, GameStatusBarAssets statusBarAssets, GamePipeline gamePipeline, StatusBarPipeline statusBarPipeline)
         {
             this.matrices = matrices;
+            this.gameTextureSurface = gameTextureSurface;
             this.assets = assets;
             this.statusBarAssets = statusBarAssets;
             this.gamePipeline = gamePipeline;
@@ -63,7 +66,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
 
-            CommandList.SetGraphicsResourceSet(0, assets.ResourceSet);
+            CommandList.SetGraphicsResourceSet(0, gameTextureSurface.ResourceSet);
             CommandList.SetGraphicsResourceSet(1, matrices.MatricesSet);
             CommandList.SetGraphicsResourceSet(2, matrices.WorldSet);
             CommandList.DrawIndexed(
@@ -80,7 +83,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.SetVertexBuffer(0, statusBarAssets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(statusBarAssets.DeviceIndexBuffer, statusBarAssets.IndexBufferFormat);
 
-            CommandList.SetGraphicsResourceSet(0, statusBarAssets.ResourceSet);
+            CommandList.SetGraphicsResourceSet(0, gameTextureSurface.ResourceSet);
             CommandList.SetGraphicsResourceSet(1, matrices.MatricesSet);
             CommandList.SetGraphicsResourceSet(2, matrices.WorldSet);
             CommandList.DrawIndexed(
