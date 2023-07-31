@@ -10,7 +10,6 @@ namespace SandAndStonesEngine.DataModels
         readonly int pointRows;
         ScreenDivisionForQuads screenDivision;
         int quadId = 0;
-        ushort[] indexesPattern = new ushort[] { 0, 1, 2, 1, 3, 2 };
         public QuadGrid(ScreenDivisionForQuads screenDivision)
         {
             this.screenDivision = screenDivision;

@@ -31,7 +31,7 @@ namespace SandAndStonesEngine.DataModels
             this.quadPointsInGrid = quadData.Points;
             this.quadIndexesInGrid = quadData.Indexes;
             this.quadTextureCoords = quadData.TextureCoords;
-            this.textureId = textureId;// quadData.TextureId;
+            this.textureId = textureId;
             Vector3 quadSizeTemp = quadGrid.GetQuadSizeInCoordinates();
             this.quadSizeInCoord = new Vector3(quadSizeTemp.X * quadScale, quadSizeTemp.Y * quadScale, quadSizeTemp.Z);
             this.pixelSizeInCoord = quadGrid.GetPixelSizeInCoordinates();
@@ -47,7 +47,7 @@ namespace SandAndStonesEngine.DataModels
 
         public void Create()
         {
-            var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0]); //quadPointsInCoord[0];
+            var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0]);
             var leftDown = GetAbsoluteCoord(quadPointsInGrid[1]);
             var rightUpper = GetAbsoluteCoord(quadPointsInGrid[2]);
             var rightDown = GetAbsoluteCoord(quadPointsInGrid[3]);

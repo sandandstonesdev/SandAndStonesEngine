@@ -36,7 +36,18 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(object param)
         {
+            var fileName = param as string;
+            if (fileName == null)
+                return;
 
+            string path = GetTextureImageFilePath(fileName);
+            byte[] imageBytes = GetImageBytes();
+            BytesCount = imageBytes.Length; 
+            if (PinnedImageBytes != null)
+            {
+                PinnedImageBytes.Dispose();
+            }
+            PinnedImageBytes = new AutoPinner(imageBytes);
         }
 
         private string GetTextureImageFilePath(string fileName)

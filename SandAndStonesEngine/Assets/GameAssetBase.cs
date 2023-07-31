@@ -1,9 +1,7 @@
 ﻿using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -11,39 +9,35 @@ using System.Threading.Tasks;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class GameFontAsset : ITextAsset, IGameAsset, IDisposable
+    public abstract class GameAssetBase : IGameAsset, IDisposable
     {
-        public int Id { get; }
+        public int Id { get; private set; }
         public List<IQuadModel> QuadModelList { get; private set; }
-        public ITextureData GameTextureData { get; private set; }
+        public ITextureData GameTextureData { get; protected set; }
         private float scale;
-        private float depth;
-        private int TextureId;
+        private float Depth;
+        protected int TextureId;
         private bool disposedValue;
-        readonly string newLineChar = System.Environment.NewLine;
-        string text = string.Empty;
-        FPSCalculator fpsCalculator;
-        public GameFontAsset(int textureId, float depth=1, float scale= 4.0f)
+        private object parameter;
+        private bool parameterChanged = false;
+        public abstract bool IsText { get; }
+        public GameAssetBase(int textureId, float depth = 1, float scale = 4.0f)
         {
-            this.fpsCalculator = new FPSCalculator(10);
             this.QuadModelList = new List<IQuadModel>();
             this.TextureId = textureId;
-            this.depth = depth;
+            this.Depth = depth;
             this.scale = scale;
             this.Id = IdManager.GetAssetId();
         }
 
         public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
         {
-            GameTextureData = new FontTextureData(Id, TextureId);
-            GameTextureData.Init();
-
             ColorRandomizer colorRandomizer = new ColorRandomizer();
             for (int i = startX; i < end; i++)
             {
                 for (int j = startY; j < end; j++)
                 {
-                    var positionInQuadCount = new Vector3(i, j, depth);
+                    var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();
                     QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid, TextureId);
                     quadModel.Create();
@@ -52,14 +46,19 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
-        public void SetText(string text)
+        public virtual void SetParam(object param)
         {
-            this.text = text;
+            this.parameter = param;
+            this.parameterChanged = true;
         }
 
-        public void Update(double delta)
+        public virtual void Update(double delta)
         {
-            GameTextureData.Update(this.text);
+            if (this.parameterChanged)
+            {
+                GameTextureData.Update(this.parameter);
+                this.parameterChanged = false;
+            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -68,7 +67,7 @@ namespace SandAndStonesEngine.Assets
             {
                 if (disposing)
                 {
-                    
+
                 }
 
                 IDisposable? toDispose = GameTextureData as IDisposable;
@@ -77,7 +76,7 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
-        ~GameFontAsset()
+        ~GameAssetBase()
         {
             Dispose(disposing: false);
         }

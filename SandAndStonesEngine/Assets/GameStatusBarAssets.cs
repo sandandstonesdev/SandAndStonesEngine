@@ -46,23 +46,23 @@ namespace SandAndStonesEngine.Assets
             get { return IndexBuffer.IndexBufferFormat; }
         }
 
-        public List<IGameAsset> gameAssets = new List<IGameAsset>();
+        public List<GameAssetBase> gameAssets = new List<GameAssetBase>();
         public GameStatusBarAssets(ScreenDivisionForQuads screenDivisionForQuads)
         {
             this.ClearColor = RgbaFloat.Black;
             this.screenDivisionForQuads = screenDivisionForQuads;
         }
 
-        private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
+        private List<GameAssetBase> InitGameAssets(QuadGrid quadGrid)
         {
             int assetId = 4;
-            List<IGameAsset> assets = new List<IGameAsset>();
+            List<GameAssetBase> assets = new List<GameAssetBase>();
 
             var GameAsset1 = new GameAsset(assetId++, 0);
             GameAsset1.Init(0, 0, 4, quadGrid, "status.png");
             assets.Add(GameAsset1);
 
-            var GameFontAsset1 = new GameFontAsset(assetId++, 1);
+            var GameFontAsset1 = new GameTextAsset(assetId++, 1);
             GameFontAsset1.Init(0, 0, 1, quadGrid, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;
@@ -85,13 +85,14 @@ namespace SandAndStonesEngine.Assets
 
         public void Update(double delta)
         {
-            var textAssets = gameAssets.Select(e =>
+            gameAssets.ForEach(e =>
             {
-                var textAsset = e as ITextAsset;
-                string text = "Points: 100000";
-                textAsset?.SetText(text);
-                return e;
-            }).ToList();
+                if (e.IsText)
+                {
+                    string pointsText = "Points: 100000";
+                    e.SetParam(pointsText);
+                }
+            });
 
             gameAssets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();

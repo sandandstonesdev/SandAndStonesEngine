@@ -48,7 +48,7 @@ namespace SandAndStonesEngine.Assets
 
         private bool disposedValue;
 
-        public List<IGameAsset> gameAssets = new List<IGameAsset>();
+        public List<GameAssetBase> gameAssets = new List<GameAssetBase>();
         FPSCalculator fpsCalculator;
         public GameAssets(ScreenDivisionForQuads screenDivisionForQuads)
         {
@@ -57,10 +57,10 @@ namespace SandAndStonesEngine.Assets
             this.screenDivisionForQuads = screenDivisionForQuads;
         }
 
-        private List<IGameAsset> InitGameAssets(QuadGrid quadGrid)
+        private List<GameAssetBase> InitGameAssets(QuadGrid quadGrid)
         {
             int assetId = 0;
-            List<IGameAsset> assets = new List<IGameAsset>();
+            List<GameAssetBase> assets = new List<GameAssetBase>();
 
             var BackgroundAsset = new GameAsset(assetId++, -1);
             BackgroundAsset.Init(0, 0, 4, quadGrid, "wall.png");
@@ -74,7 +74,7 @@ namespace SandAndStonesEngine.Assets
             GameAsset2.Init(1, 1, 2, quadGrid, "char2.png");
             assets.Add(GameAsset2);
 
-            var GameFontAsset1 = new GameFontAsset(assetId++, 1);
+            var GameFontAsset1 = new GameTextAsset(assetId++, 1);
             GameFontAsset1.Init(0, 0, 1, quadGrid, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;
@@ -103,12 +103,14 @@ namespace SandAndStonesEngine.Assets
             {
                 int fps = (int)fpsCalculator.GetResult();
                 string text = $"FPS: {fps}";
-                var textAssets = gameAssets.Select(e =>
+                
+                gameAssets.ForEach(e =>
                 {
-                    var textAsset = e as ITextAsset;
-                    textAsset?.SetText(text);
-                    return e;
-                }).ToList();
+                    if (e.IsText)
+                    {
+                        e.SetParam(text);
+                    }
+                });
             }
 
             gameAssets.ForEach(e => e.Update(delta));
