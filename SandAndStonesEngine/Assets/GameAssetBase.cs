@@ -20,7 +20,7 @@ namespace SandAndStonesEngine.Assets
             }
         }
         public List<IQuadModel> QuadModelList { get; private set; }
-        public ITextureData GameTextureData { get; protected set; }
+        public GameTextureDataBase GameTextureData { get; protected set; }
         private float scale;
         private float Depth;
         private bool disposedValue;

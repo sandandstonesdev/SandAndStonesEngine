@@ -34,7 +34,7 @@ namespace SandAndStonesEngine.GameTextures
 
         GameGraphicDevice gameGraphicDevice;
 
-        List<ITextureData> textureDataList;
+        List<GameTextureDataBase> textureDataList;
         private bool disposedValue;
         List<GameAssetBase> gameAssets;
 
@@ -43,7 +43,7 @@ namespace SandAndStonesEngine.GameTextures
             this.gameAssets = gameAssets;
             this.width = width;
             this.height = height;
-            this.textureDataList = new List<ITextureData>();
+            this.textureDataList = new List<GameTextureDataBase>();
             gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
         }
         public void Init()

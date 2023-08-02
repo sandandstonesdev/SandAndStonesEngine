@@ -5,29 +5,27 @@ using System.Runtime.InteropServices;
 
 namespace SandAndStonesEngine.Assets
 {
-    public class FontTextureData : ITextureData, IDisposable
+    public class FontTextureData : GameTextureDataBase, IDisposable
     {
-        public int AssetId { get; private set; }
-        public int Id { get; private set; }
-        public AutoPinner PinnedImageBytes { get; private set; }
-        public int BytesCount { get; private set; }
-
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-
-        private bool disposedValue;
-        public FontTextureData(int assetId)
+        public FontTextureData(int assetId) : base(assetId)
         {
-            this.Id = IdManager.GetTextureId();
-            this.AssetId = assetId;
         }
 
-        public void Init()
+        public override void Init()
         {
             Update("");
         }
 
-        private byte[] GetTextBitmap(string text = "", int colNumber = 0, int rowNumber = 0, float textSize = 10.0f, int bitmapSize = 256)
+        public override void Update(object param)
+        {
+            var text = param as string;
+            if (text == null)
+                return;
+            var fontTextBytes = GetTextBitmap(text, 0, 0);
+            base.Update(fontTextBytes);
+        }
+
+        public byte[] GetTextBitmap(string text = "", int colNumber = 0, int rowNumber = 0, float textSize = 10.0f, int bitmapSize = 256)
         {
             var textLinesToRender = text.Split(System.Environment.NewLine).ToList();
             byte[] bitmapBytes = null;
@@ -70,42 +68,9 @@ namespace SandAndStonesEngine.Assets
             return bitmapBytes;
         }
 
-        public void Update(object param)
+        protected override void Dispose(bool disposing)
         {
-            var text = param as string;
-            if (text == null)
-                return;
-            var fontTextBytes = GetTextBitmap(text, 0, 0);
-            BytesCount = fontTextBytes.Length;
-            if (PinnedImageBytes != null)
-            {
-                PinnedImageBytes.Dispose();
-            }
-            PinnedImageBytes = new AutoPinner(fontTextBytes);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                }
-
-                PinnedImageBytes.Dispose();
-                disposedValue = true;
-            }
-        }
-
-        ~FontTextureData()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            base.Dispose(disposing);
         }
     }
 }

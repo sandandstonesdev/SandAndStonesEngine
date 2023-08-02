@@ -7,68 +7,32 @@ using Vortice.D3DCompiler;
 namespace SandAndStonesEngine.Assets
 {
 
-    public class GameTextureData : ITextureData, IDisposable
+    public class GameTextureData : GameTextureDataBase, IDisposable
     {
-        public int AssetId { get; private set; }
-        public int Id { get; private set; }
-        string fileName;
-        private bool disposedValue;
-
-        public AutoPinner PinnedImageBytes { get; private set; }
-        public int BytesCount { get; private set; }
-
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public GameTextureData(int assetId, string fileName)
+        public string FileName { get; private set; }
+        public GameTextureData(int assetId, string fileName) : base(assetId)
         {
-            this.Id = IdManager.GetTextureId();
-            this.AssetId = assetId;
-            this.fileName = fileName;
+            this.FileName = fileName;
         }
 
-        public void Init()
+        public override void Init()
         {
-            string path = GetTextureImageFilePath(fileName);
-            byte[] imageBytes = GetImageBytes();
-            BytesCount = imageBytes.Length;
-            PinnedImageBytes = new AutoPinner(imageBytes);
+            Update(FileName);
         }
 
-        public void Update(object param)
+        public override void Update(object param)
         {
             var fileName = param as string;
             if (fileName == null)
                 return;
 
             string path = GetTextureImageFilePath(fileName);
-            byte[] imageBytes = GetImageBytes();
-            BytesCount = imageBytes.Length; 
-            if (PinnedImageBytes != null)
-            {
-                PinnedImageBytes.Dispose();
-            }
-            PinnedImageBytes = new AutoPinner(imageBytes);
+            byte[] imageBytes = GetImageBytes(fileName);
+
+            base.Update(imageBytes);
         }
 
-        private string GetTextureImageFilePath(string fileName)
-        {
-            const string textureImagesPath = "GameTextures\\Images";
-            string basePath = Path.GetFullPath(@".");
-            string imagePath = Path.Combine(basePath, textureImagesPath, fileName);
-            return imagePath;
-        }
-
-        private Image GetImage(string filename)
-        {
-            var imagePath = GetTextureImageFilePath(filename);
-            FileStream inputImageStream = File.OpenRead(imagePath);
-            Image image = Image.Load(inputImageStream);
-            this.Width = image.Width;
-            this.Height = image.Height;
-            return image;
-        }
-
-        public byte[] GetImageBytes()
+        public byte[] GetImageBytes(string fileName)
         {
             var outputImagePath = GetTextureImageFilePath(fileName);
             using Image<Rgba32> imagePixels = Image.Load<Rgba32>(outputImagePath);
@@ -81,36 +45,17 @@ namespace SandAndStonesEngine.Assets
             return imageBytes;
         }
 
-        public void WriteTextureToOutFile(byte[] bytes)
+        public string GetTextureImageFilePath(string fileName)
         {
-            var textureOutFilename = "wallout.bmp";
-            var outputImagePath = GetTextureImageFilePath(textureOutFilename);
-            using FileStream file = new FileStream(outputImagePath, FileMode.Create, System.IO.FileAccess.Write);
-            file.Write(bytes);
+            const string textureImagesPath = "GameTextures\\Images";
+            string basePath = Path.GetFullPath(@".");
+            string imagePath = Path.Combine(basePath, textureImagesPath, fileName);
+            return imagePath;
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                }
-
-                PinnedImageBytes.Dispose();
-                disposedValue = true;
-            }
-        }
-
-        ~GameTextureData()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            base.Dispose(disposing);
         }
     }
 }
