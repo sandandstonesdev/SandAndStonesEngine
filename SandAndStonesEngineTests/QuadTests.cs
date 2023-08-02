@@ -7,6 +7,7 @@ namespace SandAndStonesEngineTests
     public class QuadTests
     {
         ScreenDivisionForQuads screenDivision;
+        QuadGridManager quadGridManager;
         void SetUp()
         {
             int x = 50;
@@ -14,7 +15,9 @@ namespace SandAndStonesEngineTests
             int screenWidth = 400;
             int screenHeight = 400;
             int quadCount = 4;
-            screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
+            this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
+            this.quadGridManager = QuadGridManager.Instance;
+            quadGridManager.Init(screenDivision);
         }
 
         [TestMethod]
@@ -24,10 +27,9 @@ namespace SandAndStonesEngineTests
             ushort[] indexesPattern1 = new ushort[] { 0, 1, 2, 1, 3, 2 };
             ushort[] indexesPattern2 = new ushort[] { 4, 5, 6, 5, 7, 6 };
             ushort[] indexesPattern3 = new ushort[] { 8, 9, 10, 9, 11, 10 };
-            QuadGrid quadGrid = new QuadGrid(screenDivision);
-            QuadData quadData1 = quadGrid.GetQuadData(1, 1, 0);
-            QuadData quadData2 = quadGrid.GetQuadData(1, 2, 0);
-            QuadData quadData3 = quadGrid.GetQuadData(1, 3, 0);
+            QuadData quadData1 = quadGridManager.GetQuadData(1, 1, 0);
+            QuadData quadData2 = quadGridManager.GetQuadData(1, 2, 0);
+            QuadData quadData3 = quadGridManager.GetQuadData(1, 3, 0);
             
             Assert.AreEqual(quadData1.Indexes.Length, indexesPattern1.Length);
             bool isEqual = Enumerable.SequenceEqual(quadData1.Indexes, indexesPattern1);
@@ -45,8 +47,7 @@ namespace SandAndStonesEngineTests
         {
             SetUp();
             const int verticesPerQuad = 4;
-            QuadGrid quadGrid = new QuadGrid(screenDivision);
-            QuadData quadData1 = quadGrid.GetQuadData(1, 1, 0);
+            QuadData quadData1 = quadGridManager.GetQuadData(1, 1, 0);
 
             Assert.AreEqual(quadData1.Points.Length, verticesPerQuad);
             bool AreLeftXsEqual = quadData1.Points[0].X == quadData1.Points[1].X;

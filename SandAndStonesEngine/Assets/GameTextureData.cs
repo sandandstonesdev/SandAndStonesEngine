@@ -19,9 +19,9 @@ namespace SandAndStonesEngine.Assets
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public GameTextureData(int id, int assetId, string fileName)
+        public GameTextureData(int assetId, string fileName)
         {
-            this.Id = id;
+            this.Id = IdManager.GetTextureId();
             this.AssetId = assetId;
             this.fileName = fileName;
         }

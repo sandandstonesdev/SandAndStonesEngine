@@ -32,7 +32,6 @@ namespace SandAndStonesEngine
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
         private Matrices matrices;
-        ScreenDivisionForQuads screenDivisionForQuads;
         public GameTextureSurface gameTextureSurface;
 
         ViewTransformator viewTransformator;
@@ -46,7 +45,7 @@ namespace SandAndStonesEngine
             
         }
 
-        public void Start(int x, int y, int width, int height, string title, ScreenDivisionForQuads screenDivisionForQuads)
+        public void Start(int x, int y, int width, int height, string title)
         {
             WindowCreateInfo windowCI = new()
             {
@@ -56,6 +55,7 @@ namespace SandAndStonesEngine
                 WindowHeight = height,
                 WindowTitle = title,
             };
+
             SDLWindow = VeldridStartup.CreateWindow(ref windowCI);
             var clientRegionPos =  new Vector2(SDLWindow.Bounds.X, SDLWindow.Bounds.Y);
             SDLWindow.Resized += () => resized = true;
@@ -68,19 +68,17 @@ namespace SandAndStonesEngine
             matrices = new Matrices(worldTransformator, viewTransformator);
             matrices.Init();
 
-            this.screenDivisionForQuads = screenDivisionForQuads;
             gameCamera = new Camera(matrices);
 
-            
-            assets = new GameAssets(screenDivisionForQuads);
+            assets = new GameAssets();
             assets.Create();
-            statusBarAssets = new GameStatusBarAssets(screenDivisionForQuads);
+            statusBarAssets = new GameStatusBarAssets();
             statusBarAssets.Create();
 
             shaderSet = new GameShaderSet(assets, matrices);
             shaderSet.Create();
 
-            List<IGameAsset> gameAssets = new List<IGameAsset>();
+            List<GameAssetBase> gameAssets = new List<GameAssetBase>();
             gameAssets.AddRange(assets.gameAssets);
             gameAssets.AddRange(statusBarAssets.gameAssets);
             gameTextureSurface = new GameTextureSurface(gameAssets, 256, 256);
@@ -118,7 +116,7 @@ namespace SandAndStonesEngine
                 if (resized)
                 {
                     gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
-                    screenDivisionForQuads.Resize(SDLWindow.Width, SDLWindow.Height);
+                    QuadGridManager.Instance.Resize(SDLWindow.Width, SDLWindow.Height);
                     resized = false;
                 }
 

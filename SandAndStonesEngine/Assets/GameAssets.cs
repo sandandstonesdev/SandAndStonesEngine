@@ -19,11 +19,9 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameAssets : IDisposable
     {
-        private readonly GameGraphicDevice gameGraphicDevice;
         public RgbaFloat ClearColor;
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
-        public ScreenDivisionForQuads screenDivisionForQuads;
         public DeviceBuffer DeviceVertexBuffer
         {
             get { return VertexBuffer.DeviceBuffer; }
@@ -50,40 +48,40 @@ namespace SandAndStonesEngine.Assets
 
         public List<GameAssetBase> gameAssets = new List<GameAssetBase>();
         FPSCalculator fpsCalculator;
-        public GameAssets(ScreenDivisionForQuads screenDivisionForQuads)
+        public GameAssets()
         {
             this.fpsCalculator = new FPSCalculator(10);
             this.ClearColor = RgbaFloat.Black;
-            this.screenDivisionForQuads = screenDivisionForQuads;
         }
 
-        private List<GameAssetBase> InitGameAssets(QuadGrid quadGrid)
+        private List<GameAssetBase> InitGameAssets()
         {
             int assetId = 0;
             List<GameAssetBase> assets = new List<GameAssetBase>();
 
-            var BackgroundAsset = new GameAsset(assetId++, -1);
-            BackgroundAsset.Init(0, 0, 4, quadGrid, "wall.png");
+            var BackgroundAsset = new GameAsset(-1);
+            BackgroundAsset.Init(0, 0, 4, "wall.png");
             assets.Add(BackgroundAsset);
 
-            var GameAsset1 = new GameAsset(assetId++, 1, 0.5f);
-            GameAsset1.Init(0, 0, 1, quadGrid, "char1.png");
+            var GameAsset1 = new GameAsset(1, 0.5f);
+            GameAsset1.Init(0, 0, 1, "char1.png");
             assets.Add(GameAsset1);
 
-            var GameAsset2 = new GameAsset(assetId++, 0.5f);
-            GameAsset2.Init(1, 1, 2, quadGrid, "char2.png");
+            var GameAsset2 = new GameAsset(0.5f);
+            GameAsset2.Init(1, 1, 2, "char2.png");
             assets.Add(GameAsset2);
 
-            var GameFontAsset1 = new GameTextAsset(assetId++, 1);
-            GameFontAsset1.Init(0, 0, 1, quadGrid, "letters.png");
+            var GameFontAsset1 = new GameTextAsset(1);
+            GameFontAsset1.Init(0, 0, 1, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;
         }
         public void Create()
         {
+            QuadGridManager.Instance.InitNewBatch();
+
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-            QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
-            gameAssets = InitGameAssets(quadGrid);
+            gameAssets = InitGameAssets();
 
             List<IQuadModel> quadModels = new List<IQuadModel>();
             gameAssets.ForEach(a => quadModels.AddRange(a.QuadModelList));
@@ -92,7 +90,7 @@ namespace SandAndStonesEngine.Assets
             VertexBuffer.Init();
 
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
-            IndexBuffer.Create();
+            IndexBuffer.Init();
         }
 
         public void Update(double delta)
@@ -116,7 +114,6 @@ namespace SandAndStonesEngine.Assets
             gameAssets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();
             VertexBuffer.Update();
-            
         }
 
         protected virtual void Dispose(bool disposing)

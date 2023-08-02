@@ -25,10 +25,7 @@ namespace SandAndStonesEngine.GameCamera
         private float fov = 1f; // Field of view
         private float aspectRatio; // (right - left) / (top - bottom) = right/top
 
-        GameGraphicDevice graphicDevice;
-        readonly InputDevicesState inputDeviceState;
         readonly Matrices matrices;
-
         int windowWidth;
         int windowHeight;
 

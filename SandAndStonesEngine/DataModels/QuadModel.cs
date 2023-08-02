@@ -7,16 +7,15 @@ namespace SandAndStonesEngine.DataModels
 
     public class QuadModel : IQuadModel
     {
-        private VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
-        private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f);
-        private Vector3 quadSizeInCoord;
-        private Vector3 pixelSizeInCoord;
-
+        int quadId;
+        int quadBatchId;
         private RgbaFloat color;
         private Vector3[] quadPointsInGrid;
         private Vector2[] quadTextureCoords;
         private ushort[] quadIndexesInGrid;
         private int textureId;
+        private VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
+
         public VertexDataFormat[] VerticesPositions
         {
             get { return verticesPositions; }
@@ -25,41 +24,34 @@ namespace SandAndStonesEngine.DataModels
         {
             get { return quadIndexesInGrid; }
         }
-        public QuadModel(Vector3 gridQuadPosition, float quadScale, RgbaFloat color, QuadGrid quadGrid, int textureId)
+
+        public float scale;
+        public QuadModel(Vector3 gridQuadPosition, float quadScale, RgbaFloat color, int textureId)
         {
-            QuadData quadData = quadGrid.GetQuadData((int)gridQuadPosition.X, (int)gridQuadPosition.Y, (int)gridQuadPosition.Z);
+            QuadData quadData = QuadGridManager.Instance.GetQuadData((int)gridQuadPosition.X, (int)gridQuadPosition.Y, (int)gridQuadPosition.Z);
             this.quadPointsInGrid = quadData.Points;
             this.quadIndexesInGrid = quadData.Indexes;
             this.quadTextureCoords = quadData.TextureCoords;
+            this.quadId = quadData.Id;
+            this.quadBatchId = quadData.BatchId;
             this.textureId = textureId;
-            Vector3 quadSizeTemp = quadGrid.GetQuadSizeInCoordinates();
-            this.quadSizeInCoord = new Vector3(quadSizeTemp.X * quadScale, quadSizeTemp.Y * quadScale, quadSizeTemp.Z);
-            this.pixelSizeInCoord = quadGrid.GetPixelSizeInCoordinates();
             this.color = color;
+            this.scale = quadScale;
         }
         
-        private Vector3 GetAbsoluteCoord(Vector3 quadGridPoint)
-        {
-            var scaledPoint = new Vector3(quadGridPoint.X, -quadGridPoint.Y, quadGridPoint.Z) * new Vector3(quadSizeInCoord.X, quadSizeInCoord.Y, quadSizeInCoord.Z);
-            var res = relativePosition + scaledPoint;
-            return res;
-        }
-
         public void Create()
         {
-            var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0]);
-            var leftDown = GetAbsoluteCoord(quadPointsInGrid[1]);
-            var rightUpper = GetAbsoluteCoord(quadPointsInGrid[2]);
-            var rightDown = GetAbsoluteCoord(quadPointsInGrid[3]);
+            var quadAbsoluteCoords = QuadGridManager.Instance.GetQuadAbsoluteCoords(quadPointsInGrid, scale);
 
-            verticesPositions[0] = new VertexDataFormat(leftDown, color, quadTextureCoords[0], textureId);
-            verticesPositions[1] = new VertexDataFormat(leftUpper, color, quadTextureCoords[1], textureId);
-            verticesPositions[2] = new VertexDataFormat(rightDown, color, quadTextureCoords[2], textureId);
-            verticesPositions[3] = new VertexDataFormat(rightUpper, color, quadTextureCoords[3], textureId);
+            verticesPositions[0] = new VertexDataFormat(quadAbsoluteCoords[0], color, quadTextureCoords[0], textureId);
+            verticesPositions[1] = new VertexDataFormat(quadAbsoluteCoords[1], color, quadTextureCoords[1], textureId);
+            verticesPositions[2] = new VertexDataFormat(quadAbsoluteCoords[2], color, quadTextureCoords[2], textureId);
+            verticesPositions[3] = new VertexDataFormat(quadAbsoluteCoords[3], color, quadTextureCoords[3], textureId);
         }
 
         public void Move(Vector2 pixelMovementVector)
         {
+            var pixelSizeInCoord = QuadGridManager.Instance.GetPixelSizeInCoordinates();
             var movement = new Vector2(pixelMovementVector.X * pixelSizeInCoord.X, pixelMovementVector.Y * pixelSizeInCoord.Y);
             for (int i = 0; i < verticesPositions.Length; i++)
             {

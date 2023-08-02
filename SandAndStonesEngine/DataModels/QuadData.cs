@@ -9,8 +9,10 @@ namespace SandAndStonesEngine.DataModels
         public Vector2[] TextureCoords;
         public ushort[] Indexes = new ushort[6];
         public int TextureId = 0;
-        public QuadData(int id, Vector3[] points, ushort[] indexes, Vector2[] textureCoords)
+        public int BatchId;
+        public QuadData(int batchId, int id, Vector3[] points, ushort[] indexes, Vector2[] textureCoords)
         {
+            this.BatchId = batchId;
             this.Id = id;
             this.TextureId = id;
             this.Points = points;

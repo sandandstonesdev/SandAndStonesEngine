@@ -76,7 +76,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 vertexOffset: 0,
                 instanceStart: 0);
 
-            var viewport2 = new Viewport(1, frameBuffer.Height - 200, frameBuffer.Width, frameBuffer.Height, 0, 1);
+            var viewport2 = new Viewport(0, frameBuffer.Height - 200, frameBuffer.Width, frameBuffer.Height, 0, 1);
             CommandList.SetViewport(0, viewport2);
 
             CommandList.SetPipeline(statusBarPipeline.Pipeline);
@@ -93,7 +93,6 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 vertexOffset: 0,
                 instanceStart: 0);
 
-            //CommandList.SetFullViewports();
             CommandList.End();
             gameGraphicDevice.Flush(CommandList);
         }

@@ -16,9 +16,9 @@ namespace SandAndStonesEngine.Assets
         public int Height { get; private set; }
 
         private bool disposedValue;
-        public FontTextureData(int assetId, int id)
+        public FontTextureData(int assetId)
         {
-            this.Id = id;
+            this.Id = IdManager.GetTextureId();
             this.AssetId = assetId;
         }
 

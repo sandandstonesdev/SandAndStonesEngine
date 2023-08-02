@@ -36,14 +36,15 @@ namespace SandAndStonesEngine.GameTextures
 
         List<ITextureData> textureDataList;
         private bool disposedValue;
-        List<IGameAsset> gameAssets;
+        List<GameAssetBase> gameAssets;
 
-        public GameTextureSurface(List<IGameAsset> gameAssets, int width, int height)
+        public GameTextureSurface(List<GameAssetBase> gameAssets, int width, int height)
         {
             this.gameAssets = gameAssets;
             this.width = width;
             this.height = height;
             this.textureDataList = new List<ITextureData>();
+            gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
         }
         public void Init()
         {
@@ -56,7 +57,6 @@ namespace SandAndStonesEngine.GameTextures
                 }
             }
 
-            gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
             TextureDescription texDesc = new TextureDescription()
             {
                 Width = (uint)width,
@@ -84,8 +84,6 @@ namespace SandAndStonesEngine.GameTextures
                 TextureLayout,
                 TextureView,
                 gameGraphicDevice.GraphicsDevice.Aniso4xSampler));
-
-
         }
         public void Update()
         {

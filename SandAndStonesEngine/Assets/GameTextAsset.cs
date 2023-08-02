@@ -14,17 +14,18 @@ namespace SandAndStonesEngine.Assets
     public class GameTextAsset : GameAssetBase
     {
         public override bool IsText { get { return true; } }
-        public GameTextAsset(int textureId, float depth=1, float scale= 4.0f) :
-            base(textureId, depth, scale)
+        public GameTextAsset(float depth= 1.0f, float scale= 4.0f) :
+            base(depth, scale)
         {
         }
 
-        public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
+        public override void Init(int startX, int startY, int end, string textureName)
         {
-            GameTextureData = new FontTextureData(Id, TextureId);
+            SetParam("");
+            GameTextureData = new FontTextureData(Id);
             GameTextureData.Init();
 
-            base.Init(startX, startY, end, quadGrid, textureName);
+            base.Init(startX, startY, end, textureName);
         }
 
         public override void SetParam(object param)
@@ -39,7 +40,7 @@ namespace SandAndStonesEngine.Assets
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -24,7 +24,6 @@ namespace SandAndStonesEngine.Utils
         public void Generate()
         {
             List<int> indices = new List<int>(); 
-            int idx = 0;
             for (int i = 0; i < rows; i++)
             {
                 if (i != 0) indices.Add((i) * rows); // col=1 row=next (triangle degeneration)

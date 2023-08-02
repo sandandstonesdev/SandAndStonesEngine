@@ -31,7 +31,7 @@ namespace SandAndStonesEngine.DataModels
         }
 
         public int TextureId;
-        public InstancedQuadModel(int textureId, Vector2 gridQuadPosition, float quadScale, RgbaFloat color, QuadGrid quadGrid)
+        public InstancedQuadModel(int textureId, Vector2 gridQuadPosition, float quadScale, RgbaFloat color, QuadGridManager quadGrid)
         {
             QuadData quadData = quadGrid.GetQuadData((int)gridQuadPosition.X, (int)gridQuadPosition.Y, 0);
 

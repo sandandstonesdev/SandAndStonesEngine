@@ -9,28 +9,33 @@ using System.Threading.Tasks;
 
 namespace SandAndStonesEngine.Assets
 {
-    public abstract class GameAssetBase : IGameAsset, IDisposable
+    public abstract class GameAssetBase : IDisposable
     {
         public int Id { get; private set; }
+        public int TextureId 
+        { 
+            get
+            {
+                return GameTextureData.Id;
+            }
+        }
         public List<IQuadModel> QuadModelList { get; private set; }
         public ITextureData GameTextureData { get; protected set; }
         private float scale;
         private float Depth;
-        protected int TextureId;
         private bool disposedValue;
         private object parameter;
         private bool parameterChanged = false;
         public abstract bool IsText { get; }
-        public GameAssetBase(int textureId, float depth = 1, float scale = 4.0f)
+        public GameAssetBase(float depth, float scale)
         {
             this.QuadModelList = new List<IQuadModel>();
-            this.TextureId = textureId;
             this.Depth = depth;
             this.scale = scale;
             this.Id = IdManager.GetAssetId();
         }
 
-        public void Init(int startX, int startY, int end, QuadGrid quadGrid, string textureName)
+        public virtual void Init(int startX, int startY, int end, string textureName)
         {
             ColorRandomizer colorRandomizer = new ColorRandomizer();
             for (int i = startX; i < end; i++)
@@ -39,7 +44,7 @@ namespace SandAndStonesEngine.Assets
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();
-                    QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, quadGrid, TextureId);
+                    QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, TextureId);
                     quadModel.Create();
                     QuadModelList.Add(quadModel);
                 }

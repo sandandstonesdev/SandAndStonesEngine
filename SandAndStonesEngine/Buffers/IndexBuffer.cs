@@ -39,7 +39,7 @@ namespace SandAndStonesEngine.Buffers
             return indexData.ToArray();
         }
 
-        public void Create()
+        public void Init()
         {
             QuadIndexes = CollectAllIndicesFromQuads();
             ResourceFactory factory = graphicsDevice.ResourceFactory;

@@ -21,7 +21,6 @@ namespace SandAndStonesEngine.Assets
         public RgbaFloat ClearColor;
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
-        public ScreenDivisionForQuads screenDivisionForQuads;
         private bool disposedValue;
 
         public DeviceBuffer DeviceVertexBuffer
@@ -47,31 +46,29 @@ namespace SandAndStonesEngine.Assets
         }
 
         public List<GameAssetBase> gameAssets = new List<GameAssetBase>();
-        public GameStatusBarAssets(ScreenDivisionForQuads screenDivisionForQuads)
+        public GameStatusBarAssets()
         {
             this.ClearColor = RgbaFloat.Black;
-            this.screenDivisionForQuads = screenDivisionForQuads;
         }
 
-        private List<GameAssetBase> InitGameAssets(QuadGrid quadGrid)
+        private List<GameAssetBase> InitGameAssets()
         {
-            int assetId = 4;
+            QuadGridManager.Instance.InitNewBatch();
             List<GameAssetBase> assets = new List<GameAssetBase>();
 
-            var GameAsset1 = new GameAsset(assetId++, 0);
-            GameAsset1.Init(0, 0, 4, quadGrid, "status.png");
+            var GameAsset1 = new GameAsset(0);
+            GameAsset1.Init(0, 0, 4, "status.png");
             assets.Add(GameAsset1);
 
-            var GameFontAsset1 = new GameTextAsset(assetId++, 1);
-            GameFontAsset1.Init(0, 0, 1, quadGrid, "letters.png");
+            var GameFontAsset1 = new GameTextAsset(1);
+            GameFontAsset1.Init(0, 0, 1, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;
         }
         public void Create()
         {
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-            QuadGrid quadGrid = new QuadGrid(screenDivisionForQuads);
-            gameAssets = InitGameAssets(quadGrid);
+            gameAssets = InitGameAssets();
 
             List<IQuadModel> quadModels = new List<IQuadModel>();
             gameAssets.ForEach(a => quadModels.AddRange(a.QuadModelList));
@@ -80,7 +77,7 @@ namespace SandAndStonesEngine.Assets
             VertexBuffer.Init();
 
             IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
-            IndexBuffer.Create();
+            IndexBuffer.Init();
         }
 
         public void Update(double delta)
