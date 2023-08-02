@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.DataModels;
 
 namespace SandAndStonesEngineTests
@@ -18,6 +19,7 @@ namespace SandAndStonesEngineTests
             this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
             this.quadGridManager = QuadGridManager.Instance;
             quadGridManager.Init(screenDivision);
+            quadGridManager.StartNewBatch();
         }
 
         [TestMethod]

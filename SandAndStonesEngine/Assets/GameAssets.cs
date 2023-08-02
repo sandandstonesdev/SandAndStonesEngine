@@ -78,7 +78,7 @@ namespace SandAndStonesEngine.Assets
         }
         public void Create()
         {
-            QuadGridManager.Instance.InitNewBatch();
+            QuadGridManager.Instance.StartNewBatch();
 
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
             gameAssets = InitGameAssets();

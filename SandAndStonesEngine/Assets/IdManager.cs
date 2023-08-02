@@ -6,6 +6,7 @@ namespace SandAndStonesEngine.Assets
     {
         static object lockObject = new object(); 
         static int AssetId = 0;
+        static int QuadBatchId = 0;
         static int QuadId = 0;
         static int TextureId = 0;
         public static int GetAssetId()
@@ -21,6 +22,22 @@ namespace SandAndStonesEngine.Assets
             lock (lockObject)
             {
                 return TextureId++;
+            }
+        }
+
+        public static int GetNextQuadBatchId()
+        {
+            lock (lockObject)
+            {
+                QuadId = 0;
+                return QuadBatchId++;
+            }
+        }
+        public static int GetNextQuadId()
+        {
+            lock (lockObject)
+            {
+                return QuadId++;
             }
         }
     }

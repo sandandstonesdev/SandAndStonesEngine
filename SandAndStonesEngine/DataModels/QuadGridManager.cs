@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.Utils;
+﻿using SandAndStonesEngine.Assets;
+using SandAndStonesEngine.Utils;
 using System.Numerics;
 
 namespace SandAndStonesEngine.DataModels
@@ -31,10 +32,10 @@ namespace SandAndStonesEngine.DataModels
             this.quadId = 0;
         }
 
-        public void InitNewBatch()
+        public void StartNewBatch()
         {
-            quadId = 0;
-            quadBatchId++;
+            quadBatchId = IdManager.GetNextQuadBatchId();
+            quadId = IdManager.GetNextQuadId();
         }
         public void Resize(int screenWidth, int screenHeight)
         {
@@ -58,18 +59,13 @@ namespace SandAndStonesEngine.DataModels
             texturePoints[3] = new Vector2(1, 0);// Lower Right => quadPoints[2]
 
             // int linearQuadId = (xQuad + yQuad * quadColumns);
-            var quadId = GetNextQuadId();
             IIndexGenerator indexGenerator = new TriangleListIndexGenerator(quadId, pointColumns, pointRows);
             indexGenerator.Generate();
             var indices = indexGenerator.Points;
             
             QuadData quadData = new QuadData(quadBatchId, quadId, quadPoints, indices, texturePoints);
+            quadId = IdManager.GetNextQuadId();
             return quadData;
-        }
-
-        private int GetNextQuadId()
-        {
-            return quadId++;
         }
 
         public Vector3 GetQuadSizeInCoordinates()

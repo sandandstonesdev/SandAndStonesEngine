@@ -53,7 +53,7 @@ namespace SandAndStonesEngine.Assets
 
         private List<GameAssetBase> InitGameAssets()
         {
-            QuadGridManager.Instance.InitNewBatch();
+            QuadGridManager.Instance.StartNewBatch();
             List<GameAssetBase> assets = new List<GameAssetBase>();
 
             var GameAsset1 = new GameAsset(0);
