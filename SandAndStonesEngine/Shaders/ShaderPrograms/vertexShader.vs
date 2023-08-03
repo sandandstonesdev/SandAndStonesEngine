@@ -26,7 +26,7 @@ layout(location = 1) out vec3 fsin_TexCoords;
 
 void main()
 {
-    vec4 objectPosition = vec4(Position);
+    vec4 objectPosition = Position;
     
     if (TextureId < 3)
     {
@@ -39,7 +39,7 @@ void main()
     else
     {
         gl_Position = objectPosition;
-        fsin_Color = vec4(0.5, 0.5, 0.5, 0.5);
+        fsin_Color = vec4(0.5, 0.5, 1.0, 1.0);
     }
     
     fsin_TexCoords = vec3(TexCoords, TextureId);

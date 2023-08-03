@@ -26,7 +26,7 @@ namespace SandAndStonesEngine.Assets
             base.Update(fontTextBytes);
         }
 
-        public byte[] GetTextBitmap(string text = "", int colNumber = 0, int rowNumber = 0, float textSize = 10.0f, int bitmapSize = 256)
+        public byte[] GetTextBitmap(string text = "", int colNumber = 0, int rowNumber = 0, float textSize = 20.0f, int bitmapSize = 256)
         {
             var textLinesToRender = text.Split(System.Environment.NewLine).ToList();
             using var bitmap = new SKBitmap(bitmapSize, bitmapSize);
@@ -38,7 +38,7 @@ namespace SandAndStonesEngine.Assets
             {
                 paint.TextSize = textSize;
                 paint.IsAntialias = true;
-                SKColor.TryParse("FFFF00", out SKColor color);
+                SKColor.TryParse("FFFFFF", out SKColor color);
 
                 paint.Color = color;
                 paint.IsStroke = false;

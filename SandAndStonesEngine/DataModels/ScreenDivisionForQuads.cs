@@ -7,21 +7,21 @@ namespace SandAndStonesEngine.DataModels
         int screenWidth;
         int screenHeight;
         int screenDepth;
-        int pointCountX;
-        public int PointCountX => pointCountX;
-        int pointCountY;
-        public int PointCountY => pointCountY;
-        int pointCountZ; // available Z layers
-        public int PointCountZ => pointCountZ;
+        int quadCountX;
+        public int QuadCountX => quadCountX;
+        int quadCountY;
+        public int QuadCountY => quadCountY;
+        int quadCountZ; // available Z layers
+        public int QuadCountZ => quadCountZ;
 
         public float aspect;
-        public ScreenDivisionForQuads(int screenWidth, int screenHeight, int pointCountX, int pointCountY, int pointCountZ = 10)
+        public ScreenDivisionForQuads(int screenWidth, int screenHeight, int quadCountX, int quadCountY, int quadCountZ = 10)
         {
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
-            this.pointCountX = pointCountX;
-            this.pointCountY = pointCountY;
-            this.pointCountZ = pointCountZ;
+            this.quadCountX = quadCountX;
+            this.quadCountY = quadCountY;
+            this.quadCountZ = quadCountZ;
             this.aspect = screenWidth / screenHeight;
             this.screenDepth = screenWidth;
         }
@@ -34,9 +34,6 @@ namespace SandAndStonesEngine.DataModels
 
         public Vector3 GetCoordinateUnitsPerQuad()
         {
-            int quadCountX = pointCountX / 2;
-            int quadCountY = pointCountY / 2;
-            int quadCountZ = pointCountZ / 2;
             float xCount = 2.0f / quadCountX;
             float yCount = 2.0f / quadCountY;
             float zCount = 2.0f / quadCountZ;
@@ -52,9 +49,9 @@ namespace SandAndStonesEngine.DataModels
         }
         public Vector3 GetPixelUnitsPerQuad()
         {
-            int xQuadSizeInPixels = screenWidth / pointCountX;
-            int yQuadSizeInPixels = screenHeight / pointCountY;
-            int zQuadSizeInPixels = screenDepth / pointCountY;
+            int xQuadSizeInPixels = screenWidth / quadCountX;
+            int yQuadSizeInPixels = screenHeight / quadCountY;
+            int zQuadSizeInPixels = screenDepth / quadCountZ;
             return new Vector3(xQuadSizeInPixels, yQuadSizeInPixels, zQuadSizeInPixels);
         }
     }

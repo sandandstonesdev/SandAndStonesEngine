@@ -28,11 +28,11 @@ namespace SandAndStonesEngine.Assets
             List<GameAssetBase> assets = new List<GameAssetBase>();
 
             var GameAsset1 = new GameAsset(0);
-            GameAsset1.Init(0, 0, 4, "status.png");
+            GameAsset1.Init(0, 0, 8, 2, "status.png");
             assets.Add(GameAsset1);
 
             var GameFontAsset1 = new GameTextAsset(1);
-            GameFontAsset1.Init(0, 0, 1, "letters.png");
+            GameFontAsset1.Init(0, 0, 1, 2, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;
         }

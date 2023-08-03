@@ -24,9 +24,9 @@ namespace SandAndStonesEngine.DataModels
         public void Init(ScreenDivisionForQuads screenDivision)
         {
             this.screenDivision = screenDivision;
-            this.pointColumns = screenDivision.PointCountX;
-            this.pointRows = screenDivision.PointCountY;
-            IVertexGenerator vertexGenerator = new VertexGenerator(pointColumns, pointRows);
+            this.pointColumns = screenDivision.QuadCountX + 1;
+            this.pointRows = screenDivision.QuadCountY + 1;
+            IVertexGenerator vertexGenerator = new VertexGenerator(pointRows, pointColumns);
             vertexGenerator.Generate();
             this.PointGrid = vertexGenerator.Points;
             this.quadId = 0;

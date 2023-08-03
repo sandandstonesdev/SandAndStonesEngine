@@ -9,10 +9,12 @@ namespace SandAndStonesEngineTests
     {
         ScreenDivisionForQuads screenDivision;
         QuadGridManager quadGridManager;
+        public QuadTests()
+        {
+            SetUp();
+        }
         void SetUp()
         {
-            int x = 50;
-            int y = 50;
             int screenWidth = 400;
             int screenHeight = 400;
             int quadCount = 4;
@@ -25,7 +27,6 @@ namespace SandAndStonesEngineTests
         [TestMethod]
         public void IndicesForQuadAreCorrect()
         {
-            SetUp();
             ushort[] indexesPattern1 = new ushort[] { 0, 1, 2, 1, 3, 2 };
             ushort[] indexesPattern2 = new ushort[] { 4, 5, 6, 5, 7, 6 };
             ushort[] indexesPattern3 = new ushort[] { 8, 9, 10, 9, 11, 10 };
@@ -47,7 +48,6 @@ namespace SandAndStonesEngineTests
         [TestMethod]
         public void VerticesForQuadGridHasCorrectLayout()
         {
-            SetUp();
             const int verticesPerQuad = 4;
             QuadData quadData1 = quadGridManager.GetQuadData(1, 1, 0);
 

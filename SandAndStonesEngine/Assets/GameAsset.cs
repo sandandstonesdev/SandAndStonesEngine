@@ -16,13 +16,13 @@ namespace SandAndStonesEngine.Assets
         {
         }
 
-        public override void Init(int startX, int startY, int end, string textureName)
+        public override void Init(int startX, int startY, int endX, int endY, string textureName)
         {
             SetParam(textureName);
             GameTextureData = new GameTextureData(Id, textureName);
             GameTextureData.Init();
 
-            base.Init(startX, startY, end, textureName);
+            base.Init(startX, startY, endX, endY, textureName);
         }
 
 

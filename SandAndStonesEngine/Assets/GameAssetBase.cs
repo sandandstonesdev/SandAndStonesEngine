@@ -35,12 +35,12 @@ namespace SandAndStonesEngine.Assets
             this.Id = IdManager.GetAssetId();
         }
 
-        public virtual void Init(int startX, int startY, int end, string textureName)
+        public virtual void Init(int startX, int startY, int endX, int endY, string textureName)
         {
             ColorRandomizer colorRandomizer = new ColorRandomizer();
-            for (int i = startX; i < end; i++)
+            for (int i = startX; i < endX; i++)
             {
-                for (int j = startY; j < end; j++)
+                for (int j = startY; j < endY; j++)
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();

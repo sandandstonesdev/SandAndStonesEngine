@@ -27,23 +27,22 @@ namespace SandAndStonesEngine.Assets
 
         protected override List<GameAssetBase> InitGameAssets()
         {
-            int assetId = 0;
             List<GameAssetBase> assets = new List<GameAssetBase>();
 
             var BackgroundAsset = new GameAsset(-1);
-            BackgroundAsset.Init(0, 0, 4, "wall.png");
+            BackgroundAsset.Init(0, 0, 8, 8, "wall.png");
             assets.Add(BackgroundAsset);
 
             var GameAsset1 = new GameAsset(1, 0.5f);
-            GameAsset1.Init(0, 0, 1, "char1.png");
+            GameAsset1.Init(0, 0, 1, 1, "char1.png");
             assets.Add(GameAsset1);
 
             var GameAsset2 = new GameAsset(0.5f);
-            GameAsset2.Init(1, 1, 2, "char2.png");
+            GameAsset2.Init(1, 1, 2, 2, "char2.png");
             assets.Add(GameAsset2);
 
             var GameFontAsset1 = new GameTextAsset(1);
-            GameFontAsset1.Init(0, 0, 1, "letters.png");
+            GameFontAsset1.Init(0, 0, 1, 1, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;
         }
