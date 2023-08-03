@@ -9,7 +9,7 @@
             this.maxTotalDelta = 1000;
         }
 
-        public bool DoUpdate(double delta)
+        public bool DoUpdate(long delta)
         {
             totalDelta += delta;
             if (totalDelta >= maxTotalDelta)

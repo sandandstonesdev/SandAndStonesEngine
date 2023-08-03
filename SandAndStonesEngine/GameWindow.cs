@@ -22,13 +22,11 @@ namespace SandAndStonesEngine
         public static GameWindow Instance => lazyInstance.Value;
 
         public bool resized = true;
-        private GameAssets assets;
-        private GameStatusBarAssets statusBarAssets;
+        List<GameAssetBatchBase> assetBatchList;
         private GameShaderSet shaderSet;
         public Sdl2Window SDLWindow;
         private GameCommandList gameCommandList;
-        private PipelineBase gamePipeline;
-        private PipelineBase statusBarPipeline;
+        private List<PipelineBase> pipelineList;
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
         private Matrices matrices;
@@ -70,26 +68,29 @@ namespace SandAndStonesEngine
 
             gameCamera = new Camera(matrices);
 
-            assets = new GameAssets();
-            assets.Create();
-            statusBarAssets = new GameStatusBarAssets();
-            statusBarAssets.Create();
+            assetBatchList = new List<GameAssetBatchBase>
+            {
+                new GameAssetBatch(),
+                new GameStatusBarAssetBatch()
+            };
+            assetBatchList.ForEach(e => e.Init());
 
-            shaderSet = new GameShaderSet(assets, matrices);
+            shaderSet = new GameShaderSet(assetBatchList[0], matrices);
             shaderSet.Create();
 
             List<GameAssetBase> gameAssets = new List<GameAssetBase>();
-            gameAssets.AddRange(assets.gameAssets);
-            gameAssets.AddRange(statusBarAssets.gameAssets);
+            assetBatchList.ForEach(e => gameAssets.AddRange(e.Assets));
             gameTextureSurface = new GameTextureSurface(gameAssets, 256, 256);
             gameTextureSurface.Init();
 
-            gamePipeline = new GamePipeline(shaderSet, gameTextureSurface, matrices);
-            gamePipeline.Init();
-            statusBarPipeline = new StatusBarPipeline(shaderSet, gameTextureSurface, matrices);
-            statusBarPipeline.Init();
+            pipelineList = new List<PipelineBase>()
+            {
+                new GamePipeline(shaderSet, gameTextureSurface, matrices),
+                new StatusBarPipeline(shaderSet, gameTextureSurface, matrices)
+            };
+            pipelineList.ForEach(e => e.Init());
 
-            gameCommandList = new GameCommandList(matrices, gameTextureSurface, assets, statusBarAssets, gamePipeline, statusBarPipeline);
+            gameCommandList = new GameCommandList(matrices, gameTextureSurface, assetBatchList, pipelineList);
             gameCommandList.Init();
         }
 
@@ -121,8 +122,7 @@ namespace SandAndStonesEngine
                 }
 
                 gameCamera.Update(deltaElapsedTime);
-                assets.Update(deltaElapsedTime);
-                statusBarAssets.Update(deltaElapsedTime);
+                assetBatchList.ForEach(e => e.Update(deltaElapsedTime));
                 gameTextureSurface.Update();
 
                 Draw((float)deltaElapsedTime);
@@ -145,16 +145,12 @@ namespace SandAndStonesEngine
                 }
                 matrices.Dispose();
                 gameCamera.Dispose();
-                gamePipeline.Dispose();
-                statusBarPipeline.Dispose();
+                pipelineList.ForEach(e=> e.Dispose());
                 gameCommandList.Dispose();
-                var disposableAssets = assets as IDisposable;
-                disposableAssets?.Dispose();
-                var disposableStatusBarAssets = statusBarAssets as IDisposable;
-                disposableStatusBarAssets?.Dispose();
-                shaderSet?.Dispose();
-                var disposableGameTextureSurface = gameTextureSurface as IDisposable;
-                gameTextureSurface?.Dispose();
+
+                assetBatchList.ForEach(e => e.Dispose());
+                shaderSet.Dispose();
+                gameTextureSurface.Dispose();
                 disposedValue = true;
             }
         }

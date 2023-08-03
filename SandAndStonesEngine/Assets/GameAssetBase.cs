@@ -57,7 +57,7 @@ namespace SandAndStonesEngine.Assets
             this.parameterChanged = true;
         }
 
-        public virtual void Update(double delta)
+        public virtual void Update(long delta)
         {
             if (this.parameterChanged)
             {

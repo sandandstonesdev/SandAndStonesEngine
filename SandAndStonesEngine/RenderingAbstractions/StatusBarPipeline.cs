@@ -15,6 +15,10 @@ namespace SandAndStonesEngine.RenderingAbstractions
 {
     public class StatusBarPipeline : PipelineBase
     {
+        public override Viewport Viewport
+        {
+            get { return new Viewport(0, Framebuffer.Height - 200, Framebuffer.Width, Framebuffer.Height, 0, 1); }
+        }
         public StatusBarPipeline(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
             : base(shaderSet, gameTextureSurface, matrices)
         {

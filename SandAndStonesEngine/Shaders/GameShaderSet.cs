@@ -9,7 +9,7 @@ namespace SandAndStonesEngine.Shaders
     public class GameShaderSet : IDisposable
     {
         public Shader[] Shaders { get; private set; }
-        private readonly GameAssets assets;
+        private readonly GameAssetBatchBase assets;
         public ShaderSetDescription ShaderSet;
         private bool disposedValue;
         readonly Dictionary<string, string> shaderFileNames = new Dictionary<string, string>
@@ -19,7 +19,7 @@ namespace SandAndStonesEngine.Shaders
         };
 
         readonly Matrices matrices;
-        public GameShaderSet(GameAssets assets, Matrices matrices)
+        public GameShaderSet(GameAssetBatchBase assets, Matrices matrices)
         {
             this.assets = assets;
             this.matrices = matrices;

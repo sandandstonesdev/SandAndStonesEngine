@@ -31,7 +31,7 @@ namespace SandAndStonesEngine.Assets
             base.SetParam(param);
         }
 
-        public override void Update(double delta)
+        public override void Update(long delta)
         {
             base.Update(delta);
         }

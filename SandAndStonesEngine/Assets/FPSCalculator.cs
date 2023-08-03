@@ -3,7 +3,7 @@
     public class FPSCalculator
     {
         int sampleCount;
-        LinkedList<double> deltasBuffer = new LinkedList<double>();
+        LinkedList<long> deltasBuffer = new LinkedList<long>();
         UpdateFPSScheduler updateScheduler = new UpdateFPSScheduler();
         public FPSCalculator(int sampleCount)
         {
@@ -14,27 +14,27 @@
             }
         }
 
-        public void AddNextDelta(double delta)
+        public void AddNextDelta(long delta)
         {
             deltasBuffer.RemoveLast();
             deltasBuffer.AddFirst(delta);
         }
 
-        public bool CanDoUpdate(double delta)
+        public bool CanDoUpdate(long delta)
         {
             return updateScheduler.DoUpdate(delta);
         }
 
         public double GetResult()
         {
-            double result = 0;
-            double sampleSum = 0;
+            long result = 0;
+            long sampleSum = 0;
             foreach(var deltaSample in deltasBuffer)
             {
                 sampleSum += deltaSample; 
             }
             
-            result = ((double)sampleCount / (double)sampleSum) * 1000;
+            result = (sampleCount * 1000) / sampleSum;
             return result;
         }
     }

@@ -13,24 +13,30 @@ using Vortice.DXGI;
 
 namespace SandAndStonesEngine.RenderingAbstractions
 {
-    public class PipelineBase : IDisposable
+    public abstract class PipelineBase : IDisposable
     {
         private Matrices matrices;
         private GameShaderSet shaderSet;
         private GameTextureSurface gameTextureSurface;
         public Pipeline Pipeline;
+        protected GameGraphicDevice gameGraphicDevice;
         private bool disposedValue;
+        protected Framebuffer Framebuffer
+        {
+            get { return gameGraphicDevice.SwapChain; }
+        }
+        public abstract Viewport Viewport { get; }
 
         public PipelineBase(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
         {
             this.gameTextureSurface = gameTextureSurface;
             this.matrices = matrices;
             this.shaderSet = shaderSet;
+            this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
         }
 
         public virtual void Init()
         {
-            GameGraphicDevice gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
             ResourceFactory factory = Factory.Instance.GetResourceFactory();
 
             GraphicsPipelineDescription pipelineDescription = new()

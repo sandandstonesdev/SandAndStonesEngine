@@ -15,11 +15,15 @@ using Vulkan;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
-    internal class GamePipeline : PipelineBase
+    public class GamePipeline : PipelineBase
     {
+        public override Viewport Viewport
+        {
+            get { return new Viewport(0, 0, Framebuffer.Width, Framebuffer.Height - 200, 0, 1); }
+        }
         public GamePipeline(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
             : base(shaderSet, gameTextureSurface, matrices)
-        { 
+        {
         }
 
         public override void Init()

@@ -23,20 +23,18 @@ namespace SandAndStonesEngine.GraphicAbstractions
     {
         private CommandList CommandList;
         private bool disposedValue;
-        private readonly GameAssets assets;
-        private readonly PipelineBase gamePipeline;
-        private readonly PipelineBase statusBarPipeline;
-        private readonly GameStatusBarAssets statusBarAssets;
+        private readonly List<GameAssetBatchBase> assetBatchList;
+        private readonly List<PipelineBase> pipelineList;
         private readonly Matrices matrices;
         private readonly GameTextureSurface gameTextureSurface;
-        public GameCommandList(Matrices matrices, GameTextureSurface gameTextureSurface, GameAssets assets, GameStatusBarAssets statusBarAssets, PipelineBase gamePipeline, PipelineBase statusBarPipeline)
+        public RgbaFloat ClearColor;
+        public GameCommandList(Matrices matrices, GameTextureSurface gameTextureSurface, List<GameAssetBatchBase> assetBatchList, List<PipelineBase> pipelineList)
         {
+            this.ClearColor = RgbaFloat.Black;
             this.matrices = matrices;
             this.gameTextureSurface = gameTextureSurface;
-            this.assets = assets;
-            this.statusBarAssets = statusBarAssets;
-            this.gamePipeline = gamePipeline;
-            this.statusBarPipeline = statusBarPipeline;
+            this.assetBatchList = assetBatchList;
+            this.pipelineList = pipelineList;
         }
 
         public void Init()
@@ -56,50 +54,28 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.UpdateBuffer(matrices.WorldBuffer, 0, matrices.WorldMatrix);
 
             CommandList.SetFramebuffer(gameGraphicDevice.SwapChain);
-            CommandList.ClearColorTarget(0, RgbaFloat.Black);
+            CommandList.ClearColorTarget(0, ClearColor);
 
-            Framebuffer frameBuffer = gameGraphicDevice.SwapChain;
-            var viewport1 = new Viewport(0, 0, frameBuffer.Width, frameBuffer.Height - 200, 0, 1);
-            DrawPipeline1(viewport1);
-            var viewport2 = new Viewport(0, frameBuffer.Height - 200, frameBuffer.Width, frameBuffer.Height, 0, 1);
-            DrawPipeline2(viewport2);
+            DrawPipeline(pipelineList[0], assetBatchList[0]);
+            DrawPipeline(pipelineList[1], assetBatchList[1]);
 
             CommandList.End();
             gameGraphicDevice.Flush(CommandList);
         }
 
-        private void DrawPipeline1(Viewport viewport)
+        private void DrawPipeline(PipelineBase pipeline, GameAssetBatchBase assetBatch)
         {
-            CommandList.SetViewport(0, viewport);
+            CommandList.SetViewport(0, pipeline.Viewport);
 
-            CommandList.SetPipeline(gamePipeline.Pipeline);
-            CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
-            CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
+            CommandList.SetPipeline(pipeline.Pipeline);
+            CommandList.SetVertexBuffer(0, assetBatch.DeviceVertexBuffer);
+            CommandList.SetIndexBuffer(assetBatch.DeviceIndexBuffer, assetBatch.IndexBufferFormat);
 
             CommandList.SetGraphicsResourceSet(0, gameTextureSurface.ResourceSet);
             CommandList.SetGraphicsResourceSet(1, matrices.MatricesSet);
             CommandList.SetGraphicsResourceSet(2, matrices.WorldSet);
             CommandList.DrawIndexed(
-                indexCount: assets.IndicesCount,
-                instanceCount: 1,
-                indexStart: 0,
-                vertexOffset: 0,
-                instanceStart: 0);
-        }
-
-        private void DrawPipeline2(Viewport viewport)
-        {
-            CommandList.SetViewport(0, viewport);
-
-            CommandList.SetPipeline(statusBarPipeline.Pipeline);
-            CommandList.SetVertexBuffer(0, statusBarAssets.DeviceVertexBuffer);
-            CommandList.SetIndexBuffer(statusBarAssets.DeviceIndexBuffer, statusBarAssets.IndexBufferFormat);
-
-            CommandList.SetGraphicsResourceSet(0, gameTextureSurface.ResourceSet);
-            CommandList.SetGraphicsResourceSet(1, matrices.MatricesSet);
-            CommandList.SetGraphicsResourceSet(2, matrices.WorldSet);
-            CommandList.DrawIndexed(
-                indexCount: statusBarAssets.IndicesCount,
+                indexCount: assetBatch.IndicesCount,
                 instanceCount: 1,
                 indexStart: 0,
                 vertexOffset: 0,
