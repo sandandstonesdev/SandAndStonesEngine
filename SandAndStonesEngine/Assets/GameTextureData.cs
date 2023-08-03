@@ -1,8 +1,5 @@
-﻿using SandAndStonesEngine.GameTextures;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Memory;
+﻿using SkiaSharp;
 using System.Runtime.InteropServices;
-using Vortice.D3DCompiler;
 
 namespace SandAndStonesEngine.Assets
 {
@@ -35,14 +32,14 @@ namespace SandAndStonesEngine.Assets
         public byte[] GetImageBytes(string fileName)
         {
             var outputImagePath = GetTextureImageFilePath(fileName);
-            using Image<Rgba32> imagePixels = Image.Load<Rgba32>(outputImagePath);
-            this.Width = imagePixels.Width;
-            this.Height = imagePixels.Height;
-            IMemoryGroup<Rgba32> memoryGroup = imagePixels.GetPixelMemoryGroup();
-            var _memoryGroup = memoryGroup.ToArray()[0];
-            var pixelData = MemoryMarshal.AsBytes(_memoryGroup.Span).ToArray();
-            byte[] imageBytes = pixelData;
-            return imageBytes;
+            using var image = SKImage.FromEncodedData(outputImagePath);
+            using var bitmap = SKBitmap.FromImage(image);
+            this.Width = image.Width;
+            this.Height = image.Height;
+            using var pixmap = bitmap.PeekPixels();
+            var span = pixmap.GetPixelSpan();
+            byte[] bitmapBytes = MemoryMarshal.AsBytes(span).ToArray();
+            return bitmapBytes;
         }
 
         public string GetTextureImageFilePath(string fileName)

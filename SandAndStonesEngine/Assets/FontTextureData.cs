@@ -1,5 +1,6 @@
 ﻿using SandAndStonesEngine.GameTextures;
 using SharpGen.Runtime;
+using SharpGen.Runtime.Win32;
 using SkiaSharp;
 using System.Runtime.InteropServices;
 
@@ -28,42 +29,36 @@ namespace SandAndStonesEngine.Assets
         public byte[] GetTextBitmap(string text = "", int colNumber = 0, int rowNumber = 0, float textSize = 10.0f, int bitmapSize = 256)
         {
             var textLinesToRender = text.Split(System.Environment.NewLine).ToList();
-            byte[] bitmapBytes = null;
-            var info = new SKImageInfo(bitmapSize, bitmapSize, SKColorType.Rgba8888);
-            using (var surface = SKSurface.Create(info))
+            using var bitmap = new SKBitmap(bitmapSize, bitmapSize);
+            using var canvas =  new SKCanvas(bitmap);
+            canvas.Clear(SKColors.Transparent);
+
+            using var font = new SKFont(SKTypeface.FromFamilyName("Arial"), textSize, 1, 0);
+            using (var paint = new SKPaint(font))
             {
-                SKBitmap bitmap = new SKBitmap(bitmapSize, bitmapSize);
-                SKCanvas canvas =  new SKCanvas(bitmap);
-                canvas.Clear(SKColors.Transparent);
+                paint.TextSize = textSize;
+                paint.IsAntialias = true;
+                SKColor.TryParse("FFFF00", out SKColor color);
 
-                SKFont font = new SKFont(SKTypeface.FromFamilyName("Arial"), textSize, 1, 0);
-                using (var paint = new SKPaint(font))
+                paint.Color = color;
+                paint.IsStroke = false;
+
+                float xTextPos = textSize * colNumber;
+                float yTextPos = textSize + textSize * rowNumber;
+                int rowCount = rowNumber;
+                foreach (var textLine in textLinesToRender)
                 {
-                    paint.TextSize = textSize;
-                    paint.IsAntialias = true;
-                    SKColor.TryParse("FFFF00", out SKColor color);
-
-                    paint.Color = color;
-                    paint.IsStroke = false;
-
-                    float xTextPos = textSize * colNumber;
-                    float yTextPos = textSize + textSize * rowNumber;
-                    int rowCount = rowNumber;
-                    foreach (var textLine in textLinesToRender)
-                    {
-                        yTextPos = textSize * ++rowCount;
-                        canvas.DrawText(textLine, xTextPos, yTextPos, paint);
-                    }
-                    canvas.Flush();
+                    yTextPos = textSize * ++rowCount;
+                    canvas.DrawText(textLine, xTextPos, yTextPos, paint);
                 }
-
-                SKImage img = SKImage.FromPixels(bitmap.PeekPixels());
-                this.Width = img.Width;
-                this.Height = img.Height;
-                var pixmap = img.PeekPixels();
-                var span = pixmap.GetPixelSpan();
-                bitmapBytes = MemoryMarshal.AsBytes(span).ToArray();
+                canvas.Flush();
             }
+
+            this.Width = bitmap.Width;
+            this.Height = bitmap.Height;
+            var pixmap = bitmap.PeekPixels();
+            var span = pixmap.GetPixelSpan();
+            byte[] bitmapBytes = MemoryMarshal.AsBytes(span).ToArray();
 
             return bitmapBytes;
         }
