@@ -27,8 +27,8 @@ namespace SandAndStonesEngine
         private GameShaderSet shaderSet;
         public Sdl2Window SDLWindow;
         private GameCommandList gameCommandList;
-        private GamePipeline gamePipeline;
-        private StatusBarPipeline statusBarPipeline;
+        private PipelineBase gamePipeline;
+        private PipelineBase statusBarPipeline;
         private InputDevicesState inputDevicesState;
         private Camera gameCamera;
         private Matrices matrices;
@@ -85,9 +85,9 @@ namespace SandAndStonesEngine
             gameTextureSurface.Init();
 
             gamePipeline = new GamePipeline(shaderSet, gameTextureSurface, matrices);
-            gamePipeline.Create();
+            gamePipeline.Init();
             statusBarPipeline = new StatusBarPipeline(shaderSet, gameTextureSurface, matrices);
-            statusBarPipeline.Create();
+            statusBarPipeline.Init();
 
             gameCommandList = new GameCommandList(matrices, gameTextureSurface, assets, statusBarAssets, gamePipeline, statusBarPipeline);
             gameCommandList.Init();

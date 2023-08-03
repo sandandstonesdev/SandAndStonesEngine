@@ -13,74 +13,21 @@ using Veldrid;
 
 namespace SandAndStonesEngine.RenderingAbstractions
 {
-    public class StatusBarPipeline : IDisposable
+    public class StatusBarPipeline : PipelineBase
     {
-        private Matrices matrices;
-        private GameShaderSet shaderSet;
-        private GameTextureSurface gameTextureSurface;
-        public Pipeline Pipeline;
-        private bool disposedValue;
-
         public StatusBarPipeline(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
+            : base(shaderSet, gameTextureSurface, matrices)
         {
-            this.gameTextureSurface = gameTextureSurface;
-            this.matrices = matrices;
-            this.shaderSet = shaderSet;
         }
 
-
-        protected virtual void Dispose(bool disposing)
+        public override void Init()
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                }
-                Pipeline.Dispose();
-
-                disposedValue = true;
-            }
+            base.Init();
         }
 
-        ~StatusBarPipeline()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(disposing: false);
-        }
-
-        public void Create()
-        {
-            GameGraphicDevice gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
-
-            GraphicsPipelineDescription pipelineDescription = new()
-            {
-                BlendState = BlendStateDescription.SingleAlphaBlend,
-
-                DepthStencilState = new DepthStencilStateDescription(
-                depthTestEnabled: true,
-                depthWriteEnabled: true,
-                comparisonKind: ComparisonKind.LessEqual),
-
-                RasterizerState = new RasterizerStateDescription(
-                cullMode: FaceCullMode.Back,
-                fillMode: PolygonFillMode.Solid,
-                frontFace: FrontFace.Clockwise,
-                depthClipEnabled: true,
-                scissorTestEnabled: false),
-
-                PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout },
-                ShaderSet = shaderSet.ShaderSet,
-
-                Outputs = gameGraphicDevice.SwapChain.OutputDescription
-            };
-            Pipeline = factory.CreateGraphicsPipeline(pipelineDescription);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            base.Dispose(disposing);
         }
     }
 }

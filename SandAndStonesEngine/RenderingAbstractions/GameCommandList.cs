@@ -21,15 +21,15 @@ namespace SandAndStonesEngine.GraphicAbstractions
 {
     internal class GameCommandList : IDisposable
     {
-        public CommandList CommandList;
+        private CommandList CommandList;
         private bool disposedValue;
         private readonly GameAssets assets;
-        private readonly GamePipeline gamePipeline;
-        private readonly StatusBarPipeline statusBarPipeline;
+        private readonly PipelineBase gamePipeline;
+        private readonly PipelineBase statusBarPipeline;
         private readonly GameStatusBarAssets statusBarAssets;
         private readonly Matrices matrices;
         private readonly GameTextureSurface gameTextureSurface;
-        public GameCommandList(Matrices matrices, GameTextureSurface gameTextureSurface, GameAssets assets, GameStatusBarAssets statusBarAssets, GamePipeline gamePipeline, StatusBarPipeline statusBarPipeline)
+        public GameCommandList(Matrices matrices, GameTextureSurface gameTextureSurface, GameAssets assets, GameStatusBarAssets statusBarAssets, PipelineBase gamePipeline, PipelineBase statusBarPipeline)
         {
             this.matrices = matrices;
             this.gameTextureSurface = gameTextureSurface;
@@ -56,12 +56,22 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList.UpdateBuffer(matrices.WorldBuffer, 0, matrices.WorldMatrix);
 
             CommandList.SetFramebuffer(gameGraphicDevice.SwapChain);
+            CommandList.ClearColorTarget(0, RgbaFloat.Black);
 
             Framebuffer frameBuffer = gameGraphicDevice.SwapChain;
             var viewport1 = new Viewport(0, 0, frameBuffer.Width, frameBuffer.Height - 200, 0, 1);
-            CommandList.SetViewport(0, viewport1);
-            CommandList.ClearColorTarget(0, RgbaFloat.Black);
-            
+            DrawPipeline1(viewport1);
+            var viewport2 = new Viewport(0, frameBuffer.Height - 200, frameBuffer.Width, frameBuffer.Height, 0, 1);
+            DrawPipeline2(viewport2);
+
+            CommandList.End();
+            gameGraphicDevice.Flush(CommandList);
+        }
+
+        private void DrawPipeline1(Viewport viewport)
+        {
+            CommandList.SetViewport(0, viewport);
+
             CommandList.SetPipeline(gamePipeline.Pipeline);
             CommandList.SetVertexBuffer(0, assets.DeviceVertexBuffer);
             CommandList.SetIndexBuffer(assets.DeviceIndexBuffer, assets.IndexBufferFormat);
@@ -75,9 +85,11 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 indexStart: 0,
                 vertexOffset: 0,
                 instanceStart: 0);
+        }
 
-            var viewport2 = new Viewport(0, frameBuffer.Height - 200, frameBuffer.Width, frameBuffer.Height, 0, 1);
-            CommandList.SetViewport(0, viewport2);
+        private void DrawPipeline2(Viewport viewport)
+        {
+            CommandList.SetViewport(0, viewport);
 
             CommandList.SetPipeline(statusBarPipeline.Pipeline);
             CommandList.SetVertexBuffer(0, statusBarAssets.DeviceVertexBuffer);
@@ -92,9 +104,6 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 indexStart: 0,
                 vertexOffset: 0,
                 instanceStart: 0);
-
-            CommandList.End();
-            gameGraphicDevice.Flush(CommandList);
         }
 
         protected virtual void Dispose(bool disposing)

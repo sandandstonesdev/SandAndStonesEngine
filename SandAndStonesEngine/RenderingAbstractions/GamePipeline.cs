@@ -8,79 +8,28 @@ using SandAndStonesEngine.GameCamera;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.MathModule;
+using SandAndStonesEngine.RenderingAbstractions;
 using SandAndStonesEngine.Shaders;
 using Veldrid;
 using Vulkan;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
-    internal class GamePipeline : IDisposable
+    internal class GamePipeline : PipelineBase
     {
-        private GameAssets gameAssets;
-        private Matrices matrices;
-        private GameShaderSet shaderSet;
-        private GameTextureSurface gameTextureSurface;
-        private bool disposedValue;
-        public Pipeline Pipeline;
         public GamePipeline(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
-        {
-            this.gameTextureSurface = gameTextureSurface;
-            this.matrices = matrices;
-            this.shaderSet = shaderSet;    
+            : base(shaderSet, gameTextureSurface, matrices)
+        { 
         }
 
-        public void Create()
+        public override void Init()
         {
-            GameGraphicDevice gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
-
-            GraphicsPipelineDescription pipelineDescription = new()
-            {
-                BlendState = BlendStateDescription.SingleAlphaBlend,
-
-                DepthStencilState = new DepthStencilStateDescription(
-                depthTestEnabled: true,
-                depthWriteEnabled: true,
-                comparisonKind: ComparisonKind.LessEqual),
-
-                RasterizerState = new RasterizerStateDescription(
-                cullMode: FaceCullMode.Back,
-                fillMode: PolygonFillMode.Solid,
-                frontFace: FrontFace.Clockwise,
-                depthClipEnabled: true,
-                scissorTestEnabled: false),
-
-                PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout }, 
-                ShaderSet = shaderSet.ShaderSet,
-
-                Outputs = gameGraphicDevice.SwapChain.OutputDescription
-            };
-            Pipeline = factory.CreateGraphicsPipeline(pipelineDescription);
+            base.Init();
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                }
-
-                Pipeline.Dispose();
-                disposedValue = true;
-            }
-        }
-
-        ~GamePipeline()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            base.Dispose(disposing);
         }
     }
 }
