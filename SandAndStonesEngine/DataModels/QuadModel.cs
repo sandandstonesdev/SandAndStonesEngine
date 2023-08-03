@@ -39,7 +39,7 @@ namespace SandAndStonesEngine.DataModels
             this.scale = quadScale;
         }
         
-        public void Create()
+        public void Init()
         {
             var quadAbsoluteCoords = QuadGridManager.Instance.GetQuadAbsoluteCoords(quadPointsInGrid, scale);
 

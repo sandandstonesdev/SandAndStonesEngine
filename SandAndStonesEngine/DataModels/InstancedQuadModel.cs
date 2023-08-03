@@ -49,13 +49,11 @@ namespace SandAndStonesEngine.DataModels
         {
             var scaledPoint = new Vector2(quadGridPoint.X, -quadGridPoint.Y) * new Vector2(quadSizeInCoord.X, quadSizeInCoord.Y);
             var res = relativePosition + scaledPoint;
-            //res = scaledPoint;
-            //Debug.WriteLine($"{ res.X} {res.Y}");
             return new Vector3(res, quadGridPoint.X);
         }
-        public void Create()
+        public void Init()
         {
-            var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0]); //quadPointsInCoord[0];
+            var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0]);
             var leftDown = GetAbsoluteCoord(quadPointsInGrid[1]);
             var rightUpper = GetAbsoluteCoord(quadPointsInGrid[2]);
             var rightDown = GetAbsoluteCoord(quadPointsInGrid[3]);

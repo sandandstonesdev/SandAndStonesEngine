@@ -45,7 +45,7 @@ namespace SandAndStonesEngine.Assets
                     var positionInQuadCount = new Vector3(i, j, Depth);
                     var color = colorRandomizer.GetColor();
                     QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, TextureId);
-                    quadModel.Create();
+                    quadModel.Init();
                     QuadModelList.Add(quadModel);
                 }
             }

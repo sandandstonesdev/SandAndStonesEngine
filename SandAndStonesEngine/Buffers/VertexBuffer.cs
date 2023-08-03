@@ -9,13 +9,9 @@ namespace SandAndStonesEngine.Buffers
     {
         public DeviceBuffer DeviceBuffer;
         readonly GraphicsDevice graphicsDevice;
-        public VertexLayoutDescription VertexLayout
+        public static VertexLayoutDescription VertexLayout
         {
-            get 
-            {
-                var VertexLayout = new VertexLayout();
-                return VertexLayout.Layout;
-            }
+            get => VertexInstanceLayout.VertexLayoutPrototype;
         }
 
         List<IQuadModel> quadModelList;

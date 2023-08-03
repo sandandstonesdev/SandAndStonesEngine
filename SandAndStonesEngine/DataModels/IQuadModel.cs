@@ -4,7 +4,7 @@ namespace SandAndStonesEngine.DataModels
 {
     public interface IQuadModel
     {
-        void Create();
+        void Init();
         VertexDataFormat[] VerticesPositions { get; }
         public ushort[] QuadIndexes { get; }
     }

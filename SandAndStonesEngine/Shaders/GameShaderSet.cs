@@ -25,7 +25,7 @@ namespace SandAndStonesEngine.Shaders
             this.matrices = matrices;
         }
 
-        public void Create()
+        public void Init()
         {
             ResourceFactory factory = Factory.Instance.GetResourceFactory();
             

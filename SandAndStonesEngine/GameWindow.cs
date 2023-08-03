@@ -8,11 +8,9 @@ using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameCamera;
 using System.Diagnostics;
 using SandAndStonesEngine.MathModule;
-using SandAndStonesEngine.GameFactories;
 using System.Numerics;
 using SandAndStonesEngine.RenderingAbstractions;
 using SandAndStonesEngine.GameTextures;
-using Veldrid;
 
 namespace SandAndStonesEngine
 {
@@ -76,7 +74,7 @@ namespace SandAndStonesEngine
             assetBatchList.ForEach(e => e.Init());
 
             shaderSet = new GameShaderSet(assetBatchList[0], matrices);
-            shaderSet.Create();
+            shaderSet.Init();
 
             List<GameAssetBase> gameAssets = new List<GameAssetBase>();
             assetBatchList.ForEach(e => gameAssets.AddRange(e.Assets));
@@ -111,21 +109,24 @@ namespace SandAndStonesEngine
 
                 var snapshot = SDLWindow.PumpEvents();
                 inputDevicesState.Update(snapshot);
-                viewTransformator.Update();
-                worldTransformator.Update();
-
-                if (resized)
+                if (SDLWindow.Exists)
                 {
-                    gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
-                    QuadGridManager.Instance.Resize(SDLWindow.Width, SDLWindow.Height);
-                    resized = false;
+                    viewTransformator.Update();
+                    worldTransformator.Update();
+
+                    if (resized)
+                    {
+                        gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
+                        QuadGridManager.Instance.Resize(SDLWindow.Width, SDLWindow.Height);
+                        resized = false;
+                    }
+
+                    gameCamera.Update(deltaElapsedTime);
+                    assetBatchList.ForEach(e => e.Update(deltaElapsedTime));
+                    gameTextureSurface.Update();
+
+                    Draw((float)deltaElapsedTime);
                 }
-
-                gameCamera.Update(deltaElapsedTime);
-                assetBatchList.ForEach(e => e.Update(deltaElapsedTime));
-                gameTextureSurface.Update();
-
-                Draw((float)deltaElapsedTime);
             }
 
             sw.Stop();

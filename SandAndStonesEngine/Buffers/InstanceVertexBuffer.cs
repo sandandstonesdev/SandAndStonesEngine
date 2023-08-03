@@ -12,13 +12,9 @@ namespace SandAndStonesEngine.Buffers
     {
         public DeviceBuffer DeviceBuffer;
         readonly GraphicsDevice graphicsDevice;
-        public VertexLayoutDescription VertexLayout
+        public static VertexLayoutDescription VertexLayout
         {
-            get
-            {
-                var VertexInstanceLayout = new VertexInstanceLayout();
-                return VertexInstanceLayout.Layout;
-            }
+            get => VertexInstanceLayout.VertexLayoutPrototype;
         }
 
         List<IQuadModel> quadModelList;
@@ -45,7 +41,7 @@ namespace SandAndStonesEngine.Buffers
             uint bufSize = (uint)vertexData.Length * VertexInstanceDataFormat.SizeInBytes;
             return bufSize;
         }
-        public void Create()
+        public void Init()
         {
             ResourceFactory factory = graphicsDevice.ResourceFactory;
             VertexData = CollectAllVerticesFromQuads();
