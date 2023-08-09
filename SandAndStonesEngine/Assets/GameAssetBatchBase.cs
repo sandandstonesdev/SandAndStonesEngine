@@ -15,7 +15,7 @@ namespace SandAndStonesEngine.Assets
         }
         public VertexLayoutDescription[] VertexLayouts
         {
-            get { return new VertexLayoutDescription[] { VertexBuffer.VertexLayout }; }
+            get { return new VertexLayoutDescription[] { VertexBuffer.Layout }; }
         }
         public uint IndicesCount
         {

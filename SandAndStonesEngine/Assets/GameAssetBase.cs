@@ -6,12 +6,14 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Veldrid;
 
 namespace SandAndStonesEngine.Assets
 {
     public abstract class GameAssetBase : IDisposable
     {
-        public int Id { get; private set; }
+        public uint Id { get; protected set; }
+        protected abstract AssetType AssetType { get; }
         public int TextureId 
         { 
             get
@@ -21,35 +23,22 @@ namespace SandAndStonesEngine.Assets
         }
         public List<IQuadModel> QuadModelList { get; private set; }
         public GameTextureDataBase GameTextureData { get; protected set; }
-        private float scale;
-        private float Depth;
+        protected float Scale;
+        protected float Depth;
+        protected RgbaFloat Color;
         private bool disposedValue;
         private object parameter;
         private bool parameterChanged = false;
         public abstract bool IsText { get; }
-        public GameAssetBase(float depth, float scale)
+        public GameAssetBase(RgbaFloat color, float depth, float scale)
         {
             this.QuadModelList = new List<IQuadModel>();
+            this.Color = color;
             this.Depth = depth;
-            this.scale = scale;
-            this.Id = IdManager.GetAssetId();
+            this.Scale = scale;
         }
 
-        public virtual void Init(int startX, int startY, int endX, int endY, string textureName)
-        {
-            ColorRandomizer colorRandomizer = new ColorRandomizer();
-            for (int i = startX; i < endX; i++)
-            {
-                for (int j = startY; j < endY; j++)
-                {
-                    var positionInQuadCount = new Vector3(i, j, Depth);
-                    var color = colorRandomizer.GetColor();
-                    QuadModel quadModel = new QuadModel(positionInQuadCount, scale, color, TextureId);
-                    quadModel.Init();
-                    QuadModelList.Add(quadModel);
-                }
-            }
-        }
+        public abstract void Init(int startX, int startY, int endX, int endY, string textureName);
 
         public virtual void SetParam(object param)
         {

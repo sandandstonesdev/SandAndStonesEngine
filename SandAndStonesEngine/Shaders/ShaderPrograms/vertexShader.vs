@@ -20,6 +20,7 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec4 Color;
 layout(location = 2) in vec2 TexCoords;
 layout(location = 3) in int TextureId;
+layout(location = 4) in uint AssetId;
 
 layout(location = 0) out vec4 fsin_Color;
 layout(location = 1) out vec3 fsin_TexCoords;
@@ -28,19 +29,24 @@ void main()
 {
     vec4 objectPosition = Position;
     
-    if (TextureId < 3)
+    uint assetType = AssetId >> 29;
+
+    if (assetType == 1) // BG
+    {
+        gl_Position = objectPosition;
+    }
+    else if (assetType == 2) // SPR
     {
         vec4 worldPosition = World * objectPosition;
         vec4 viewPosition = View * worldPosition;
         vec4 clipPosition =  Projection * viewPosition;
         gl_Position = clipPosition;
-        fsin_Color = Color;
     }
-    else
+    else if (assetType == 4) // TXT
     {
         gl_Position = objectPosition;
-        fsin_Color = vec4(0.5, 0.5, 1.0, 1.0);
     }
     
+    fsin_Color = Color;
     fsin_TexCoords = vec3(TexCoords, TextureId);
 }

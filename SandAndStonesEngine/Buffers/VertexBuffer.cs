@@ -1,6 +1,4 @@
 ﻿using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.Utils;
-using System.Numerics;
 using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
@@ -9,9 +7,9 @@ namespace SandAndStonesEngine.Buffers
     {
         public DeviceBuffer DeviceBuffer;
         readonly GraphicsDevice graphicsDevice;
-        public static VertexLayoutDescription VertexLayout
+        public static VertexLayoutDescription Layout
         {
-            get => VertexInstanceLayout.VertexLayoutPrototype;
+            get => VertexLayout.VertexLayoutPrototype;
         }
 
         List<IQuadModel> quadModelList;

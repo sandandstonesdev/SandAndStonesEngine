@@ -7,7 +7,7 @@ namespace SandAndStonesEngine.Assets
     public class GameTextureData : GameTextureDataBase, IDisposable
     {
         public string FileName { get; private set; }
-        public GameTextureData(int assetId, string fileName) : base(assetId)
+        public GameTextureData(uint assetId, string fileName) : base(assetId)
         {
             this.FileName = fileName;
         }

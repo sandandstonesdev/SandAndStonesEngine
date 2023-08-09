@@ -12,7 +12,7 @@ namespace SandAndStonesEngine.Buffers
     {
         public DeviceBuffer DeviceBuffer;
         readonly GraphicsDevice graphicsDevice;
-        public static VertexLayoutDescription VertexLayout
+        public static VertexLayoutDescription Layout
         {
             get => VertexInstanceLayout.VertexLayoutPrototype;
         }

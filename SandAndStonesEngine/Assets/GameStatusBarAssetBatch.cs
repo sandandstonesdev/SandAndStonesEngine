@@ -27,11 +27,11 @@ namespace SandAndStonesEngine.Assets
             QuadGridManager.Instance.StartNewBatch();
             List<GameAssetBase> assets = new List<GameAssetBase>();
 
-            var GameAsset1 = new GameAsset(0);
+            var GameAsset1 = new GameBackgroundAsset(RgbaFloat.CornflowerBlue, -1);
             GameAsset1.Init(0, 0, 8, 2, "status.png");
             assets.Add(GameAsset1);
 
-            var GameFontAsset1 = new GameTextAsset(1);
+            var GameFontAsset1 = new GameTextAsset(RgbaFloat.Blue, 1);
             GameFontAsset1.Init(0, 0, 1, 2, "letters.png");
             assets.Add(GameFontAsset1);
             return assets;

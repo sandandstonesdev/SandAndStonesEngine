@@ -8,7 +8,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class FontTextureData : GameTextureDataBase, IDisposable
     {
-        public FontTextureData(int assetId) : base(assetId)
+        public FontTextureData(uint assetId) : base(assetId)
         {
         }
 

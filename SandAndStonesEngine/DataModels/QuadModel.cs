@@ -4,7 +4,6 @@ using Veldrid;
 
 namespace SandAndStonesEngine.DataModels
 {
-
     public class QuadModel : IQuadModel
     {
         int quadId;
@@ -14,6 +13,7 @@ namespace SandAndStonesEngine.DataModels
         private Vector2[] quadTextureCoords;
         private ushort[] quadIndexesInGrid;
         private int textureId;
+        private uint assetId;
         private VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
 
         public VertexDataFormat[] VerticesPositions
@@ -26,7 +26,7 @@ namespace SandAndStonesEngine.DataModels
         }
 
         public float scale;
-        public QuadModel(Vector3 gridQuadPosition, float quadScale, RgbaFloat color, int textureId)
+        public QuadModel(Vector3 gridQuadPosition, float quadScale, RgbaFloat color, uint assetId, int textureId)
         {
             QuadData quadData = QuadGridManager.Instance.GetQuadData((int)gridQuadPosition.X, (int)gridQuadPosition.Y, (int)gridQuadPosition.Z);
             this.quadPointsInGrid = quadData.Points;
@@ -34,6 +34,7 @@ namespace SandAndStonesEngine.DataModels
             this.quadTextureCoords = quadData.TextureCoords;
             this.quadId = quadData.Id;
             this.quadBatchId = quadData.BatchId;
+            this.assetId = assetId;
             this.textureId = textureId;
             this.color = color;
             this.scale = quadScale;
@@ -43,13 +44,13 @@ namespace SandAndStonesEngine.DataModels
         {
             var quadAbsoluteCoords = QuadGridManager.Instance.GetQuadAbsoluteCoords(quadPointsInGrid, scale);
 
-            verticesPositions[0] = new VertexDataFormat(quadAbsoluteCoords[0], color, quadTextureCoords[0], textureId);
-            verticesPositions[1] = new VertexDataFormat(quadAbsoluteCoords[1], color, quadTextureCoords[1], textureId);
-            verticesPositions[2] = new VertexDataFormat(quadAbsoluteCoords[2], color, quadTextureCoords[2], textureId);
-            verticesPositions[3] = new VertexDataFormat(quadAbsoluteCoords[3], color, quadTextureCoords[3], textureId);
+            verticesPositions[0] = new VertexDataFormat(quadAbsoluteCoords[0], color, quadTextureCoords[0], (uint)assetId, textureId);
+            verticesPositions[1] = new VertexDataFormat(quadAbsoluteCoords[1], color, quadTextureCoords[1], (uint)assetId, textureId);
+            verticesPositions[2] = new VertexDataFormat(quadAbsoluteCoords[2], color, quadTextureCoords[2], (uint)assetId, textureId);
+            verticesPositions[3] = new VertexDataFormat(quadAbsoluteCoords[3], color, quadTextureCoords[3], (uint)assetId, textureId);
         }
 
-        public void Move(Vector2 pixelMovementVector)
+        protected void Move(Vector2 pixelMovementVector)
         {
             var pixelSizeInCoord = QuadGridManager.Instance.GetPixelSizeInCoordinates();
             var movement = new Vector2(pixelMovementVector.X * pixelSizeInCoord.X, pixelMovementVector.Y * pixelSizeInCoord.Y);
