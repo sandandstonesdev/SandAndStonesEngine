@@ -13,8 +13,8 @@ namespace SandAndStonesEngine.Assets
     {
         protected override AssetType AssetType => AssetType.Sprite;
         public override bool IsText { get { return false; } }
-        public GameSpriteAsset(RgbaFloat color, float depth, float scale = 1.0f) : 
-            base(color,depth, scale)
+        public GameSpriteAsset(string name, RgbaFloat color, float depth, float scale = 1.0f) : 
+            base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);
         }

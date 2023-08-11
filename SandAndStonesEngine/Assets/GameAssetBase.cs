@@ -29,10 +29,12 @@ namespace SandAndStonesEngine.Assets
         private bool disposedValue;
         private object parameter;
         private bool parameterChanged = false;
+        public string Name { get; private set; }
         public abstract bool IsText { get; }
-        public GameAssetBase(RgbaFloat color, float depth, float scale)
+        public GameAssetBase(string name, RgbaFloat color, float depth, float scale)
         {
             this.QuadModelList = new List<IQuadModel>();
+            this.Name = name;
             this.Color = color;
             this.Depth = depth;
             this.Scale = scale;

@@ -20,8 +20,8 @@ namespace SandAndStonesEngine.GameCamera
             {
                 { forwardKey, -Vector3.UnitZ},
                 { backwardKey, Vector3.UnitZ},
-                { leftKey, -Vector3.UnitX},
-                { rightKey, Vector3.UnitX},
+                { leftKey, Vector3.UnitX},
+                { rightKey, -Vector3.UnitX},
                 { upKey, -Vector3.UnitY},
                 { downKey, Vector3.UnitY}
             };

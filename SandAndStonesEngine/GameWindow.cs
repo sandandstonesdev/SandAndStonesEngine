@@ -68,7 +68,7 @@ namespace SandAndStonesEngine
 
             assetBatchList = new List<GameAssetBatchBase>
             {
-                new GameAssetBatch(),
+                new GameAssetBatch(viewTransformator),
                 new GameStatusBarAssetBatch()
             };
             assetBatchList.ForEach(e => e.Init());

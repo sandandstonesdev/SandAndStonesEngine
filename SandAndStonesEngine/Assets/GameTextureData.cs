@@ -19,12 +19,12 @@ namespace SandAndStonesEngine.Assets
 
         public override void Update(object param)
         {
-            var fileName = param as string;
-            if (fileName == null)
+            FileName = param as string;
+            if (FileName == null)
                 return;
 
-            string path = GetTextureImageFilePath(fileName);
-            byte[] imageBytes = GetImageBytes(fileName);
+            string path = GetTextureImageFilePath(FileName);
+            byte[] imageBytes = GetImageBytes(FileName);
 
             base.Update(imageBytes);
         }

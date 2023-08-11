@@ -14,8 +14,8 @@ namespace SandAndStonesEngine.Assets
     {
         protected override AssetType AssetType => AssetType.Background;
         public override bool IsText { get { return false; } }
-        public GameBackgroundAsset(RgbaFloat color, float depth, float scale = 1.0f) :
-            base(color,depth, scale)
+        public GameBackgroundAsset(string name, RgbaFloat color, float depth, float scale = 1.0f) :
+            base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);
         }

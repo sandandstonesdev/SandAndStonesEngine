@@ -8,6 +8,7 @@ namespace SandAndStonesEngine.MathModule
         InputMotionMapperBase inputMotionMapper;
         Matrices matrices;
         public TransformatorData TransformatorData;
+        public event EventHandler PositionChanged;
         public ViewTransformator(InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {
             this.inputMotionMapper = inputMotionMapper;
@@ -26,6 +27,8 @@ namespace SandAndStonesEngine.MathModule
             if (motionDir != Vector3.Zero)
             {
                 TransformatorData.Position += motionDir * TransformatorData.MoveSpeed;
+                if (PositionChanged != null) 
+                    PositionChanged(this, EventArgs.Empty);
             }
         }
     }

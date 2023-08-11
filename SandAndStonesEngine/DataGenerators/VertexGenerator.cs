@@ -9,7 +9,7 @@ using Vulkan.Xlib;
 
 namespace SandAndStonesEngine.Utils
 {
-    internal class VertexGenerator : IVertexGenerator
+    public class VertexGenerator : IVertexGenerator
     {
         int rows;
         int cols;
