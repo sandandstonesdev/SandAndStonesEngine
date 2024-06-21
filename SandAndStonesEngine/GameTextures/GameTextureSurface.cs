@@ -40,7 +40,7 @@ namespace SandAndStonesEngine.GameTextures
             this.width = width;
             this.height = height;
             this.textureDataList = new List<GameTextureDataBase>();
-            gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+            this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
         }
         public void Init()
         {

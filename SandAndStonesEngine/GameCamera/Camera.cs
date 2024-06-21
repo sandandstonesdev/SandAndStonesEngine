@@ -29,6 +29,21 @@ namespace SandAndStonesEngine.GameCamera
         int windowWidth;
         int windowHeight;
 
+        Vector2 CameraPos
+        {
+            get
+            {
+                var transformator = matrices.viewTransformator;
+                var data = transformator?.TransformatorData;
+                if (data==null)
+                {
+                    return new Vector2(0, 0);
+                }
+                return new Vector2(data.Position.X, data.Position.Y);
+            }
+        }
+
+
         public Camera(Matrices matrices)
         {
             this.matrices = matrices;

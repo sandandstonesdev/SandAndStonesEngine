@@ -25,8 +25,8 @@ namespace SandAndStonesEngine.MathModule
         public ResourceSet MatricesSet;
         public ResourceSet WorldSet;
         private bool disposedValue;
-        WorldTransformator worldTransformator;
-        ViewTransformator viewTransformator;
+        public WorldTransformator worldTransformator;
+        public ViewTransformator viewTransformator;
         public Matrices(WorldTransformator worldTransformator, ViewTransformator viewTransformator)
         {
             this.worldTransformator = worldTransformator;
