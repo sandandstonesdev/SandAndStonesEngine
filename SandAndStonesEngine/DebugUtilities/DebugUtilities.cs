@@ -10,6 +10,15 @@ namespace SandAndStonesEngine.DebugUtilities
 {
     public static class DebugUtilities
     {
+        public static void DisplayVector2(Vector2 vector, string valueName)
+        {
+            Debug.WriteLine($"Vector {valueName}");
+            Debug.WriteLine("--------------------");
+            Debug.WriteLine($"{vector.X}");
+            Debug.WriteLine($"{vector.Y}");
+            Debug.WriteLine("--------------------");
+        }
+
         public static void DisplayMatrix4x4(Matrix4x4 matrix, string matrixName)
         {
             Debug.WriteLine($"Matrix {matrixName}");

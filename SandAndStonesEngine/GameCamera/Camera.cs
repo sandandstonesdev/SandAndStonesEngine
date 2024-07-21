@@ -13,6 +13,7 @@ using Vulkan.Xlib;
 using System.Runtime.CompilerServices;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.DataModels;
 
 namespace SandAndStonesEngine.GameCamera
 {
@@ -43,11 +44,13 @@ namespace SandAndStonesEngine.GameCamera
             }
         }
 
+        readonly ScrollableViewport scrollableViewport;
 
-        public Camera(Matrices matrices)
+        public Camera(Matrices matrices, ScrollableViewport scrollableViewport)
         {
             this.matrices = matrices;
-            
+            this.scrollableViewport = scrollableViewport;
+
             windowWidth = GameWindow.Instance.SDLWindow.Width;
             windowHeight = GameWindow.Instance.SDLWindow.Height;
             aspectRatio = windowWidth / windowHeight;
@@ -80,7 +83,7 @@ namespace SandAndStonesEngine.GameCamera
 
         public void Update(long deltaSeconds)
         {
-            matrices.UpdateView();
+            matrices.UpdateViewWorld();
         }
 
         public void Dispose()

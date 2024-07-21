@@ -9,5 +9,6 @@ namespace SandAndStonesEngine.Buffers
         RgbaFloat Color { get; }
         Vector2 TextureCoords { get; }
         int TextureId { get; }
+        int Scroll { get; }
     }
 }

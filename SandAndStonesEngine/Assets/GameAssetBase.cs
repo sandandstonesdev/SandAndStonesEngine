@@ -13,7 +13,7 @@ namespace SandAndStonesEngine.Assets
     public abstract class GameAssetBase : IDisposable
     {
         public uint Id { get; protected set; }
-        protected abstract AssetType AssetType { get; }
+        public abstract AssetType AssetType { get; }
         public int TextureId 
         { 
             get
@@ -22,6 +22,7 @@ namespace SandAndStonesEngine.Assets
             }
         }
         public List<IQuadModel> QuadModelList { get; private set; }
+        
         public GameTextureDataBase GameTextureData { get; protected set; }
         protected float Scale;
         protected float Depth;

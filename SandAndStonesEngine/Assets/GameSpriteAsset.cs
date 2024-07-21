@@ -11,7 +11,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameSpriteAsset : GameAssetBase
     {
-        protected override AssetType AssetType => AssetType.Sprite;
+        public override AssetType AssetType => AssetType.Sprite;
         public override bool IsText { get { return false; } }
         public GameSpriteAsset(string name, RgbaFloat color, float depth, float scale = 1.0f) : 
             base(name, color, depth, scale)

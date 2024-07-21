@@ -12,7 +12,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameBackgroundAsset : GameAssetBase
     {
-        protected override AssetType AssetType => AssetType.Background;
+        public override AssetType AssetType => AssetType.Background;
         public override bool IsText { get { return false; } }
         public GameBackgroundAsset(string name, RgbaFloat color, float depth, float scale = 1.0f) :
             base(name, color, depth, scale)
@@ -38,6 +38,14 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
+        public void Scroll(ScrollableViewport scrollableViewport)
+        {
+            QuadModelList.ForEach(x =>
+            {
+                var backgroundTile = x as BackgroundTile;
+                backgroundTile?.Scroll(scrollableViewport);
+            });
+        }
 
         public override void SetParam(object param)
         {

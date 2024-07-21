@@ -27,6 +27,7 @@ namespace SandAndStonesEngine.MathModule
         private bool disposedValue;
         public WorldTransformator worldTransformator;
         public ViewTransformator viewTransformator;
+
         public Matrices(WorldTransformator worldTransformator, ViewTransformator viewTransformator)
         {
             this.worldTransformator = worldTransformator;
@@ -65,23 +66,32 @@ namespace SandAndStonesEngine.MathModule
             ViewMatrix = Matrix4x4.CreateLookAt(viewTransformatorData.Position, viewTransformatorData.Target, viewTransformatorData.Up);
             DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
         }
+
         public void UpdateWorld()
         {
             var worldTransformatorData = worldTransformator.TransformatorData;
             WorldMatrix = Matrix4x4.CreateWorld(-worldTransformatorData.Position, worldTransformatorData.Forward, worldTransformatorData.Up);
             DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
         }
+        
+        public void UpdateScroll()
+        {
+            var viewTransformatorData = viewTransformator.TransformatorData;
+            DebugUtilities.DebugUtilities.DisplayVector2(viewTransformatorData.ScrollMovement, "Scroll");
+        }
+
 
         public void UpdateViewWorld()
         {
             UpdateWorld();
             UpdateView();
         }
+
         public void UpdateOrtographic(float width, float height, float near, float far)
         {
             float w = (width / height) * 2.0f;
             float h = (height / width) * 2.0f;
-            ProjectionMatrix = Matrix4x4.CreateOrthographic(2, 2, near, far);
+            ProjectionMatrix = Matrix4x4.CreateOrthographic(w, h, near, far);
             DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix (Orthographic)");
         }
 

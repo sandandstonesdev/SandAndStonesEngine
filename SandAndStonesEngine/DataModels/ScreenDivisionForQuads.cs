@@ -47,6 +47,14 @@ namespace SandAndStonesEngine.DataModels
             float zCount = 2.0f / screenDepth;
             return new Vector3(xCount, yCount, zCount);
         }
+
+        public Vector2 GetPixelsPerCoordinateUnit()
+        {
+            int xPixels = screenWidth / 2;
+            int yPixels = screenHeight / 2;
+            return new Vector2(xPixels, yPixels);
+        }
+
         public Vector3 GetPixelUnitsPerQuad()
         {
             int xQuadSizeInPixels = screenWidth / quadCountX;

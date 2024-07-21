@@ -22,6 +22,11 @@ namespace SandAndStonesEngine.Buffers
         VertexDataFormat[] VertexData;
         private bool disposedValue;
 
+        public void SetQuads(List<IQuadModel> quadModels)
+        {
+            quadModelList = quadModels;
+        }
+
         private VertexDataFormat[] CollectAllVerticesFromQuads()
         {
             List<VertexDataFormat> quadsVerticesData = new List<VertexDataFormat>();

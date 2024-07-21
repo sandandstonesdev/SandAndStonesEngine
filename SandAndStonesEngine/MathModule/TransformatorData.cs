@@ -7,7 +7,9 @@ namespace SandAndStonesEngine.MathModule
         public Vector3 Position;
         public Vector3 Forward;
         public Vector3 Up;
+        public Vector2 ScrollMovement;
         public float MoveSpeed;
+        public float ScrollSpeedPixels;
         public Vector3 Rotation;
         public Vector3 LookDir
         {
@@ -25,12 +27,15 @@ namespace SandAndStonesEngine.MathModule
             get { return Position + LookDir; }
         }
 
-        private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f);
-        public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector3 rotation, float moveSpeed)
+        private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f); // Left Upper Corner Position
+
+        public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector3 rotation, float moveSpeed, float scrollSpeedPixels)
         {
             //position = relativePosition + position;
+            SetScrollMovement(new Vector2(0, 0));
             SetDirections(position, forward, up);
             SetSpeed(moveSpeed);
+            SetScrollSpeedPixels(scrollSpeedPixels);
             SetRotation(rotation);
         }
         public void SetDirections(Vector3 position, Vector3 forward, Vector3 up)
@@ -43,6 +48,17 @@ namespace SandAndStonesEngine.MathModule
         {
             MoveSpeed = moveSpeed;
         }
+
+        public void SetScrollMovement(Vector2 scrollMovement)
+        {
+            ScrollMovement = scrollMovement;
+        }
+
+        public void SetScrollSpeedPixels(float scrollSpeedPixels)
+        {
+            ScrollSpeedPixels = scrollSpeedPixels;
+        }
+
         public void SetRotation(Vector3 rotation) // yaw/pitch
         {
             Rotation = rotation;

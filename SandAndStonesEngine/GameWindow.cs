@@ -33,6 +33,7 @@ namespace SandAndStonesEngine
         ViewTransformator viewTransformator;
         WorldTransformator worldTransformator;
         CameraInputMotionMapper inputMotionMapper;
+        ScrollableViewport scrollableViewport;
 
         private bool disposedValue;
 
@@ -57,18 +58,19 @@ namespace SandAndStonesEngine
             SDLWindow.Resized += () => resized = true;
             inputDevicesState = new InputDevicesState(clientRegionPos);
             inputMotionMapper = new CameraInputMotionMapper(inputDevicesState);
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.002f);
+            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.002f, 1f);
             this.viewTransformator = new ViewTransformator(inputMotionMapper, transformatorData);
             this.worldTransformator = new WorldTransformator(inputMotionMapper, transformatorData);
 
             matrices = new Matrices(worldTransformator, viewTransformator);
             matrices.Init();
 
-            gameCamera = new Camera(matrices);
+            scrollableViewport = new ScrollableViewport(0, 0, width, height);
+            gameCamera = new Camera(matrices, scrollableViewport);
 
             assetBatchList = new List<GameAssetBatchBase>
             {
-                new GameAssetBatch(viewTransformator),
+                new GameAssetBatch(viewTransformator, scrollableViewport),
                 new GameStatusBarAssetBatch()
             };
             assetBatchList.ForEach(e => e.Init());

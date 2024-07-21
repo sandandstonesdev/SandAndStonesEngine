@@ -62,5 +62,10 @@ namespace SandAndStonesEngine.GameCamera
 
             return mouseRotationResult;
         }
+
+        public override Vector2 GetScrollDir()
+        {
+            return Vector2.Zero;
+        }
     }
 }

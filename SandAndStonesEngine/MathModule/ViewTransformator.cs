@@ -9,6 +9,8 @@ namespace SandAndStonesEngine.MathModule
         Matrices matrices;
         public TransformatorData TransformatorData;
         public event EventHandler PositionChanged;
+        public event EventHandler ScrollChanged;
+
         public ViewTransformator(InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {
             this.inputMotionMapper = inputMotionMapper;
@@ -27,8 +29,14 @@ namespace SandAndStonesEngine.MathModule
             if (motionDir != Vector3.Zero)
             {
                 TransformatorData.Position += motionDir * TransformatorData.MoveSpeed;
-                if (PositionChanged != null) 
-                    PositionChanged(this, EventArgs.Empty);
+                PositionChanged?.Invoke(this, EventArgs.Empty);
+            }
+
+            var scrollDir = inputMotionMapper.GetScrollDir();
+            if (scrollDir != Vector2.Zero)
+            {
+                TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels;
+                ScrollChanged?.Invoke(this, EventArgs.Empty);
             }
         }
     }

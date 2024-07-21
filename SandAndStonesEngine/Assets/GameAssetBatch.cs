@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SandAndStonesEngine.Buffers;
-using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.GameCamera;
-using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.GameInput;
-using SandAndStonesEngine.GameTextures;
-using SandAndStonesEngine.GraphicAbstractions;
+﻿using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.MathModule;
 using Veldrid;
 
@@ -22,16 +9,28 @@ namespace SandAndStonesEngine.Assets
         FPSCalculator fpsCalculator;
         ViewTransformator viewTransformator;
         bool characterMoving = false;
-        public GameAssetBatch(ViewTransformator viewTransformator) : base()
+        bool scrollMoving = false;
+        private readonly ScrollableViewport scrollableViewport;
+
+        public GameAssetBatch(ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base()
         {
             this.fpsCalculator = new FPSCalculator(10);
             this.viewTransformator = viewTransformator;
+            this.scrollableViewport = scrollableViewport;
             this.viewTransformator.PositionChanged += ChangePosition;
+            this.viewTransformator.ScrollChanged += ChangeScroll;
         }
 
         private void ChangePosition(object? sender, EventArgs eventArgs)
         {
             characterMoving = true;
+        }
+
+        private void ChangeScroll(object? sender, EventArgs eventArgs)
+        {
+            scrollableViewport.Scroll((int)viewTransformator.TransformatorData.ScrollMovement.X,
+                                      (int)viewTransformator.TransformatorData.ScrollMovement.Y);
+            scrollMoving = true;
         }
 
         protected override List<GameAssetBase> InitGameAssets()
@@ -82,7 +81,7 @@ namespace SandAndStonesEngine.Assets
             {
                 int fps = (int)fpsCalculator.GetResult();
                 string text = $"FPS: {fps}";
-                
+
                 Assets.ForEach(e =>
                 {
                     if (e.Name == "fps_info")
@@ -114,17 +113,25 @@ namespace SandAndStonesEngine.Assets
                             e.SetParam("char2.png");
                         }
                     }
+
+                    if (scrollMoving && e.AssetType == AssetType.Background)
+                    {
+                        var backgroundAsset = e as GameBackgroundAsset;
+                        backgroundAsset?.Scroll(scrollableViewport);
+                    }
                 });
             }
 
             base.Update(delta);
 
             characterMoving = false;
+            scrollMoving = false;
         }
 
         protected override void Dispose(bool disposing)
         {
             this.viewTransformator.PositionChanged -= ChangePosition;
+            this.viewTransformator.ScrollChanged -= ChangeScroll;
             base.Dispose(disposing);
         }
     }

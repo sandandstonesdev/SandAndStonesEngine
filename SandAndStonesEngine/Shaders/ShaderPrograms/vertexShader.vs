@@ -21,6 +21,7 @@ layout(location = 1) in vec4 Color;
 layout(location = 2) in vec2 TexCoords;
 layout(location = 3) in int TextureId;
 layout(location = 4) in uint AssetId;
+layout(location = 5) in vec2 ScrollPosition;
 
 layout(location = 0) out vec4 fsin_Color;
 layout(location = 1) out vec3 fsin_TexCoords;
@@ -33,7 +34,7 @@ void main()
 
     if (assetType == 1) // BG
     {
-        gl_Position = objectPosition;
+        gl_Position = objectPosition + vec4(vec2(ScrollPosition.x/20, ScrollPosition.y/20), 0, 0);
     }
     else if (assetType == 2) // SPR
     {

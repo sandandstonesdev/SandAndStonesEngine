@@ -13,7 +13,6 @@ namespace SandAndStonesEngine.GameCamera
         public override Vector3 GetMotionDir()
         {
             Vector3 motionDir = Vector3.Zero;
-            
 
             foreach (var keyToCheck in keyToVectorMap)
             {
@@ -59,5 +58,17 @@ namespace SandAndStonesEngine.GameCamera
             return rotatedMotionDir;
         }
 
+        public override Vector2 GetScrollDir()
+        {
+            Vector2 scrollDir = Vector2.Zero;
+
+            foreach (var scrollKeyToCheck in keyToVectorScrollMap)
+            {
+                if (inputDevicesState.GetKey(scrollKeyToCheck.Key))
+                    scrollDir = scrollKeyToCheck.Value;
+            }
+
+            return scrollDir;
+        }
     }
 }

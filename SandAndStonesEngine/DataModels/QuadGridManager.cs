@@ -16,6 +16,11 @@ namespace SandAndStonesEngine.DataModels
         ScreenDivisionForQuads screenDivision;
         int quadId = 0;
         int quadBatchId = 0;
+
+        public int QuadId => quadId;
+        public int QuadBatchId => quadBatchId;
+        public int AbsoluteQuadIndex => quadBatchId * quadId + quadId;
+
         public QuadGridManager()
         {
             
@@ -76,6 +81,11 @@ namespace SandAndStonesEngine.DataModels
         public Vector3 GetPixelSizeInCoordinates()
         {
             return screenDivision.GetCoordinateUnitsPerPixel();
+        }
+
+        public Vector2 GetPixelsPerCoordinateUnit()
+        {
+            return screenDivision.GetPixelsPerCoordinateUnit();
         }
 
         public Vector3[] GetQuadAbsoluteCoords(Vector3[] quadPointsInGrid, float scale)

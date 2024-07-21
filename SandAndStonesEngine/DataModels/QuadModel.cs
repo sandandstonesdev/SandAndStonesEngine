@@ -14,18 +14,25 @@ namespace SandAndStonesEngine.DataModels
         private ushort[] quadIndexesInGrid;
         private int textureId;
         private uint assetId;
-        private VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
+        protected VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
 
         public VertexDataFormat[] VerticesPositions
         {
             get { return verticesPositions; }
         }
+
+        public bool Visible 
+        { 
+            get;
+        }
+
         public ushort[] QuadIndexes
         {
             get { return quadIndexesInGrid; }
         }
 
         public float scale;
+        
         public QuadModel(Vector3 gridQuadPosition, float quadScale, RgbaFloat color, uint assetId, int textureId)
         {
             QuadData quadData = QuadGridManager.Instance.GetQuadData((int)gridQuadPosition.X, (int)gridQuadPosition.Y, (int)gridQuadPosition.Z);
