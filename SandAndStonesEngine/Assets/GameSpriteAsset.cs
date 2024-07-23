@@ -1,22 +1,22 @@
 ﻿using System.Numerics;
+using SandAndStonesEngine.Animation;
 using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.GameCamera;
-using SandAndStonesEngine.GameTextures;
-using SandAndStonesEngine.MathModule;
-using SandAndStonesEngine.Utils;
 using Veldrid;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace SandAndStonesEngine.Assets
 {
     public class GameSpriteAsset : GameAssetBase
     {
         public override AssetType AssetType => AssetType.Sprite;
+        public override AssetBatchType AssetBatchType { get; init; }
         public override bool IsText { get { return false; } }
-        public GameSpriteAsset(string name, RgbaFloat color, float depth, float scale = 1.0f) : 
+        public override IAnimation Animation { get; set; }
+
+        public GameSpriteAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth, float scale = 1.0f) : 
             base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);
+            this.AssetBatchType = assetBatchType;
         }
 
         public override void Init(int startX, int startY, int endX, int endY, string textureName)

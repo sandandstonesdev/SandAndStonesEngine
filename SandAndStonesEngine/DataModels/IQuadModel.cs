@@ -1,4 +1,5 @@
 ﻿using SandAndStonesEngine.Buffers;
+using System.Numerics;
 
 namespace SandAndStonesEngine.DataModels
 {
@@ -6,6 +7,6 @@ namespace SandAndStonesEngine.DataModels
     {
         void Init();
         VertexDataFormat[] VerticesPositions { get; }
-        public ushort[] QuadIndexes { get; }
+        ushort[] QuadIndexes { get; }
     }
 }

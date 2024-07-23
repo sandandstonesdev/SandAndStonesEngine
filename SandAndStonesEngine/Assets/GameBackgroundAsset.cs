@@ -1,11 +1,6 @@
-﻿using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SandAndStonesEngine.Animation;
+using SandAndStonesEngine.DataModels;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets
@@ -13,11 +8,15 @@ namespace SandAndStonesEngine.Assets
     public class GameBackgroundAsset : GameAssetBase
     {
         public override AssetType AssetType => AssetType.Background;
+        public override AssetBatchType AssetBatchType { get; init; }
         public override bool IsText { get { return false; } }
-        public GameBackgroundAsset(string name, RgbaFloat color, float depth, float scale = 1.0f) :
+        public override IAnimation Animation { get; set; }
+
+        public GameBackgroundAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth, float scale = 1.0f) :
             base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);
+            this.AssetBatchType = assetBatchType;
         }
 
         public override void Init(int startX, int startY, int endX, int endY, string textureName)

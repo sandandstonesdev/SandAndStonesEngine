@@ -9,12 +9,13 @@ namespace SandAndStonesEngine.Assets
         static int QuadBatchId = 0;
         static int QuadId = 0;
         static int TextureId = 0;
+
         public static uint GetAssetId(AssetType type)
         {
             lock (lockObject)
             {
                 uint retAssetId = (uint)AssetId++;
-                retAssetId |= (uint)type << 29;
+                retAssetId |= (uint)type << 28;
                 return retAssetId++;
             }
         }

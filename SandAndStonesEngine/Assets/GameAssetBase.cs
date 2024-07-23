@@ -1,11 +1,5 @@
-﻿using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SandAndStonesEngine.Animation;
+using SandAndStonesEngine.DataModels;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets
@@ -14,6 +8,10 @@ namespace SandAndStonesEngine.Assets
     {
         public uint Id { get; protected set; }
         public abstract AssetType AssetType { get; }
+        public abstract AssetBatchType AssetBatchType { get; init; }
+        //public delegate void Animate(string param);
+        //public Animate AnimateTexture { get; set; }
+
         public int TextureId 
         { 
             get
@@ -32,6 +30,7 @@ namespace SandAndStonesEngine.Assets
         private bool parameterChanged = false;
         public string Name { get; private set; }
         public abstract bool IsText { get; }
+        public abstract IAnimation Animation { get; set; }
         public GameAssetBase(string name, RgbaFloat color, float depth, float scale)
         {
             this.QuadModelList = new List<IQuadModel>();
@@ -43,6 +42,17 @@ namespace SandAndStonesEngine.Assets
 
         public abstract void Init(int startX, int startY, int endX, int endY, string textureName);
 
+        public void SetAnimation(IAnimation animation)
+        {
+            Animation = animation;
+        }
+
+        public void Animate(string param="")
+        {
+            Animation.Next(param);
+            this.parameterChanged = true;
+        }
+
         public virtual void SetParam(object param)
         {
             this.parameter = param;
@@ -53,7 +63,11 @@ namespace SandAndStonesEngine.Assets
         {
             if (this.parameterChanged)
             {
-                GameTextureData.Update(this.parameter);
+                if (Animation is not null)
+                    GameTextureData.Update(Animation.GetCurrent());
+                else
+                    GameTextureData.Update(this.parameter);
+
                 this.parameterChanged = false;
             }
         }

@@ -57,7 +57,7 @@ namespace SandAndStonesEngine.DataModels
             verticesPositions[3] = new VertexDataFormat(quadAbsoluteCoords[3], color, quadTextureCoords[3], (uint)assetId, textureId);
         }
 
-        protected void Move(Vector2 pixelMovementVector)
+        public void Move(Vector2 pixelMovementVector)
         {
             var pixelSizeInCoord = QuadGridManager.Instance.GetPixelSizeInCoordinates();
             var movement = new Vector2(pixelMovementVector.X * pixelSizeInCoord.X, pixelMovementVector.Y * pixelSizeInCoord.Y);

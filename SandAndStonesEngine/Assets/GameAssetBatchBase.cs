@@ -1,12 +1,14 @@
 ﻿using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.Managers;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets
 {
     public abstract class GameAssetBatchBase : IDisposable
     {
+        public abstract AssetBatchType AssetBatchType { get; }
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
         public DeviceBuffer DeviceVertexBuffer
@@ -33,30 +35,36 @@ namespace SandAndStonesEngine.Assets
 
         private bool disposedValue;
 
-        public List<GameAssetBase> Assets = new List<GameAssetBase>();
-
-        protected abstract List<GameAssetBase> InitGameAssets();
+        protected abstract void InitGameAssets();
 
         public virtual void Init()
         {
             QuadGridManager.Instance.StartNewBatch();
 
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-            Assets = InitGameAssets();
+            InitGameAssets();
 
-            List<IQuadModel> quadModels = new List<IQuadModel>();
-            Assets.ForEach(a => quadModels.AddRange(a.QuadModelList));
+            if (AssetBatchType == AssetBatchType.ClientRectBatch)
+            {
+                VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.ModelData);
+                VertexBuffer.Init();
 
-            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
-            VertexBuffer.Init();
+                IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.ModelData);
+                IndexBuffer.Init();
+            }
+            else if (AssetBatchType == AssetBatchType.StatusBarBatch)
+            {
+                VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.StatusBarModels);
+                VertexBuffer.Init();
 
-            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, quadModels);
-            IndexBuffer.Init();
+                IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.StatusBarModels);
+                IndexBuffer.Init();
+            }
         }
 
         public virtual void Update(long delta)
         {
-            Assets.ForEach(e => e.Update(delta));
+            AssetDataManager.Instance.Assets.ForEach(e => e.Update(delta));
             IndexBuffer.Update();
             VertexBuffer.Update();
         }
@@ -69,7 +77,7 @@ namespace SandAndStonesEngine.Assets
                 {
                 }
 
-                Assets.ForEach(e =>
+                AssetDataManager.Instance.Assets.ForEach(e =>
                 {
                     var disposableAssets = e as IDisposable;
                     disposableAssets?.Dispose();

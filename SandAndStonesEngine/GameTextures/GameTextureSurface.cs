@@ -2,6 +2,7 @@
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.Assets;
+using SandAndStonesEngine.Managers;
 
 namespace SandAndStonesEngine.GameTextures
 {
@@ -34,25 +35,16 @@ namespace SandAndStonesEngine.GameTextures
         private bool disposedValue;
         List<GameAssetBase> gameAssets;
 
-        public GameTextureSurface(List<GameAssetBase> gameAssets, int width, int height)
+        public GameTextureSurface(int width, int height)
         {
-            this.gameAssets = gameAssets;
+            this.gameAssets = AssetDataManager.Instance.Assets;
             this.width = width;
             this.height = height;
-            this.textureDataList = new List<GameTextureDataBase>();
+            this.textureDataList = AssetDataManager.Instance.TexturesData;
             this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
         }
         public void Init()
         {
-            foreach(var asset in gameAssets)
-            {
-                var textureData = asset.GameTextureData;
-                if (textureDataList.All(e => e.Id != textureData.Id))
-                {
-                    textureDataList.Add(asset.GameTextureData);
-                }
-            }
-
             TextureDescription texDesc = new TextureDescription()
             {
                 Width = (uint)width,

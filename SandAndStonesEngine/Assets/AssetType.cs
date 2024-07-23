@@ -5,6 +5,7 @@
         Unknown = 0,
         Background = 1,
         Sprite = 2,
-        Text = 4
+        CharacterSprite = 4,
+        Text = 8
     }
 }

@@ -1,11 +1,16 @@
-﻿namespace SandAndStonesEngine.Assets
+﻿using SandAndStonesEngine.DataModels;
+
+namespace SandAndStonesEngine.Assets
 {
     public class FPSCalculator
     {
+        private static readonly Lazy<FPSCalculator> lazyInstance = new Lazy<FPSCalculator>(() => new FPSCalculator());
+        public static FPSCalculator Instance => lazyInstance.Value;
+
         int sampleCount;
         LinkedList<long> deltasBuffer = new LinkedList<long>();
         UpdateFPSScheduler updateScheduler = new UpdateFPSScheduler();
-        public FPSCalculator(int sampleCount)
+        public FPSCalculator(int sampleCount = 10)
         {
             this.sampleCount = sampleCount;
             for (int i = 0; i < sampleCount; i++)
@@ -36,6 +41,13 @@
             
             result = (sampleCount * 1000) / sampleSum;
             return result;
+        }
+
+        public string GetFormatedResult()
+        {
+            int fps = (int)GetResult();
+            string text = $"FPS: {fps}";
+            return text;
         }
     }
 }

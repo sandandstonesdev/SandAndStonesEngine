@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using System.Runtime.CompilerServices;
 using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
@@ -12,6 +11,8 @@ namespace SandAndStonesEngine.Buffers
         public int TextureId { get; }
         public uint AssetId { get; }
         public Vector2 Scroll { get; private set; }
+        public Vector2 Movement { get; private set; }
+
         public VertexDataFormat(Vector3 position, RgbaFloat color, Vector2 textureCoords, uint assetId, int textureId)
         {
             Position = new Vector4(position, 1);
@@ -25,6 +26,11 @@ namespace SandAndStonesEngine.Buffers
         public void SetScroll(Vector2 scroll)
         {
             Scroll = scroll;
+        }
+
+        public void SetMovement(Vector2 movement)
+        {
+            Movement = movement;
         }
 
         //public static uint SizeInBytes { get; } = (uint)Unsafe.SizeOf<VertexDataFormat>();

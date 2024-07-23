@@ -58,7 +58,7 @@ namespace SandAndStonesEngine
             SDLWindow.Resized += () => resized = true;
             inputDevicesState = new InputDevicesState(clientRegionPos);
             inputMotionMapper = new CameraInputMotionMapper(inputDevicesState);
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.002f, 1f);
+            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.002f, 10.0f);
             this.viewTransformator = new ViewTransformator(inputMotionMapper, transformatorData);
             this.worldTransformator = new WorldTransformator(inputMotionMapper, transformatorData);
 
@@ -78,9 +78,7 @@ namespace SandAndStonesEngine
             shaderSet = new GameShaderSet(assetBatchList[0], matrices);
             shaderSet.Init();
 
-            List<GameAssetBase> gameAssets = new List<GameAssetBase>();
-            assetBatchList.ForEach(e => gameAssets.AddRange(e.Assets));
-            gameTextureSurface = new GameTextureSurface(gameAssets, 256, 256);
+            gameTextureSurface = new GameTextureSurface(256, 256);
             gameTextureSurface.Init();
 
             pipelineList = new List<PipelineBase>()

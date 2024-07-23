@@ -5,6 +5,7 @@ namespace SandAndStonesEngine.MathModule
     public class TransformatorData
     {
         public Vector3 Position;
+        public Vector2 Movement;
         public Vector3 Forward;
         public Vector3 Up;
         public Vector2 ScrollMovement;
@@ -16,8 +17,7 @@ namespace SandAndStonesEngine.MathModule
             get
             {
                 Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z);
-                //Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(0f, 0f, 0f);
-
+                
                 Vector3 lookDir = Vector3.Transform(Forward, lookRotation);
                 return lookDir;
             }
@@ -31,7 +31,7 @@ namespace SandAndStonesEngine.MathModule
 
         public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector3 rotation, float moveSpeed, float scrollSpeedPixels)
         {
-            //position = relativePosition + position;
+            SetMovement(new Vector2(0, 0));
             SetScrollMovement(new Vector2(0, 0));
             SetDirections(position, forward, up);
             SetSpeed(moveSpeed);
@@ -44,6 +44,12 @@ namespace SandAndStonesEngine.MathModule
             Forward = forward;
             Up = up;
         }
+
+        public void SetMovement(Vector2 movement)
+        {
+            Movement = movement;
+        }
+
         public void SetSpeed(float moveSpeed)
         {
             MoveSpeed = moveSpeed;

@@ -27,7 +27,7 @@ namespace SandAndStonesEngine.MathModule
             var motionDir = inputMotionMapper.GetRotatedMotionDir(TransformatorData.Rotation.X, TransformatorData.Rotation.Y);
             if (motionDir != Vector3.Zero)
             {
-                TransformatorData.Position += motionDir * TransformatorData.MoveSpeed;
+                //TransformatorData.Position += motionDir * TransformatorData.MoveSpeed;
             }
         }
     }

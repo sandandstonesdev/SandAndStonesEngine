@@ -6,7 +6,12 @@
         double maxTotalDelta = 0;
         public UpdateFPSScheduler(int maxTotalDelta = 1000)
         {
-            this.maxTotalDelta = 1000;
+#if DEBUG
+            this.maxTotalDelta = 50;
+#else
+            this.maxTotalDelta = 500;
+#endif
+
         }
 
         public bool DoUpdate(long delta)
