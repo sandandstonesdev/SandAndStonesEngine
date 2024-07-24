@@ -18,6 +18,11 @@ namespace SandAndStonesEngine.Managers
             
         }
 
+        public IEnumerable<IQuadModel> GetVisibleModelData(ScrollableViewport scrollableViewport)
+        {
+            return QuadModelManager.Instance.GetVisibleModels(scrollableViewport);
+        }
+
         public void Add(GameAssetBase asset)
         {
             Assets.Add(asset);

@@ -38,8 +38,8 @@ namespace SandAndStonesEngine.Assets
             {
                 sampleSum += deltaSample; 
             }
-            
-            result = (sampleCount * 1000) / sampleSum;
+
+            result = sampleSum != 0 ? (sampleCount * 1000) / sampleSum : 0;
             return result;
         }
 

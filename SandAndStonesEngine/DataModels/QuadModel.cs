@@ -4,7 +4,7 @@ using Veldrid;
 
 namespace SandAndStonesEngine.DataModels
 {
-    public class QuadModel : IQuadModel
+    public class QuadModel : IQuadModel, IVisibleModel
     {
         int quadId;
         int quadBatchId;
@@ -57,10 +57,8 @@ namespace SandAndStonesEngine.DataModels
             verticesPositions[3] = new VertexDataFormat(quadAbsoluteCoords[3], color, quadTextureCoords[3], (uint)assetId, textureId);
         }
 
-        public void Move(Vector2 pixelMovementVector)
+        public virtual void Move(Vector2 movement)
         {
-            var pixelSizeInCoord = QuadGridManager.Instance.GetPixelSizeInCoordinates();
-            var movement = new Vector2(pixelMovementVector.X * pixelSizeInCoord.X, pixelMovementVector.Y * pixelSizeInCoord.Y);
             for (int i = 0; i < verticesPositions.Length; i++)
             {
                 verticesPositions[i].Position = 
@@ -69,6 +67,14 @@ namespace SandAndStonesEngine.DataModels
                                 verticesPositions[i].Position.Z,
                                 verticesPositions[i].Position.W);
             }
+        }
+
+        public bool IsVisible(ScrollableViewport scrollableViewport)
+        {
+            return scrollableViewport.ContainsVertex(verticesPositions[0].Position)
+            || scrollableViewport.ContainsVertex(verticesPositions[1].Position)
+            || scrollableViewport.ContainsVertex(verticesPositions[2].Position)
+            || scrollableViewport.ContainsVertex(verticesPositions[3].Position);
         }
     }
 }

@@ -11,7 +11,6 @@
 #else
             this.maxTotalDelta = 500;
 #endif
-
         }
 
         public bool DoUpdate(long delta)

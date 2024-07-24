@@ -11,17 +11,25 @@ namespace SandAndStonesEngine.Assets
         public override AssetBatchType AssetBatchType { get; init; }
         public override bool IsText { get { return false; } }
         public override IAnimation Animation { get; set; }
+        public ScrollableViewport scrollableViewport;
+        bool scrollMoving = false;
 
-        public GameBackgroundAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth, float scale = 1.0f) :
+        public GameBackgroundAsset(string name, ScrollableViewport scrollableViewport, RgbaFloat color, AssetBatchType assetBatchType, float depth, float scale = 1.0f) :
             base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);
             this.AssetBatchType = assetBatchType;
+            this.scrollableViewport = scrollableViewport;
+            this.scrollableViewport.ScrollChanged += ScrollChanged; 
+        }
+
+        void ScrollChanged(object? sender, EventArgs args)
+        {
+            scrollMoving = true;
         }
 
         public override void Init(int startX, int startY, int endX, int endY, string textureName)
         {
-            SetParam(textureName);
             GameTextureData = new GameTextureData(Id, textureName);
             GameTextureData.Init();
 
@@ -41,23 +49,27 @@ namespace SandAndStonesEngine.Assets
         {
             QuadModelList.ForEach(x =>
             {
-                var backgroundTile = x as BackgroundTile;
-                backgroundTile?.Scroll(scrollableViewport);
+                x.Move(new Vector2(scrollableViewport.CartesianCoords.Item1, scrollableViewport.CartesianCoords.Item2));
             });
-        }
-
-        public override void SetParam(object param)
-        {
-            base.SetParam(param);
         }
 
         public override void Update(long delta)
         {
+            if (AssetBatchType == AssetBatchType.ClientRectBatch && scrollMoving)
+            {
+                Scroll(scrollableViewport);
+                
+                scrollMoving = false;
+            }
+
+            Animate();
+
             base.Update(delta);
         }
 
         protected override void Dispose(bool disposing)
         {
+            this.scrollableViewport.ScrollChanged -= ScrollChanged;
             base.Dispose(disposing);
         }
     }

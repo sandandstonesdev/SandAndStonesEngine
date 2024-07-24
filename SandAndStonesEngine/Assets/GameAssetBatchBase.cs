@@ -35,38 +35,23 @@ namespace SandAndStonesEngine.Assets
 
         private bool disposedValue;
 
+        protected ScrollableViewport scrollableViewport;
+
         protected abstract void InitGameAssets();
 
-        public virtual void Init()
+        public GameAssetBatchBase(ScrollableViewport scrollableViewport)
         {
-            QuadGridManager.Instance.StartNewBatch();
+            this.scrollableViewport = scrollableViewport;
+        }
 
-            var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+        public virtual void Init(ScrollableViewport scrollableViewport)
+        {
             InitGameAssets();
-
-            if (AssetBatchType == AssetBatchType.ClientRectBatch)
-            {
-                VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.ModelData);
-                VertexBuffer.Init();
-
-                IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.ModelData);
-                IndexBuffer.Init();
-            }
-            else if (AssetBatchType == AssetBatchType.StatusBarBatch)
-            {
-                VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.StatusBarModels);
-                VertexBuffer.Init();
-
-                IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.StatusBarModels);
-                IndexBuffer.Init();
-            }
         }
 
         public virtual void Update(long delta)
         {
             AssetDataManager.Instance.Assets.ForEach(e => e.Update(delta));
-            IndexBuffer.Update();
-            VertexBuffer.Update();
         }
 
         protected virtual void Dispose(bool disposing)

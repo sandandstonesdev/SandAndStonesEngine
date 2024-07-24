@@ -58,22 +58,24 @@ namespace SandAndStonesEngine
             SDLWindow.Resized += () => resized = true;
             inputDevicesState = new InputDevicesState(clientRegionPos);
             inputMotionMapper = new CameraInputMotionMapper(inputDevicesState);
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.002f, 10.0f);
-            this.viewTransformator = new ViewTransformator(inputMotionMapper, transformatorData);
+            scrollableViewport = new ScrollableViewport(0, 0, width, height);
+
+            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.001f, 10.0f);
+            this.viewTransformator = new ViewTransformator(scrollableViewport, inputMotionMapper, transformatorData);
             this.worldTransformator = new WorldTransformator(inputMotionMapper, transformatorData);
 
             matrices = new Matrices(worldTransformator, viewTransformator);
             matrices.Init();
 
-            scrollableViewport = new ScrollableViewport(0, 0, width, height);
+            
             gameCamera = new Camera(matrices, scrollableViewport);
 
             assetBatchList = new List<GameAssetBatchBase>
             {
                 new GameAssetBatch(viewTransformator, scrollableViewport),
-                new GameStatusBarAssetBatch()
+                new GameStatusBarAssetBatch(scrollableViewport)
             };
-            assetBatchList.ForEach(e => e.Init());
+            assetBatchList.ForEach(e => e.Init(scrollableViewport));
 
             shaderSet = new GameShaderSet(assetBatchList[0], matrices);
             shaderSet.Init();

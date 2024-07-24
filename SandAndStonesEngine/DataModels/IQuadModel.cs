@@ -8,5 +8,6 @@ namespace SandAndStonesEngine.DataModels
         void Init();
         VertexDataFormat[] VerticesPositions { get; }
         ushort[] QuadIndexes { get; }
+        public void Move(Vector2 pixelMovementVector);
     }
 }

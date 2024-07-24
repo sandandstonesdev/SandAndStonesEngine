@@ -9,9 +9,7 @@ namespace SandAndStonesEngine.Assets
         public uint Id { get; protected set; }
         public abstract AssetType AssetType { get; }
         public abstract AssetBatchType AssetBatchType { get; init; }
-        //public delegate void Animate(string param);
-        //public Animate AnimateTexture { get; set; }
-
+        
         public int TextureId 
         { 
             get
@@ -26,8 +24,6 @@ namespace SandAndStonesEngine.Assets
         protected float Depth;
         protected RgbaFloat Color;
         private bool disposedValue;
-        private object parameter;
-        private bool parameterChanged = false;
         public string Name { get; private set; }
         public abstract bool IsText { get; }
         public abstract IAnimation Animation { get; set; }
@@ -49,27 +45,13 @@ namespace SandAndStonesEngine.Assets
 
         public void Animate(string param="")
         {
-            Animation.Next(param);
-            this.parameterChanged = true;
-        }
-
-        public virtual void SetParam(object param)
-        {
-            this.parameter = param;
-            this.parameterChanged = true;
+            Animation.Next(param, 5);
         }
 
         public virtual void Update(long delta)
         {
-            if (this.parameterChanged)
-            {
-                if (Animation is not null)
-                    GameTextureData.Update(Animation.GetCurrent());
-                else
-                    GameTextureData.Update(this.parameter);
-
-                this.parameterChanged = false;
-            }
+            if (Animation?.Changed ?? false)
+                GameTextureData.Update(Animation.GetCurrent());
         }
 
         protected virtual void Dispose(bool disposing)

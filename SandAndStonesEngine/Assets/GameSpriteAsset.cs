@@ -21,7 +21,6 @@ namespace SandAndStonesEngine.Assets
 
         public override void Init(int startX, int startY, int endX, int endY, string textureName)
         {
-            SetParam(textureName);
             GameTextureData = new GameTextureData(Id, textureName);
             GameTextureData.Init();
 
@@ -35,12 +34,6 @@ namespace SandAndStonesEngine.Assets
                     QuadModelList.Add(quadModel);
                 }
             }
-        }
-
-
-        public override void SetParam(object param)
-        {
-            base.SetParam(param);
         }
 
         public override void Update(long delta)

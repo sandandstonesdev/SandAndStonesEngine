@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.GameCamera;
+﻿using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.GameCamera;
 using System.Numerics;
 
 namespace SandAndStonesEngine.MathModule
@@ -7,14 +8,16 @@ namespace SandAndStonesEngine.MathModule
     {
         InputMotionMapperBase inputMotionMapper;
         Matrices matrices;
+        ScrollableViewport scrollableViewport;
         public TransformatorData TransformatorData;
         public event EventHandler PositionChanged;
-        public event EventHandler ScrollChanged;
+        //public event EventHandler ScrollChanged;
 
-        public ViewTransformator(InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
+        public ViewTransformator(ScrollableViewport scrollableViewport, InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {
             this.inputMotionMapper = inputMotionMapper;
             this.TransformatorData = transformatorData;
+            this.scrollableViewport = scrollableViewport;
         }
 
         public void Update()
@@ -28,15 +31,16 @@ namespace SandAndStonesEngine.MathModule
             var motionDir = inputMotionMapper.GetRotatedMotionDir(TransformatorData.Rotation.X, TransformatorData.Rotation.Y);
             if (motionDir != Vector3.Zero)
             {
-                TransformatorData.Movement -= new Vector2(motionDir.X, motionDir.Y) * TransformatorData.MoveSpeed;
-                PositionChanged?.Invoke(this, EventArgs.Empty);
+                TransformatorData.Movement = -new Vector2(motionDir.X, motionDir.Y) * TransformatorData.MoveSpeed;
+                PositionChanged?.Invoke(this, EventArgs.Empty); // This call should be moved to class managing Character
             }
 
             var scrollDir = inputMotionMapper.GetScrollDir();
             if (scrollDir != Vector2.Zero)
             {
                 TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels;
-                ScrollChanged?.Invoke(this, EventArgs.Empty);
+                scrollableViewport.Scroll((int)TransformatorData.ScrollMovement.X,
+                                      (int)TransformatorData.ScrollMovement.Y);
             }
         }
     }

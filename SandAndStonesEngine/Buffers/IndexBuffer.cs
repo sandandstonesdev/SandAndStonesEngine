@@ -13,14 +13,19 @@ namespace SandAndStonesEngine.Buffers
         {
             get { return (uint)QuadIndexes.Length; }
         }
-        List<IQuadModel> quadModelList;
+        IEnumerable<IQuadModel> quadModelList;
         ushort[] QuadIndexes;
         private bool disposedValue;
 
-        public IndexBuffer(GraphicsDevice graphicsDevice, List<IQuadModel> quadModelList)
+        public IndexBuffer(GraphicsDevice graphicsDevice, IEnumerable<IQuadModel> quadModelList)
         {
             this.quadModelList = quadModelList;
             this.graphicsDevice = graphicsDevice;
+        }
+
+        public void SetQuads(IEnumerable<IQuadModel> quadModels)
+        {
+            quadModelList = quadModels;
         }
 
         private uint GetNeededBufSize(ushort[] quadIndexes)
@@ -48,6 +53,7 @@ namespace SandAndStonesEngine.Buffers
 
         public void Update()
         {
+            QuadIndexes = CollectAllIndicesFromQuads();
             graphicsDevice.UpdateBuffer(DeviceBuffer, 0, QuadIndexes);
         }
 

@@ -15,10 +15,13 @@ namespace SandAndStonesEngine.DataModels
         private int ScrollX = 0, ScrollY = 0;
         private const float CartesianWidth = 2.0f;
         private const float CartesianHeight = 2.0f;
+        private bool ScrollProcessed = false;
+        public event EventHandler ScrollChanged;
         public (float, float) CartesianCoords
         {
             get
             {
+                ScrollProcessed = true;
                 return ScreenCartesianConverter.ScreenToCartesianScrollMovement(ScrollX, ScrollY);
             }
         }
@@ -41,8 +44,16 @@ namespace SandAndStonesEngine.DataModels
 
         public void Scroll(int scrollOffsetX = 5, int scrollOffsetY = 0)
         {
+            if (ScrollProcessed)
+            {
+                ScrollX = 0;
+                ScrollY = 0;
+            }
+
+            ScrollProcessed = false;
             ScrollX += scrollOffsetX;
             ScrollY += scrollOffsetY;
+            this.ScrollChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void ScrollCartesian(float scrollCartesianOffsetX = 5, float scrollCartesianOffsetY = 0)
@@ -55,19 +66,19 @@ namespace SandAndStonesEngine.DataModels
 
         public bool ContainsVertex(Vector4 vertexPosition)
         {
-            var pixelSizeInCoords = QuadGridManager.Instance.GetPixelSizeInCoordinates();
-            var x = vertexPosition.X + 1.0; // Transform From -1 to 0
-            var y = -vertexPosition.Y + 1.0; // Transform From -1 to 0
-
+            var coords = ScreenCartesianConverter.CartesianToScreen(vertexPosition.X, vertexPosition.Y, Width, Height);
+            var x = coords.Item1;
+            var y = coords.Item2;
+            
             // x Tests
-            var leftBound = X + ScrollX;
-            var rightBound = X + Width + ScrollX;
-            var xTestResult = leftBound <= vertexPosition.X && rightBound >= vertexPosition.X;
+            var leftBound = X + Math.Abs(ScrollX);
+            var rightBound = X + Width + Math.Abs(ScrollX);
+            var xTestResult = leftBound <= x && rightBound >= x;
 
             // y Tests
-            var upBound = Y;
-            var downBound = Y + Height + ScrollY;
-            var yTestResult = upBound <= vertexPosition.Y && downBound >= vertexPosition.Y;
+            var upBound = Y + Math.Abs(ScrollY);
+            var downBound = Y + Height + Math.Abs(ScrollY);
+            var yTestResult = upBound <= y && downBound >= y;
 
 
             return xTestResult && yTestResult;

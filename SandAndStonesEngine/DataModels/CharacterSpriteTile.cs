@@ -11,12 +11,9 @@ namespace SandAndStonesEngine.DataModels
 
         }
 
-        public void ApplyMovement(Vector2 movement)
+        public override void Move(Vector2 movement)
         {
-            for (int i = 0; i < verticesPositions.Count(); i++)
-            {
-                verticesPositions[i].SetMovement(movement);
-            }
+            base.Move(new Vector2(movement.X, movement.Y));
         }
     }
 }

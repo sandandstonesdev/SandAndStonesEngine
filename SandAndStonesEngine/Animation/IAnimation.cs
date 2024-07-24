@@ -2,7 +2,8 @@
 {
     public interface IAnimation
     {
-        void Next(string param="");
+        bool Changed { get; set; }
+        void Next(string param="", int skipFrames=0);
         string GetCurrent();
     }
 }

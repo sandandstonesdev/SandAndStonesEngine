@@ -12,8 +12,8 @@ namespace SandAndStonesEngine.Buffers
             get => VertexLayout.VertexLayoutPrototype;
         }
 
-        List<IQuadModel> quadModelList;
-        public VertexBuffer(GraphicsDevice graphicDevice, List<IQuadModel> quadModelList)
+        IEnumerable<IQuadModel> quadModelList;
+        public VertexBuffer(GraphicsDevice graphicDevice, IEnumerable<IQuadModel> quadModelList)
         {
             this.graphicsDevice = graphicDevice;
             this.quadModelList = quadModelList;
@@ -22,7 +22,7 @@ namespace SandAndStonesEngine.Buffers
         VertexDataFormat[] VertexData;
         private bool disposedValue;
 
-        public void SetQuads(List<IQuadModel> quadModels)
+        public void SetQuads(IEnumerable<IQuadModel> quadModels)
         {
             quadModelList = quadModels;
         }

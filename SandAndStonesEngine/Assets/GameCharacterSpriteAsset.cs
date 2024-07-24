@@ -1,5 +1,6 @@
 ﻿using SandAndStonesEngine.Animation;
 using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.MathModule;
 using System.Numerics;
 using Veldrid;
 
@@ -14,17 +15,25 @@ namespace SandAndStonesEngine.Assets
         public override bool IsText => false;
 
         public override IAnimation Animation { get; set; }
+        bool characterMoving = false;
+        ViewTransformator viewTransformator;
 
-        public GameCharacterSpriteAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth, float scale = 1.0f) :
+        public GameCharacterSpriteAsset(string name, ViewTransformator viewTransformator, RgbaFloat color, AssetBatchType assetBatchType, float depth, float scale = 1.0f) :
             base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);
             this.AssetBatchType = assetBatchType;
+            this.viewTransformator = viewTransformator;
+            this.viewTransformator.PositionChanged += PositionChanged;
+        }
+
+        void PositionChanged(object? sender, EventArgs args)
+        {
+            characterMoving = true;
         }
 
         public override void Init(int startX, int startY, int endX, int endY, string textureName)
         {
-            SetParam(textureName);
             GameTextureData = new GameTextureData(Id, textureName);
             GameTextureData.Init();
 
@@ -40,27 +49,29 @@ namespace SandAndStonesEngine.Assets
             }
         }
 
-        public void Move(Vector2 movement)
+        public void Move(ViewTransformator viewTransformator)
         {
             QuadModelList.ForEach(x =>
             {
-                var characterSpriteTile = x as CharacterSpriteTile;
-                characterSpriteTile?.ApplyMovement(movement);
+                x.Move(new Vector2(viewTransformator.TransformatorData.Movement.X, viewTransformator.TransformatorData.Movement.Y));
             });
-        }
-
-        public override void SetParam(object param)
-        {
-            base.SetParam(param);
         }
 
         public override void Update(long delta)
         {
+            if (AssetBatchType == AssetBatchType.ClientRectBatch && characterMoving)
+            {
+                Move(viewTransformator);
+                Animate();
+                characterMoving = false;
+            }
+
             base.Update(delta);
         }
 
         protected override void Dispose(bool disposing)
         {
+            this.viewTransformator.PositionChanged -= PositionChanged;
             base.Dispose(disposing);
         }
     }
