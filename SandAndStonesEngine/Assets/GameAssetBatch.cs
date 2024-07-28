@@ -11,6 +11,7 @@ namespace SandAndStonesEngine.Assets
     public class GameAssetBatch : GameAssetBatchBase
     {
         public override AssetBatchType AssetBatchType => AssetBatchType.ClientRectBatch;
+        public override List<IQuadModel> Assets => AssetDataManager.Instance.ModelData;
 
         ViewTransformator viewTransformator;
         
@@ -53,18 +54,12 @@ namespace SandAndStonesEngine.Assets
             GameAsset6.SetAnimation(new TextureAnimation("torch.png", "torch2.png"));
             AssetDataManager.Instance.Add(GameAsset6);
             
-            var GameFontAsset1 = new GameFPSCounterTextAsset("fps_info", RgbaFloat.Blue, AssetBatchType, 1);
+            var GameFontAsset1 = new GameFPSCounterTextAsset("fps_info", RgbaFloat.Blue, AssetBatchType, 1.0f, 1.0f);
             GameFontAsset1.Init(0, 0, 1, 1, "letters.png");
             GameFontAsset1.SetAnimation(new TextAnimation("FPS: 0"));
             AssetDataManager.Instance.Add(GameFontAsset1);
 
-            var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-
-            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.ModelData);
-            VertexBuffer.Init();
-
-            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, AssetDataManager.Instance.ModelData);
-            IndexBuffer.Init();
+            base.InitGameAssets();
         }
 
         public override void Update(long delta)
@@ -75,11 +70,6 @@ namespace SandAndStonesEngine.Assets
             {
                 base.Update(delta);
             }
-
-            IndexBuffer.SetQuads(AssetDataManager.Instance.ModelData);
-            IndexBuffer.Update();
-            VertexBuffer.SetQuads(AssetDataManager.Instance.ModelData);
-            VertexBuffer.Update();
         }
 
         protected override void Dispose(bool disposing)

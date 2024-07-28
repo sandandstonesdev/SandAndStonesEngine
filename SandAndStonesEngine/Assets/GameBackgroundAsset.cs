@@ -49,7 +49,8 @@ namespace SandAndStonesEngine.Assets
         {
             QuadModelList.ForEach(x =>
             {
-                x.Move(new Vector2(scrollableViewport.CartesianCoords.Item1, scrollableViewport.CartesianCoords.Item2));
+                x.Move(new Vector4(
+                    scrollableViewport.CartesianCoords.Item1, scrollableViewport.CartesianCoords.Item2, 0, 0));
             });
         }
 

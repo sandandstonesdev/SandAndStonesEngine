@@ -43,9 +43,9 @@ namespace SandAndStonesEngine.Assets
             Animation = animation;
         }
 
-        public void Animate(string param="")
+        public void Animate(string param="", int skipFrames=5)
         {
-            Animation.Next(param, 5);
+            Animation.Next(param, skipFrames);
         }
 
         public virtual void Update(long delta)

@@ -16,7 +16,7 @@ namespace SandAndStonesEngine.MathModule
             this.TransformatorData = transformatorData;
         }
 
-        public void Update()
+        public void Update(double deltaElapsedTime)
         {
             Vector3 yawPitchVector = inputMotionMapper.GetYawPitchVector();
             if (yawPitchVector != Vector3.Zero)

@@ -1,5 +1,4 @@
 ﻿using SandAndStonesEngine.DataModels;
-using System.Collections.Immutable;
 
 namespace SandAndStonesEngine.Managers
 {
@@ -14,15 +13,6 @@ namespace SandAndStonesEngine.Managers
         public QuadModelManager()
         {
 
-        }
-
-        public IEnumerable<IQuadModel> GetVisibleModels(ScrollableViewport scrollableViewport)
-        {
-            foreach (var model in Models.ToImmutableArray())
-            {
-                if (((IVisibleModel)model).IsVisible(scrollableViewport))
-                    yield return model;
-            }
         }
 
         public void AddRange(List<IQuadModel> models)

@@ -16,9 +16,9 @@ namespace SandAndStonesEngine.DataModels
 
         }
 
-        public override void Move(Vector2 movement)
+        public override void Move(Vector4 movement)
         {
-            base.Move(new Vector2(movement.X, movement.Y));
+            base.Move(movement);
         }
     }
 }

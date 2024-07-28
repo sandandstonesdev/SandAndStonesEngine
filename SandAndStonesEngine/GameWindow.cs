@@ -60,7 +60,7 @@ namespace SandAndStonesEngine
             inputMotionMapper = new CameraInputMotionMapper(inputDevicesState);
             scrollableViewport = new ScrollableViewport(0, 0, width, height);
 
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.001f, 10.0f);
+            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.03f, 1.0f);
             this.viewTransformator = new ViewTransformator(scrollableViewport, inputMotionMapper, transformatorData);
             this.worldTransformator = new WorldTransformator(inputMotionMapper, transformatorData);
 
@@ -113,8 +113,8 @@ namespace SandAndStonesEngine
                 inputDevicesState.Update(snapshot);
                 if (SDLWindow.Exists)
                 {
-                    viewTransformator.Update();
-                    worldTransformator.Update();
+                    viewTransformator.Update(deltaElapsedTime);
+                    worldTransformator.Update(deltaElapsedTime);
 
                     if (resized)
                     {

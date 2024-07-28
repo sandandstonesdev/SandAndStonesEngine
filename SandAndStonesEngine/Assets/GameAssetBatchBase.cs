@@ -8,6 +8,8 @@ namespace SandAndStonesEngine.Assets
 {
     public abstract class GameAssetBatchBase : IDisposable
     {
+        public abstract List<IQuadModel> Assets { get; }
+
         public abstract AssetBatchType AssetBatchType { get; }
         public IndexBuffer IndexBuffer;
         public VertexBuffer VertexBuffer;
@@ -37,7 +39,16 @@ namespace SandAndStonesEngine.Assets
 
         protected ScrollableViewport scrollableViewport;
 
-        protected abstract void InitGameAssets();
+        protected virtual void InitGameAssets()
+        {
+            var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+
+            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, Assets);
+            VertexBuffer.Init();
+
+            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, Assets);
+            IndexBuffer.Init();
+        }
 
         public GameAssetBatchBase(ScrollableViewport scrollableViewport)
         {
@@ -51,7 +62,16 @@ namespace SandAndStonesEngine.Assets
 
         public virtual void Update(long delta)
         {
-            AssetDataManager.Instance.Assets.ForEach(e => e.Update(delta));
+            AssetDataManager.Instance.Assets.ForEach(e =>
+            {
+                if (e.AssetBatchType == AssetBatchType)
+                    e.Update(delta);
+            });
+
+            IndexBuffer.SetQuads(Assets);
+            IndexBuffer.Update();
+            VertexBuffer.SetQuads(Assets);
+            VertexBuffer.Update();
         }
 
         protected virtual void Dispose(bool disposing)

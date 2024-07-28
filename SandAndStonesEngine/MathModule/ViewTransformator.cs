@@ -11,7 +11,6 @@ namespace SandAndStonesEngine.MathModule
         ScrollableViewport scrollableViewport;
         public TransformatorData TransformatorData;
         public event EventHandler PositionChanged;
-        //public event EventHandler ScrollChanged;
 
         public ViewTransformator(ScrollableViewport scrollableViewport, InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {
@@ -20,7 +19,7 @@ namespace SandAndStonesEngine.MathModule
             this.scrollableViewport = scrollableViewport;
         }
 
-        public void Update()
+        public void Update(double deltaElapsedTime)
         {
             Vector3 yawPitchVector = inputMotionMapper.GetYawPitchVector();
             if (yawPitchVector != Vector3.Zero)
@@ -31,14 +30,14 @@ namespace SandAndStonesEngine.MathModule
             var motionDir = inputMotionMapper.GetRotatedMotionDir(TransformatorData.Rotation.X, TransformatorData.Rotation.Y);
             if (motionDir != Vector3.Zero)
             {
-                TransformatorData.Movement = -new Vector2(motionDir.X, motionDir.Y) * TransformatorData.MoveSpeed;
+                TransformatorData.Movement = -new Vector2(motionDir.X, motionDir.Y) * TransformatorData.MoveSpeed * (float)(deltaElapsedTime / 2);
                 PositionChanged?.Invoke(this, EventArgs.Empty); // This call should be moved to class managing Character
             }
 
             var scrollDir = inputMotionMapper.GetScrollDir();
             if (scrollDir != Vector2.Zero)
             {
-                TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels;
+                TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels * (float)(deltaElapsedTime/2);
                 scrollableViewport.Scroll((int)TransformatorData.ScrollMovement.X,
                                       (int)TransformatorData.ScrollMovement.Y);
             }

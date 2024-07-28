@@ -1,10 +1,5 @@
 ﻿using SandAndStonesEngine.DataModels;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SandAndStonesEngine.MathModule
 {
@@ -30,7 +25,7 @@ namespace SandAndStonesEngine.MathModule
         {
             var coordX = screenX * QuadGridManager.Instance.GetPixelSizeInCoordinates().X - cartesianWidth / 2;
             var coordY = cartesianHeight / 2 - screenY * QuadGridManager.Instance.GetPixelSizeInCoordinates().Y;
-            Debug.WriteLine("ScreenToCartesian {0}", (coordX, coordY));
+            //Debug.WriteLine("ScreenToCartesian {0}", (coordX, coordY));
             return (coordX, coordY);
         }
 
@@ -38,7 +33,7 @@ namespace SandAndStonesEngine.MathModule
         {
             var coordX = screenMovementX * QuadGridManager.Instance.GetPixelSizeInCoordinates().X;
             var coordY = screenMovementY * QuadGridManager.Instance.GetPixelSizeInCoordinates().Y;
-            Debug.WriteLine("ScreenToCartesian {0}", (coordX, coordY));
+            //Debug.WriteLine("ScreenToCartesian {0}", (coordX, coordY));
             return (coordX, coordY);
         }
     }

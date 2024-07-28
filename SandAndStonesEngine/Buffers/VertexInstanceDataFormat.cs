@@ -24,6 +24,7 @@ namespace SandAndStonesEngine.Buffers
             TextureId = textureId;
             Scroll = scroll;
         }
+
         public const uint SizeInBytes = (4 + 1 + 2) * 8;
         //public static uint SizeInBytes { get; } = (uint)Unsafe.SizeOf<VertexInstanceDataFormat>();
     }

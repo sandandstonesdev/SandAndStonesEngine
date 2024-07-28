@@ -12,7 +12,7 @@ namespace SandAndStonesEngine.Assets
         public override bool IsText { get { return true; } }
         public override IAnimation Animation { get; set; }
 
-        public GameTextAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth= 1.0f, float scale= 4.0f) :
+        public GameTextAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth= 1.0f, float scale=1.0f) :
             base(name, color, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);

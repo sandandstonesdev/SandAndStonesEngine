@@ -57,15 +57,12 @@ namespace SandAndStonesEngine.DataModels
             verticesPositions[3] = new VertexDataFormat(quadAbsoluteCoords[3], color, quadTextureCoords[3], (uint)assetId, textureId);
         }
 
-        public virtual void Move(Vector2 movement)
+        public virtual void Move(Vector4 movement)
         {
             for (int i = 0; i < verticesPositions.Length; i++)
             {
                 verticesPositions[i].Position = 
-                    new Vector4(verticesPositions[i].Position.X + movement.X, 
-                                verticesPositions[i].Position.Y + movement.Y,
-                                verticesPositions[i].Position.Z,
-                                verticesPositions[i].Position.W);
+                    Vector4.Add(verticesPositions[i].Position, movement);
             }
         }
 

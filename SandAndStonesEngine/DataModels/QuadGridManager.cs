@@ -9,7 +9,7 @@ namespace SandAndStonesEngine.DataModels
         private static readonly Lazy<QuadGridManager> lazyInstance = new Lazy<QuadGridManager>(() => new QuadGridManager());
         public static QuadGridManager Instance => lazyInstance.Value;
 
-        private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f);
+        private Vector3 relativePosition = new Vector3(-1.00f, -1.00f, 0.0f);
         Vector2[] PointGrid;
         int pointColumns;
         int pointRows;
@@ -47,24 +47,30 @@ namespace SandAndStonesEngine.DataModels
             screenDivision.Resize(screenWidth, screenHeight);
         }
 
+        public int CalculateQuadGridIndex(int xQuad, int yQuad, int xQuadSize, int yQuadSize)
+        {
+            int idx = ((yQuadSize - yQuad - 1) + (xQuad * xQuadSize)) - 1;
+            return idx;
+        }
+
         public QuadData GetQuadData(int xQuad, int yQuad, int zQuad)
         {
             Vector3[] quadPoints = new Vector3[4];
-            int upperPointGridIndex = (yQuad + xQuad * pointColumns);
-            int lowerPointGridIndex = (yQuad + (xQuad + 1) * pointRows);
-            quadPoints[0] = new Vector3(PointGrid[upperPointGridIndex], (float)zQuad); // Upper Left
-            quadPoints[1] = new Vector3(PointGrid[upperPointGridIndex + 1], (float)zQuad); // Upper Right
-            quadPoints[2] = new Vector3(PointGrid[lowerPointGridIndex], (float)zQuad); // Lower Left
-            quadPoints[3] = new Vector3(PointGrid[lowerPointGridIndex + 1], (float)zQuad); // Lower Right
+            int lowerPointGridIndex = CalculateQuadGridIndex(xQuad, yQuad, screenDivision.QuadCountX + 1, screenDivision.QuadCountY + 1);
+            int upperPointGridIndex = CalculateQuadGridIndex(xQuad + 1, yQuad, screenDivision.QuadCountX + 1, screenDivision.QuadCountY + 1);
+            quadPoints[0] = new Vector3(PointGrid[upperPointGridIndex], (float)zQuad); // Lower Left
+            quadPoints[1] = new Vector3(PointGrid[upperPointGridIndex + 1], (float)zQuad); // Lower Right
+            quadPoints[2] = new Vector3(PointGrid[lowerPointGridIndex], (float)zQuad); // Upper Left
+            quadPoints[3] = new Vector3(PointGrid[lowerPointGridIndex+ 1], (float)zQuad); // Upper Right
 
             Vector2[] texturePoints = new Vector2[4];
-            texturePoints[0] = new Vector2(0, 1);// Upper Left => quadPoints[1]
-            texturePoints[1] = new Vector2(0, 0);// Lower Left => quadPoints[0]
-            texturePoints[2] = new Vector2(1, 1);// Upper Right => quadPoints[3]
-            texturePoints[3] = new Vector2(1, 0);// Lower Right => quadPoints[2]
+            texturePoints[0] = new Vector2(1, 0);// Upper Right => quadPoints[3]
+            texturePoints[1] = new Vector2(1, 1);// Lower Right => quadPoints[1]
+            texturePoints[2] = new Vector2(0, 0);// Upper Left => quadPoints[2]
+            texturePoints[3] = new Vector2(0, 1);// Lower Left => quadPoints[0]
 
             // int linearQuadId = (xQuad + yQuad * quadColumns);
-            IIndexGenerator indexGenerator = new TriangleListIndexGenerator(quadId, pointColumns, pointRows);
+            IIndexGenerator indexGenerator = new TriangleListIndexGenerator(quadId, pointRows, pointColumns);
             indexGenerator.Generate();
             var indices = indexGenerator.Points;
             
@@ -97,7 +103,7 @@ namespace SandAndStonesEngine.DataModels
 
             Vector3[] quadAbsoluteCoords = new Vector3[4]
             {
-                leftDown, leftUpper , rightDown, rightUpper
+                leftDown, leftUpper, rightDown, rightUpper
             };
 
             return quadAbsoluteCoords;
@@ -106,7 +112,7 @@ namespace SandAndStonesEngine.DataModels
         private Vector3 GetAbsoluteCoord(Vector3 quadGridPoint, float quadScale)
         {
             var quadSizeInCoord = this.GetScaledQuadSizeInCoord(quadScale);
-            var scaledPoint = new Vector3(quadGridPoint.X, -quadGridPoint.Y, quadGridPoint.Z) * new Vector3(quadSizeInCoord.X, quadSizeInCoord.Y, quadSizeInCoord.Z);
+            var scaledPoint = Vector3.Multiply(quadGridPoint, quadSizeInCoord);
             var res = relativePosition + scaledPoint;
             return res;
         }
@@ -114,7 +120,7 @@ namespace SandAndStonesEngine.DataModels
         private Vector3 GetScaledQuadSizeInCoord(float quadScale)
         {
             Vector3 quadSizeTemp = this.GetQuadSizeInCoordinates();
-            var quadSizeInCoord = new Vector3(quadSizeTemp.X * quadScale, quadSizeTemp.Y * quadScale, quadSizeTemp.Z);
+            var quadSizeInCoord = Vector3.Multiply(quadSizeTemp, new Vector3(quadScale, quadScale, 1));
             return quadSizeInCoord;
         }
     }

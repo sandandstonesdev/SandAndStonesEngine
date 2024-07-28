@@ -9,7 +9,7 @@ namespace SandAndStonesEngine.Assets
 {
     public class GameFPSCounterTextAsset : GameTextAsset
     {
-        public GameFPSCounterTextAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float depth = 1.0f, float scale = 4.0f) :
+        public GameFPSCounterTextAsset(string name, RgbaFloat color, AssetBatchType assetBatchType, float scale, float depth = 1.0f) :
             base(name, color, assetBatchType, depth, scale)
         {
             this.Id = IdManager.GetAssetId(AssetType);

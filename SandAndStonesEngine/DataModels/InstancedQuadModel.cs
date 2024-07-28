@@ -47,10 +47,11 @@ namespace SandAndStonesEngine.DataModels
 
         private Vector3 GetAbsoluteCoord(Vector3 quadGridPoint)
         {
-            var scaledPoint = new Vector2(quadGridPoint.X, -quadGridPoint.Y) * new Vector2(quadSizeInCoord.X, quadSizeInCoord.Y);
+            var scaledPoint = new Vector2(quadGridPoint.X, quadGridPoint.Y) * new Vector2(quadSizeInCoord.X, quadSizeInCoord.Y);
             var res = relativePosition + scaledPoint;
             return new Vector3(res, quadGridPoint.X);
         }
+
         public void Init()
         {
             var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0]);

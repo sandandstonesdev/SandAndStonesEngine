@@ -37,12 +37,13 @@ namespace SandAndStonesEngine.GameTextures
 
         public GameTextureSurface(int width, int height)
         {
-            this.gameAssets = AssetDataManager.Instance.Assets;
+            //this.gameAssets = AssetDataManager.Instance.Assets;
             this.width = width;
             this.height = height;
             this.textureDataList = AssetDataManager.Instance.TexturesData;
             this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
         }
+
         public void Init()
         {
             TextureDescription texDesc = new TextureDescription()

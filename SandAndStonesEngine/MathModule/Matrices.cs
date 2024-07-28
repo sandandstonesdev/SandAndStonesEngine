@@ -64,20 +64,20 @@ namespace SandAndStonesEngine.MathModule
         {
             var viewTransformatorData = viewTransformator.TransformatorData;
             ViewMatrix = Matrix4x4.CreateLookAt(viewTransformatorData.Position, viewTransformatorData.Target, viewTransformatorData.Up);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
+            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ViewMatrix, "ViewMatrix");
         }
 
         public void UpdateWorld()
         {
             var worldTransformatorData = worldTransformator.TransformatorData;
             WorldMatrix = Matrix4x4.CreateWorld(-worldTransformatorData.Position, worldTransformatorData.Forward, worldTransformatorData.Up);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
+            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
         }
         
         public void UpdateScroll()
         {
             var viewTransformatorData = viewTransformator.TransformatorData;
-            DebugUtilities.DebugUtilities.DisplayVector2(viewTransformatorData.ScrollMovement, "Scroll");
+            //DebugUtilities.DebugUtilities.DisplayVector2(viewTransformatorData.ScrollMovement, "Scroll");
         }
 
 
@@ -92,13 +92,13 @@ namespace SandAndStonesEngine.MathModule
             float w = (width / height) * 2.0f;
             float h = (height / width) * 2.0f;
             ProjectionMatrix = Matrix4x4.CreateOrthographic(w, h, near, far);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix (Orthographic)");
+            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix (Orthographic)");
         }
 
         public void UpdateProjection(float fov, float aspectRatio, float near, float far)
         {
             ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(fov, aspectRatio, near, far);
-            DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
+            //DebugUtilities.DebugUtilities.DisplayMatrix4x4(ProjectionMatrix, "ProjectionMatrix");
         }
 
         protected virtual void Dispose(bool disposing)

@@ -18,19 +18,15 @@ namespace SandAndStonesEngine.Managers
             
         }
 
-        public IEnumerable<IQuadModel> GetVisibleModelData(ScrollableViewport scrollableViewport)
-        {
-            return QuadModelManager.Instance.GetVisibleModels(scrollableViewport);
-        }
-
+        static uint lastAssetId = 0;
         public void Add(GameAssetBase asset)
         {
             Assets.Add(asset);
             if (asset.AssetBatchType == AssetBatchType.ClientRectBatch)
                 QuadModelManager.Instance.AddRange(asset.QuadModelList);
-            else if (asset.AssetBatchType == AssetBatchType.StatusBarBatch)
+            if (asset.AssetBatchType == AssetBatchType.StatusBarBatch)
                 QuadModelManager.Instance.AddStatusBarModelsRange(asset.QuadModelList);
-
+            
             GameTextureDataManager.Instance.Add(asset.GameTextureData);
         }
     }

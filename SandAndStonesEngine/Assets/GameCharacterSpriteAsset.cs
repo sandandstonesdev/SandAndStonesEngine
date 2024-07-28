@@ -53,7 +53,8 @@ namespace SandAndStonesEngine.Assets
         {
             QuadModelList.ForEach(x =>
             {
-                x.Move(new Vector2(viewTransformator.TransformatorData.Movement.X, viewTransformator.TransformatorData.Movement.Y));
+                x.Move(new Vector4(
+                    viewTransformator.TransformatorData.Movement.X, viewTransformator.TransformatorData.Movement.Y, 0, 0));
             });
         }
 

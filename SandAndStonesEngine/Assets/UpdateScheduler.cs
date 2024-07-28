@@ -7,7 +7,7 @@
         public UpdateFPSScheduler(int maxTotalDelta = 1000)
         {
 #if DEBUG
-            this.maxTotalDelta = 50;
+            this.maxTotalDelta = 500;
 #else
             this.maxTotalDelta = 500;
 #endif

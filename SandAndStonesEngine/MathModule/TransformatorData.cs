@@ -27,8 +27,6 @@ namespace SandAndStonesEngine.MathModule
             get { return Position + LookDir; }
         }
 
-        private Vector3 relativePosition = new Vector3(-1.00f, 1.00f, 0.0f); // Left Upper Corner Position
-
         public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector3 rotation, float moveSpeed, float scrollSpeedPixels)
         {
             SetMovement(new Vector2(0, 0));
@@ -38,6 +36,7 @@ namespace SandAndStonesEngine.MathModule
             SetScrollSpeedPixels(scrollSpeedPixels);
             SetRotation(rotation);
         }
+
         public void SetDirections(Vector3 position, Vector3 forward, Vector3 up)
         {
             Position = position;
