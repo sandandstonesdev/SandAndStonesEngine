@@ -1,6 +1,7 @@
 ﻿using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameCamera;
 using System.Numerics;
+using Vortice.Mathematics;
 
 namespace SandAndStonesEngine.MathModule
 {
@@ -30,7 +31,7 @@ namespace SandAndStonesEngine.MathModule
             var motionDir = inputMotionMapper.GetRotatedMotionDir(TransformatorData.Rotation.X, TransformatorData.Rotation.Y);
             if (motionDir != Vector3.Zero)
             {
-                TransformatorData.Movement = -new Vector2(motionDir.X, motionDir.Y) * TransformatorData.MoveSpeed * (float)(deltaElapsedTime / 2);
+                TransformatorData.Movement = Vector3.Negate(motionDir)* TransformatorData.MoveSpeed * (float)(deltaElapsedTime / 2);
                 PositionChanged?.Invoke(this, EventArgs.Empty); // This call should be moved to class managing Character
             }
 

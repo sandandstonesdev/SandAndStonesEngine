@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Veldrid.Sdl2;
-using Veldrid.StartupUtilities;
-using Veldrid;
-using System.Numerics;
-using Veldrid.SPIRV;
-using Vulkan;
-using SandAndStonesEngine.DataModels;
-using SandAndStonesEngine.GameFactories;
+﻿using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.DataModels.ScreenDivisions;
 
 namespace SandAndStonesEngine
 {

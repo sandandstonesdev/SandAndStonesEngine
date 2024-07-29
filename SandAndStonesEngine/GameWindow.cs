@@ -11,6 +11,8 @@ using SandAndStonesEngine.MathModule;
 using System.Numerics;
 using SandAndStonesEngine.RenderingAbstractions;
 using SandAndStonesEngine.GameTextures;
+using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.Assets.Batches;
 
 namespace SandAndStonesEngine
 {

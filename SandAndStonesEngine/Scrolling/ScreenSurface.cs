@@ -1,19 +1,8 @@
-﻿using SandAndStonesEngine.Assets;
-using SandAndStonesEngine.Buffers;
+﻿using SandAndStonesEngine.Assets.Assets;
+using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.MathModule;
-using SandAndStonesEngine.RenderingAbstractions;
-using SandAndStonesEngine.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Veldrid;
-using Vulkan;
 
 namespace SandAndStonesEngine.Scrolling
 {
@@ -75,7 +64,7 @@ namespace SandAndStonesEngine.Scrolling
                 ArrayLayers = (uint)textureDataList.Count,
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
-                Type = TextureType.Texture2D,
+                Type = Veldrid.TextureType.Texture2D,
             };
 
             ResourceFactory factory = Factory.Instance.GetResourceFactory();

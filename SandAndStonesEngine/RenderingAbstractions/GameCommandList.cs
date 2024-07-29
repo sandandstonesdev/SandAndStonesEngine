@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using SandAndStonesEngine.Assets;
+using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GameTextures;

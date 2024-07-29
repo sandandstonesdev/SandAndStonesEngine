@@ -1,4 +1,4 @@
-﻿using SandAndStonesEngine.DataModels;
+﻿using SandAndStonesEngine.DataModels.Quads;
 
 namespace SandAndStonesEngine.Managers
 {

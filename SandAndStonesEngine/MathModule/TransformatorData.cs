@@ -5,13 +5,14 @@ namespace SandAndStonesEngine.MathModule
     public class TransformatorData
     {
         public Vector3 Position;
-        public Vector2 Movement;
+        public Vector3 Movement;
         public Vector3 Forward;
         public Vector3 Up;
         public Vector2 ScrollMovement;
         public float MoveSpeed;
         public float ScrollSpeedPixels;
         public Vector3 Rotation;
+
         public Vector3 LookDir
         {
             get
@@ -29,7 +30,7 @@ namespace SandAndStonesEngine.MathModule
 
         public TransformatorData(Vector3 position, Vector3 forward, Vector3 up, Vector3 rotation, float moveSpeed, float scrollSpeedPixels)
         {
-            SetMovement(new Vector2(0, 0));
+            SetMovement(new Vector3(0, 0, 0));
             SetScrollMovement(new Vector2(0, 0));
             SetDirections(position, forward, up);
             SetSpeed(moveSpeed);
@@ -44,7 +45,7 @@ namespace SandAndStonesEngine.MathModule
             Up = up;
         }
 
-        public void SetMovement(Vector2 movement)
+        public void SetMovement(Vector3 movement)
         {
             Movement = movement;
         }
@@ -64,7 +65,7 @@ namespace SandAndStonesEngine.MathModule
             ScrollSpeedPixels = scrollSpeedPixels;
         }
 
-        public void SetRotation(Vector3 rotation) // yaw/pitch
+        public void SetRotation(Vector3 rotation)
         {
             Rotation = rotation;
         }

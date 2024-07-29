@@ -1,4 +1,4 @@
-﻿using SandAndStonesEngine.Assets;
+﻿using SandAndStonesEngine.Assets.Textures;
 
 namespace SandAndStonesEngine.Managers
 {

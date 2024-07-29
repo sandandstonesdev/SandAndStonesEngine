@@ -1,8 +1,9 @@
 ﻿using Veldrid;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.Managers;
+using SandAndStonesEngine.Assets.Assets;
+using SandAndStonesEngine.Assets.Textures;
 
 namespace SandAndStonesEngine.GameTextures
 {
@@ -55,7 +56,7 @@ namespace SandAndStonesEngine.GameTextures
                 ArrayLayers = (uint)textureDataList.Count,
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
-                Type = TextureType.Texture2D,
+                Type = Veldrid.TextureType.Texture2D,
             };
 
             ResourceFactory factory = Factory.Instance.GetResourceFactory();

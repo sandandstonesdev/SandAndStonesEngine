@@ -5,9 +5,9 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStonesEngine", "SandAndStonesEngine\SandAndStonesEngine.csproj", "{EA5AC1F7-54CF-467A-BD1D-BC248F9A9300}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandAndStonesEngineTests", "SandAndStonesEngineTests\SandAndStonesEngineTests.csproj", "{73B347FE-F59E-48E6-9A0A-F0F55A7E6C94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStonesEngineTests", "SandAndStonesEngineTests\SandAndStonesEngineTests.csproj", "{73B347FE-F59E-48E6-9A0A-F0F55A7E6C94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandAndStonesEngineSample", "SandAndStonesEngineSample\SandAndStonesEngineSample.csproj", "{444F3E42-FC36-46F9-9A7C-1A704D853F85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStonesEngineSample", "SandAndStonesEngineSample\SandAndStonesEngineSample.csproj", "{444F3E42-FC36-46F9-9A7C-1A704D853F85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

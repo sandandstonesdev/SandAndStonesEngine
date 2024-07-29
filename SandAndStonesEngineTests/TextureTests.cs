@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine;
-using SandAndStonesEngine.Assets;
+using SandAndStonesEngine.Assets.Textures;
 
 namespace SandAndStonesEngineTests
 {

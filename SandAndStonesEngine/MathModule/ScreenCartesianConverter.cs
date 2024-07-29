@@ -1,4 +1,4 @@
-﻿using SandAndStonesEngine.DataModels;
+﻿using SandAndStonesEngine.DataModels.Quads;
 using System.Diagnostics;
 
 namespace SandAndStonesEngine.MathModule

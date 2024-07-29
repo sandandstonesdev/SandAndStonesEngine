@@ -1,4 +1,5 @@
 ﻿using SandAndStonesEngine.Buffers;
+using SandAndStonesEngine.DataModels.Quads;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,9 @@ namespace SandAndStonesEngine.DataModels
         }
 
         public int TextureId;
-        public InstancedQuadModel(int textureId, Vector2 gridQuadPosition, float quadScale, RgbaFloat color, QuadGridManager quadGrid)
+        public InstancedQuadModel(int textureId, Vector3 gridQuadPosition, float quadScale, RgbaFloat color, QuadGridManager quadGrid)
         {
-            QuadData quadData = quadGrid.GetQuadData((int)gridQuadPosition.X, (int)gridQuadPosition.Y, 0);
+            QuadData quadData = quadGrid.GetQuadData(gridQuadPosition);
 
             this.quadPointsInGrid = quadData.Points;
             this.quadIndexesInGrid = quadData.Indexes;

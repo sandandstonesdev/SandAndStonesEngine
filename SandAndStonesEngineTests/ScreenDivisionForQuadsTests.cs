@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.DataModels;
+﻿using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.DataModels.ScreenDivisions;
 
 namespace SandAndStonesEngineTests
 {

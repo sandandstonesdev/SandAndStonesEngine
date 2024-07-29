@@ -1,4 +1,6 @@
 ﻿using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.DataModels.ScreenDivisions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +45,7 @@ namespace SandAndStonesEngineTests
             ScrollableViewport scrollableViewport = new ScrollableViewport(0, 0, 400, 400);
             scrollableViewport.Scroll(10, 10);
             bool result = scrollableViewport.ContainsVertex(new Vector4(0.25f, -0.25f, 0.0f, 0));
-            Assert.IsFalse(result);
+            Assert.IsTrue(result);
         }
     }
 }

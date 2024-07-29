@@ -1,5 +1,7 @@
-﻿using SandAndStonesEngine.Assets;
-using SandAndStonesEngine.DataModels;
+﻿using SandAndStonesEngine.Assets.Assets;
+using SandAndStonesEngine.Assets.Batches;
+using SandAndStonesEngine.Assets.Textures;
+using SandAndStonesEngine.DataModels.Quads;
 
 namespace SandAndStonesEngine.Managers
 {
