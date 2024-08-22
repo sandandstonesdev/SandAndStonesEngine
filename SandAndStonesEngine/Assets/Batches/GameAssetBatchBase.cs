@@ -44,10 +44,10 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
 
-            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, Assets);
+            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, Assets, scrollableViewport);
             VertexBuffer.Init();
 
-            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, Assets);
+            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, Assets, scrollableViewport);
             IndexBuffer.Init();
         }
 

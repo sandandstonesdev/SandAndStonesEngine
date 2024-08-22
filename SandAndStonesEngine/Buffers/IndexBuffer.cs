@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.DataModels.Quads;
+﻿using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.Utils;
 using Veldrid;
 
@@ -13,19 +14,21 @@ namespace SandAndStonesEngine.Buffers
         {
             get { return (uint)QuadIndexes.Length; }
         }
-        IEnumerable<IQuadModel> quadModelList;
-        ushort[] QuadIndexes;
+        IQuadModel[] quadModelList;
+        private ushort[] QuadIndexes;
         private bool disposedValue;
+        private ScrollableViewport scrollableViewport;
 
-        public IndexBuffer(GraphicsDevice graphicsDevice, IEnumerable<IQuadModel> quadModelList)
+        public IndexBuffer(GraphicsDevice graphicsDevice, IEnumerable<IQuadModel> quadModelList, ScrollableViewport scrollableViewport)
         {
-            this.quadModelList = quadModelList;
+            this.quadModelList = quadModelList.ToArray();
             this.graphicsDevice = graphicsDevice;
+            this.scrollableViewport = scrollableViewport;
         }
 
         public void SetQuads(IEnumerable<IQuadModel> quadModels)
         {
-            quadModelList = quadModels;
+            quadModelList = quadModels.ToArray();
         }
 
         private uint GetNeededBufSize(ushort[] quadIndexes)
@@ -36,12 +39,28 @@ namespace SandAndStonesEngine.Buffers
 
         private ushort[] CollectAllIndicesFromQuads()
         {
-            List<ushort> indexData = new List<ushort>();
-            foreach (var quadModel in quadModelList)
+            var quadModelCount = quadModelList.Count();
+            var indicesDataLength = quadModelCount * 6;
+            ushort[] indexData = new ushort[indicesDataLength];
+            int destinationIdx = 0;
+            for (int i = 0; i < quadModelCount; i++)
             {
-                indexData.AddRange(quadModel.QuadIndexes);
+                if (((IVisibleModel)quadModelList[i]).IsVisible(scrollableViewport))
+                {
+                    for (int j = 0; j < 6; j++)
+                    {
+                        indexData[destinationIdx++] = quadModelList[i].QuadIndexes[j];
+                    }
+                }
             }
-            return indexData.ToArray();
+
+            return indexData;
+            //List<ushort> indexData = new List<ushort>();
+            //foreach (var quadModel in quadModelList)
+            //{
+            //    indexData.AddRange(quadModel.QuadIndexes);
+            //}
+            //return indexData.ToArray();
         }
 
         public void Init()

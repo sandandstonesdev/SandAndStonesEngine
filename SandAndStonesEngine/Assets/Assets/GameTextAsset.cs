@@ -33,7 +33,7 @@ namespace SandAndStonesEngine.Assets.Assets
                 for (int j = (int)assetInfo.StartPos.Y; j < assetInfo.EndPos.Y; j++)
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
-                    var quadModel = AssetFactory.Instance.CreateTile(positionInQuadCount, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Font);
+                    var quadModel = AssetFactory.Instance.CreateTile(new Vector2(0, 0), positionInQuadCount, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Font);
                     quadModel.Init();
                     QuadModelList.Add(quadModel);
                 }

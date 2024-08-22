@@ -6,8 +6,8 @@ namespace SandAndStonesEngine.DataModels.Tiles
 {
     public class BackgroundTile : QuadModel
     {
-        public BackgroundTile(Vector3 gridQuadPosition, float quadScale, RgbaFloat color, uint assetId, int textureId) :
-            base(gridQuadPosition, quadScale, color, assetId, textureId)
+        public BackgroundTile(Vector2 screenId, Vector3 gridQuadPosition, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
+            base(screenId, gridQuadPosition, quadScale, color, assetId, textureId, tileType)
         {
 
         }

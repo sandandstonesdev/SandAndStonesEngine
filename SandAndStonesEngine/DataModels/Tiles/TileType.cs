@@ -5,6 +5,7 @@
         Background,
         Character,
         Font,
-        Sprite
+        Sprite,
+        StatusBarBackground
     }
 }

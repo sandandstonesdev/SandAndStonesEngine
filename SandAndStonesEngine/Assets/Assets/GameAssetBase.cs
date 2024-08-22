@@ -2,7 +2,6 @@
 using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels.Quads;
-using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Assets
 {

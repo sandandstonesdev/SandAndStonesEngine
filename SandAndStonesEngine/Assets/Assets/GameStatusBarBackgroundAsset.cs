@@ -34,7 +34,8 @@ namespace SandAndStonesEngine.Assets.Assets
                 for (int j = (int)assetInfo.StartPos.Y; j < assetInfo.EndPos.Y; j++)
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
-                    QuadModel quadModel = new BackgroundTile(positionInQuadCount, Scale, assetInfo.Textures[0].Color, Id, TextureId);
+                    //var screenPosition = new Vector2((int)i / 8, 0);
+                    var quadModel = AssetFactory.Instance.CreateTile(new Vector2(0, 0), positionInQuadCount, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.StatusBarBackground);
                     quadModel.Init();
                     QuadModelList.Add(quadModel);
                 }

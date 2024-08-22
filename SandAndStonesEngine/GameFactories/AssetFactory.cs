@@ -26,18 +26,20 @@ namespace SandAndStonesEngine.GameFactories
             return texture;
         }
 
-        public IQuadModel CreateTile(Vector3 gridQuadPosition, float fontSize, RgbaFloat color, uint assetId, int textureId, TileType type)
+        public IQuadModel CreateTile(Vector2 screenPosition, Vector3 gridQuadPosition, float fontSize, RgbaFloat color, uint assetId, int textureId, TileType type)
         {
             IQuadModel quadModel = null!;
             
             if (type == TileType.Font)
-                quadModel = new FontTile(gridQuadPosition, fontSize, color, assetId, textureId);
+                quadModel = new FontTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
+            else if (type == TileType.StatusBarBackground)
+                quadModel = new BackgroundTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
             else if (type == TileType.Background)
-                quadModel = new BackgroundTile(gridQuadPosition, fontSize, color, assetId, textureId);
+                quadModel = new BackgroundTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
             else if (type == TileType.Sprite)
-                quadModel = new SpriteTile(gridQuadPosition, fontSize, color, assetId, textureId);
+                quadModel = new SpriteTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
             else if (type == TileType.Character)
-                quadModel = new CharacterSpriteTile(gridQuadPosition, fontSize, color, assetId, textureId);
+                quadModel = new CharacterSpriteTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
 
             return quadModel;
         }

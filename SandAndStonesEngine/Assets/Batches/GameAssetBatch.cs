@@ -1,10 +1,13 @@
 ﻿using SandAndStonesEngine.Animation;
 using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
+using SandAndStonesEngine.Clients;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.Managers;
 using SandAndStonesEngine.MathModule;
+using System.Numerics;
+using System.Text.Json;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches
@@ -21,33 +24,27 @@ namespace SandAndStonesEngine.Assets.Batches
             this.viewTransformator = viewTransformator;
         }
 
-        protected override void InitGameAssets()
+        protected override async void InitGameAssets()
         {
             QuadGridManager.Instance.StartNewBatch();
 
-            var BackgroundAsset = new GameBackgroundAsset("wall", scrollableViewport, AssetBatchType, 2);
-            BackgroundAsset.Init(AssetInfo.Create2DAssetInfo(0, 0, 8, 8, new TextureAnimation("wall.png"), TextureInfo.CreateTextureInfo("wall.png", RgbaFloat.White)));
+            var client = new AssetInfoClient(new HttpClient());
+            var assetInfo = client.GetAssetInfo().Result;
+
+            var BackgroundAsset = new GameBackgroundAsset("wall", viewTransformator, scrollableViewport, AssetBatchType, 2);
+            BackgroundAsset.Init(AssetInfo.Create2DAssetInfo(0, 0, 16, 8, new TextureAnimation("wall.png"), TextureInfo.CreateTextureInfo("wall.png", RgbaFloat.White)));
             AssetDataManager.Instance.Add(BackgroundAsset);
 
             var GameAsset2 = new GameCharacterSpriteAsset("character", viewTransformator, AssetBatchType, 0.5f);
             GameAsset2.Init(AssetInfo.Create2DAssetInfo(0, 7, 1, 8, new TextureAnimation("char2.png", "char2_move.png"), TextureInfo.CreateTextureInfo("char2.png", RgbaFloat.Green)));
             AssetDataManager.Instance.Add(GameAsset2);
 
-            var GameAsset3 = new GameBackgroundAsset("torch", scrollableViewport, AssetBatchType, 1);
-            GameAsset3.Init(AssetInfo.Create2DAssetInfo(1, 6, 2, 7, new TextureAnimation("torch.png", "torch2.png"), TextureInfo.CreateTextureInfo("torch.png", RgbaFloat.White)));
-            AssetDataManager.Instance.Add(GameAsset3);
-
-            var GameAsset4 = new GameBackgroundAsset("torch", scrollableViewport, AssetBatchType, 1);
-            GameAsset4.Init(AssetInfo.Create2DAssetInfo(3, 6, 4, 7, new TextureAnimation("torch.png", "torch2.png"), TextureInfo.CreateTextureInfo("torch.png", RgbaFloat.White)));
-            AssetDataManager.Instance.Add(GameAsset4);
-
-            var GameAsset5 = new GameBackgroundAsset("torch", scrollableViewport, AssetBatchType, 1);
-            GameAsset5.Init(AssetInfo.Create2DAssetInfo(5, 6, 6, 7, new TextureAnimation("torch.png", "torch2.png"), TextureInfo.CreateTextureInfo("torch.png", RgbaFloat.White)));
-            AssetDataManager.Instance.Add(GameAsset5);
-
-            var GameAsset6 = new GameBackgroundAsset("torch", scrollableViewport, AssetBatchType, 1);
-            GameAsset6.Init(AssetInfo.Create2DAssetInfo(7, 6, 8, 7, new TextureAnimation("torch.png", "torch2.png"), TextureInfo.CreateTextureInfo("torch.png", RgbaFloat.White)));
-            AssetDataManager.Instance.Add(GameAsset6);
+            for (int i = 1; i < 16; i += 2)
+            {
+                var GameAsset3 = new GameBackgroundAsset("torch", viewTransformator, scrollableViewport, AssetBatchType, 1);
+                GameAsset3.Init(AssetInfo.Create2DAssetInfo(i, 6, i + 1, 7, new TextureAnimation("torch.png", "torch2.png"), TextureInfo.CreateTextureInfo("torch.png", RgbaFloat.White)));
+                AssetDataManager.Instance.Add(GameAsset3);
+            }
 
             var GameFontAsset1 = new GameFPSCounterTextAsset("fps_info", AssetBatchType, 1.0f, 1.0f);
             GameFontAsset1.Init(AssetInfo.Create2DAssetInfo(0, 0, 1, 1, new TextAnimation("FPS: 0"), TextureInfo.CreateTextureInfo("letters.png", RgbaFloat.Blue)));

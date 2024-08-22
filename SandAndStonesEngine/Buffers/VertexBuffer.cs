@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.DataModels.Quads;
+﻿using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.DataModels.Quads;
 using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
@@ -12,11 +13,14 @@ namespace SandAndStonesEngine.Buffers
             get => VertexLayout.VertexLayoutPrototype;
         }
 
-        IEnumerable<IQuadModel> quadModelList;
-        public VertexBuffer(GraphicsDevice graphicDevice, IEnumerable<IQuadModel> quadModelList)
+        private IQuadModel[] quadModelList;
+        private ScrollableViewport scrollableViewport;
+
+        public VertexBuffer(GraphicsDevice graphicDevice, IEnumerable<IQuadModel> quadModelList, ScrollableViewport scrollableViewport)
         {
             this.graphicsDevice = graphicDevice;
-            this.quadModelList = quadModelList;
+            this.quadModelList = quadModelList.ToArray();
+            this.scrollableViewport = scrollableViewport;
         }
 
         VertexDataFormat[] VertexData;
@@ -24,17 +28,33 @@ namespace SandAndStonesEngine.Buffers
 
         public void SetQuads(IEnumerable<IQuadModel> quadModels)
         {
-            quadModelList = quadModels;
+            quadModelList = quadModels.ToArray();
         }
 
         private VertexDataFormat[] CollectAllVerticesFromQuads()
         {
-            List<VertexDataFormat> quadsVerticesData = new List<VertexDataFormat>();
-            foreach (var quadModel in quadModelList)
+            var quadModelCount = quadModelList.Count();
+            var verticesDataLength = quadModelCount * 4;
+            VertexDataFormat[] quadsVerticesData = new VertexDataFormat[verticesDataLength];
+            int destinationIdx = 0;
+
+            for (int i = 0; i < quadModelCount; i++)
             {
-                quadsVerticesData.AddRange(quadModel.VerticesPositions);
+                if (((IVisibleModel)quadModelList[i]).IsVisible(scrollableViewport))
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        quadsVerticesData[destinationIdx++] = quadModelList[i].VerticesPositions[j];
+                    }
+                }
             }
-            return quadsVerticesData.ToArray();
+
+            return quadsVerticesData;
+            //VertexDataFormat> quadsVerticesData = new List<VertexDataFormat>();
+            //foreach (var quadModel in quadModelList)
+            //{
+            //    quadsVerticesData.AddRange(quadModel.VerticesPositions);
+            //}
         }
 
         private uint GetNeededBufSize(VertexDataFormat[] vertexData)
