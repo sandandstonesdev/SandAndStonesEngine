@@ -31,12 +31,12 @@ namespace SandAndStonesEngineTests
         [TestMethod]
         public void IndicesForQuadAreCorrect()
         {
-            ushort[] indexesPattern1 = new ushort[] { 0, 1, 2, 1, 3, 2 };
-            ushort[] indexesPattern2 = new ushort[] { 4, 5, 6, 5, 7, 6 };
-            ushort[] indexesPattern3 = new ushort[] { 8, 9, 10, 9, 11, 10 };
-            QuadData quadData1 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 1, 0), TileType.Background);
-            QuadData quadData2 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 2, 0), TileType.Background);
-            QuadData quadData3 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 3, 0), TileType.Background);
+            var indexesPattern1 = new ushort[] { 0, 1, 2, 1, 3, 2 };
+            var indexesPattern2 = new ushort[] { 4, 5, 6, 5, 7, 6 };
+            var indexesPattern3 = new ushort[] { 8, 9, 10, 9, 11, 10 };
+            QuadData quadData1 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 1, 0), 1, TileType.Background);
+            QuadData quadData2 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 2, 0), 1, TileType.Background);
+            QuadData quadData3 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 3, 0), 1, TileType.Background);
             
             Assert.AreEqual(quadData1.Indexes.Length, indexesPattern1.Length);
             bool isEqual = Enumerable.SequenceEqual(quadData1.Indexes, indexesPattern1);
@@ -53,7 +53,7 @@ namespace SandAndStonesEngineTests
         public void VerticesForQuadGridHasCorrectLayout()
         {
             const int verticesPerQuad = 4;
-            QuadData quadData1 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 1, 0), TileType.Background);
+            QuadData quadData1 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 1, 0), 1, TileType.Background);
 
             Assert.AreEqual(quadData1.Points.Length, verticesPerQuad);
             bool AreLeftXsEqual = quadData1.Points[0].X == quadData1.Points[2].X;

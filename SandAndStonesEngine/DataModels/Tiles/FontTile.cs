@@ -6,8 +6,8 @@ namespace SandAndStonesEngine.DataModels.Tiles
 {
     public class FontTile : QuadModel
     {
-        public FontTile(QuadData quadData, float fontSize, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
-            base(quadData, fontSize, color, assetId, textureId, tileType)
+        public FontTile(QuadData quadData, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
+            base(quadData, color, assetId, textureId, tileType)
         {
 
         }

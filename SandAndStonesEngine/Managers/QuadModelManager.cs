@@ -4,11 +4,8 @@ namespace SandAndStonesEngine.Managers
 {
     public class QuadModelManager
     {
-        private static readonly Lazy<QuadModelManager> lazyInstance = new Lazy<QuadModelManager>(() => new QuadModelManager());
-        public static QuadModelManager Instance => lazyInstance.Value;
-
-        public List<IQuadModel> Models { get; } = new();
-        public List<IQuadModel> StatusBarModels { get; } = new();
+        public List<IQuadModel> Models { get; } = [];
+        public List<IQuadModel> StatusBarModels { get; } = [];
 
         public QuadModelManager()
         {

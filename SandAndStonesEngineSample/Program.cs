@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.GameFactories;
+﻿using SandAndStonesEngine;
+using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngineSample
 {
@@ -6,7 +7,7 @@ namespace SandAndStonesEngineSample
     {
         static void Main()
         {
-            Factory.Instance.GetGame().Start();
+            Game.Instance.Start();
         }
     }
 }

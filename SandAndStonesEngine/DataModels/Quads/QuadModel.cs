@@ -40,7 +40,7 @@ namespace SandAndStonesEngine.DataModels.Quads
         }
         public float scale;
 
-        public QuadModel(QuadData quadData, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType)
+        public QuadModel(QuadData quadData, RgbaFloat color, uint assetId, int textureId, TileType tileType)
         {
             screenInfo = quadData.ScreenPos;
             quadPointsInGrid = quadData.Points;
@@ -51,7 +51,7 @@ namespace SandAndStonesEngine.DataModels.Quads
             this.assetId = assetId;
             this.textureId = textureId;
             this.color = color;
-            scale = quadScale;
+            scale = quadData.Scale;
         }
 
         public void Init(ScreenDivisionForQuads screenDivision)

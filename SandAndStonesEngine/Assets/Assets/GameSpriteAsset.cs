@@ -22,24 +22,20 @@ namespace SandAndStonesEngine.Assets.Assets
             AssetBatchType = assetBatchType;
         }
 
-        public override void Init(QuadGridManager quadGridManager, AssetInfo assetInfo)
+        public override GameAssetBase Init(QuadGridManager quadGridManager, AssetInfo assetInfo)
         {
             Animation = assetInfo.Animation;
-            GameTextureData = AssetFactory.Instance.CreateTexture(Id, assetInfo.Textures[0].Name, TextureType.Standard);
-            GameTextureData.Init();
+            GameTextureData = assetInfo.AssetFactory.CreateTexture(Id, assetInfo.Textures[0].Name, TextureType.Standard);
 
             for (int i = (int)assetInfo.StartPos.X; i < assetInfo.EndPos.X; i++)
             {
                 for (int j = (int)assetInfo.StartPos.Y; j < assetInfo.EndPos.Y; j++)
                 {
-                    var positionInQuadCount = new Vector3(i, j, Depth);
-                    //var screenPosition = new Vector2((int)i / 8, 0);
-                    var quadData = quadGridManager.GetQuadData(new Vector2(0, 0), positionInQuadCount, TileType.Sprite);
-                    var quadModel = AssetFactory.Instance.CreateTile(quadData, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Sprite);
-                    quadModel.Init(quadGridManager.screenDivision);
-                    QuadModelList.Add(quadModel);
+                    CreateAssetQuad(quadGridManager, assetInfo, new Vector2(0, 0), new Vector3(i, j, Depth), TileType.Sprite);
                 }
             }
+
+            return this;
         }
 
         public override void Update(long delta)

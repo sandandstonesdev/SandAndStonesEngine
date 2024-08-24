@@ -8,11 +8,11 @@ namespace SandAndStonesEngine.RenderingAbstractions
 {
     public abstract class PipelineBase : IDisposable
     {
-        private Matrices matrices;
-        private GameShaderSet shaderSet;
-        private GameTextureSurface gameTextureSurface;
+        private readonly Matrices matrices;
+        private readonly GameShaderSet shaderSet;
+        private readonly GameTextureSurface gameTextureSurface;
         public Pipeline Pipeline;
-        protected GameGraphicDevice graphicDevice;
+        protected readonly GameGraphicDevice graphicDevice;
         private bool disposedValue;
         protected Framebuffer Framebuffer
         {
@@ -49,7 +49,7 @@ namespace SandAndStonesEngine.RenderingAbstractions
                 scissorTestEnabled: false),
 
                 PrimitiveTopology = PrimitiveTopology.TriangleList,
-                ResourceLayouts = new ResourceLayout[] { gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout },
+                ResourceLayouts = [gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout],
                 ShaderSet = shaderSet.ShaderSet,
 
                 Outputs = graphicDevice.SwapChain.OutputDescription

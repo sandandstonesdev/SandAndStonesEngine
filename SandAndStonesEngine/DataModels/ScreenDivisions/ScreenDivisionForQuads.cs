@@ -6,7 +6,7 @@ namespace SandAndStonesEngine.DataModels.ScreenDivisions
     {
         private int screenWidth;
         private int screenHeight;
-        private int screenDepth;
+        private readonly int screenDepth;
         public Vector3 QuadCount { get; init; }
         public Vector3 QuadPointCount { get; init; }
 

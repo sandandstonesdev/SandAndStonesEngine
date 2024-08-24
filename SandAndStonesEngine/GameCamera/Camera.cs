@@ -10,11 +10,11 @@ namespace SandAndStonesEngine.GameCamera
     public class Camera
     {
         // Frustrum
-        private float near = 1f; // Near plane z
-        private float far = 100f; // Far plane z
+        private readonly float near = 1f; // Near plane z
+        private readonly float far = 100f; // Far plane z
         const float fovInDegrees = 55; // Full view
-        private float fov = 1f; // Field of view
-        private float aspectRatio; // (right - left) / (top - bottom) = right/top
+        private readonly float fov = 1f; // Field of view
+        private readonly float aspectRatio; // (right - left) / (top - bottom) = right/top
 
         readonly Matrices matrices;
         int windowWidth;
@@ -34,12 +34,9 @@ namespace SandAndStonesEngine.GameCamera
             }
         }
 
-        private readonly ScrollableViewport scrollableViewport;
-
-        public Camera(GameWindow gameWindow, Matrices matrices, ScrollableViewport scrollableViewport)
+        public Camera(GameWindow gameWindow, Matrices matrices)
         {
             this.matrices = matrices;
-            this.scrollableViewport = scrollableViewport;
 
             windowWidth = gameWindow.SDLWindow.Width;
             windowHeight = gameWindow.SDLWindow.Height;
@@ -74,11 +71,6 @@ namespace SandAndStonesEngine.GameCamera
         public void Update(long deltaSeconds)
         {
             matrices.UpdateViewWorld();
-        }
-
-        public void Dispose()
-        {
-
         }
     }
 }

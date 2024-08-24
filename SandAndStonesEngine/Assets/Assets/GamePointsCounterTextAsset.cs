@@ -5,6 +5,7 @@ namespace SandAndStonesEngine.Assets.Assets
     public class GamePointsCounterTextAsset : GameTextAsset
     {
         private long Points = 0;
+        public override AssetType AssetType => AssetType.PointsText;
         public GamePointsCounterTextAsset(string name, AssetBatchType assetBatchType, float scale, float depth = 1.0f) :
             base(name, assetBatchType, depth, scale)
         {

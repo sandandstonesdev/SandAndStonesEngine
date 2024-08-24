@@ -1,6 +1,7 @@
 ﻿using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.Managers;
 using Veldrid;
@@ -20,7 +21,7 @@ namespace SandAndStonesEngine.Assets.Batches
         }
         public VertexLayoutDescription[] VertexLayouts
         {
-            get { return new VertexLayoutDescription[] { VertexBuffer.Layout }; }
+            get { return [VertexBuffer.Layout]; }
         }
         public uint IndicesCount
         {
@@ -41,11 +42,12 @@ namespace SandAndStonesEngine.Assets.Batches
         protected readonly ScrollableViewport scrollableViewport;
 
         private readonly GameGraphicDevice graphicDevice;
-
-        protected GameAssetBatchBase(GameGraphicDevice graphicDevice, ScrollableViewport scrollableViewport)
+        protected readonly AssetFactory assetFactory;
+        protected GameAssetBatchBase(AssetFactory assetFactory, GameGraphicDevice graphicDevice, ScrollableViewport scrollableViewport)
         {
             this.graphicDevice = graphicDevice;
             this.scrollableViewport = scrollableViewport;
+            this.assetFactory = assetFactory;
         }
 
         protected virtual void InitGameAssets()
@@ -64,7 +66,7 @@ namespace SandAndStonesEngine.Assets.Batches
 
         public virtual void Update(long delta)
         {
-            AssetDataManager.Instance.Assets.ForEach(e =>
+            assetFactory.Assets.ForEach(e =>
             {
                 if (e.AssetBatchType == AssetBatchType)
                     e.Update(delta);
@@ -84,7 +86,7 @@ namespace SandAndStonesEngine.Assets.Batches
                 {
                 }
 
-                AssetDataManager.Instance.Assets.ForEach(e =>
+                assetFactory.Assets.ForEach(e =>
                 {
                     e?.Dispose();
                 });

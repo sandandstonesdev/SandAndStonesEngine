@@ -32,9 +32,9 @@ namespace SandAndStonesEngine.Shaders
         {
             ResourceFactory factory = gameGraphicDevice.ResourceFactory;
 
-            ShaderProgram vertexShader = new ShaderProgram(shaderFileNames["VS"], ShaderStages.Vertex);
+            var vertexShader = new ShaderProgram(shaderFileNames["VS"], ShaderStages.Vertex);
             vertexShader.Init();
-            ShaderProgram pixelShader = new ShaderProgram(shaderFileNames["PS"], ShaderStages.Fragment);
+            var pixelShader = new ShaderProgram(shaderFileNames["PS"], ShaderStages.Fragment);
             pixelShader.Init();
 
             Shaders = factory.CreateFromSpirv(vertexShader.ShaderDesc, pixelShader.ShaderDesc);

@@ -4,6 +4,7 @@ namespace SandAndStonesEngine.Assets.Assets
 {
     public class GameFPSCounterTextAsset : GameTextAsset
     {
+        public override AssetType AssetType => AssetType.FPSText;
         public GameFPSCounterTextAsset(string name, AssetBatchType assetBatchType, float scale, float depth = 1.0f) :
             base(name, assetBatchType, depth, scale)
         {

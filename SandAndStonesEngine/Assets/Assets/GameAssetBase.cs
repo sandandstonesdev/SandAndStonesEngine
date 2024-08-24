@@ -2,6 +2,8 @@
 using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.DataModels.Tiles;
+using System.Numerics;
 
 namespace SandAndStonesEngine.Assets.Assets
 {
@@ -29,13 +31,20 @@ namespace SandAndStonesEngine.Assets.Assets
         public abstract IAnimation Animation { get; set; }
         public GameAssetBase(string name, float depth, float scale)
         {
-            QuadModelList = new List<IQuadModel>();
+            QuadModelList = [];
             Name = name;
             Depth = depth;
             Scale = scale;
         }
 
-        public abstract void Init(QuadGridManager quadGridManager, AssetInfo assetInfo);
+        public abstract GameAssetBase Init(QuadGridManager quadGridManager, AssetInfo assetInfo);
+
+        protected virtual void CreateAssetQuad(QuadGridManager gridManager, AssetInfo assetInfo, Vector2 screenPos, Vector3 positionInQuadCount, TileType tileType)
+        {
+            var quadData = gridManager.GetQuadData(screenPos, positionInQuadCount, Scale, tileType);
+            var quadModel = assetInfo.AssetFactory.CreateTile(gridManager, quadData, assetInfo.Textures[0].Color, Id, TextureId, tileType);
+            QuadModelList.Add(quadModel);
+        }
 
         public void Animate(string param = "", int skipFrames = 5)
         {

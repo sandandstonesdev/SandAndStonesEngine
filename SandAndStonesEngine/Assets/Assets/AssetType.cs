@@ -6,6 +6,8 @@
         Background = 1,
         Sprite = 2,
         CharacterSprite = 4,
-        Text = 8
+        Text = 8,
+        FPSText = 16,
+        PointsText = 32
     }
 }

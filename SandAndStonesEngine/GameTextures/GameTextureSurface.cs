@@ -1,5 +1,6 @@
 ﻿using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
+using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.Managers;
 using Veldrid;
@@ -26,26 +27,24 @@ namespace SandAndStonesEngine.GameTextures
             private set { resourceSet = value; }
         }
 
-        int width;
-        int height;
+        private readonly int width;
+        private readonly int height;
 
-        List<GameTextureDataBase> textureDataList;
+        private readonly List<GameTextureDataBase> textureDataList;
         private bool disposedValue;
-        List<GameAssetBase> gameAssets;
         private readonly GameGraphicDevice graphicDevice;
 
-        public GameTextureSurface(GameGraphicDevice graphicDevice, int width, int height)
+        public GameTextureSurface(AssetFactory assetFactory, GameGraphicDevice graphicDevice, int width, int height)
         {
-            //this.gameAssets = AssetDataManager.Instance.Assets;
             this.width = width;
             this.height = height;
-            this.textureDataList = AssetDataManager.Instance.TexturesData;
+            this.textureDataList = assetFactory.TexturesData;
             this.graphicDevice = graphicDevice;
         }
 
         public void Init()
         {
-            TextureDescription texDesc = new TextureDescription()
+            var texDesc = new TextureDescription()
             {
                 Width = (uint)width,
                 Height = (uint)height,

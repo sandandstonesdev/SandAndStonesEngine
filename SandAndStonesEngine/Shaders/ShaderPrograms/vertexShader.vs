@@ -31,7 +31,7 @@ void main()
 {
     vec4 objectPosition = Position;
     
-    uint assetType = AssetId >> 28;
+    uint assetType = AssetId >> 26;
 
     if (assetType == 1) // BG
     {
@@ -49,6 +49,14 @@ void main()
         gl_Position = objectPosition + vec4(vec2(Movement.x, Movement.y), 0, 0);
     }
     else if (assetType == 8) // TXT
+    {
+        gl_Position = objectPosition;
+    }
+    else if (assetType == 16) // FPS_TXT
+    {
+        gl_Position = objectPosition;
+    }
+    else if (assetType == 32) // PTS_TXT
     {
         gl_Position = objectPosition;
     }

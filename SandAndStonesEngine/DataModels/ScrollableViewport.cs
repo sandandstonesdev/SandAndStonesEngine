@@ -7,8 +7,6 @@ namespace SandAndStonesEngine.DataModels
     {
         private readonly int X, Y, Width, Height;
         private int ScrollX = 0, ScrollY = 0;
-        private const float CartesianWidth = 2.0f;
-        private const float CartesianHeight = 2.0f;
         private bool ScrollProcessed = false;
         public event EventHandler ScrollChanged;
         public (float, float) CartesianCoords

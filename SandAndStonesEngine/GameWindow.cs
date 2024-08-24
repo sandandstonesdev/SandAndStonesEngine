@@ -109,7 +109,6 @@ namespace SandAndStonesEngine
                 }
 
                 matrices.Dispose();
-                gameCamera.Dispose();
                 gameCommandList.pipelineList.ForEach(e => e.Dispose());
                 gameCommandList.Dispose();
 

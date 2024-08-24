@@ -8,6 +8,7 @@ using SandAndStonesEngine.GameCamera;
 using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
+using SandAndStonesEngine.Managers;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.RenderingAbstractions;
 using SandAndStonesEngine.Shaders;
@@ -23,8 +24,6 @@ namespace SandAndStonesEngine.GameFactories
         {
             var serviceCollection = new ServiceCollection();
             
-            var dir = Directory.GetCurrentDirectory();
-
             var configurationRoot = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
@@ -56,7 +55,7 @@ namespace SandAndStonesEngine.GameFactories
             gameWindow.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test");
             services.AddSingleton(gameWindow);
 
-            GameGraphicDevice gameGraphicDevice = new GameGraphicDevice(gameWindow);
+            var gameGraphicDevice = new GameGraphicDevice(gameWindow);
             gameGraphicDevice.Init();
             services.AddSingleton(gameGraphicDevice);
 
@@ -80,12 +79,20 @@ namespace SandAndStonesEngine.GameFactories
             services.AddSingleton(viewTransformator);
             services.AddSingleton(matrices);
 
-            services.AddSingleton(new Camera(gameWindow, matrices, scrollableViewport));
+            services.AddSingleton(new Camera(gameWindow, matrices));
+
+            var quadModelManager = new QuadModelManager();
+            services.AddSingleton(quadModelManager);
+            var gameTextureDataManager = new GameTextureDataManager();
+            services.AddSingleton(gameTextureDataManager);
+
+            var assetFactory = new AssetFactory(quadModelManager, gameTextureDataManager);
+            services.AddSingleton(assetFactory);
 
             var assetBatchList = new List<GameAssetBatchBase>()
             {
-                new GameAssetBatch(gameGraphicDevice, gridManager, viewTransformator, scrollableViewport),
-                new GameStatusBarAssetBatch(gameGraphicDevice, gridManager, scrollableViewport)
+                new GameAssetBatch(assetFactory, gameGraphicDevice, gridManager, viewTransformator, scrollableViewport),
+                new GameStatusBarAssetBatch(assetFactory, gameGraphicDevice, gridManager, scrollableViewport)
             };
 
             assetBatchList.ForEach(e => e.Init(gameGraphicDevice, scrollableViewport));
@@ -94,7 +101,7 @@ namespace SandAndStonesEngine.GameFactories
             shaderSet.Init();
             services.AddSingleton(shaderSet);
 
-            var gameTextureSurface = new GameTextureSurface(gameGraphicDevice, 256, 256);
+            var gameTextureSurface = new GameTextureSurface(assetFactory, gameGraphicDevice, 256, 256);
             gameTextureSurface.Init();
             services.AddSingleton(gameTextureSurface);
 

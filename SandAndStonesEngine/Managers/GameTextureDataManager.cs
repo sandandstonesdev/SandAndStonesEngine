@@ -2,12 +2,9 @@
 
 namespace SandAndStonesEngine.Managers
 {
-    internal class GameTextureDataManager
+    public class GameTextureDataManager
     {
-        private static readonly Lazy<GameTextureDataManager> lazyInstance = new Lazy<GameTextureDataManager>(() => new GameTextureDataManager());
-        public static GameTextureDataManager Instance => lazyInstance.Value;
-
-        public List<GameTextureDataBase> TexturesData { get; } = new();
+        public List<GameTextureDataBase> TexturesData { get; } = [];
 
         public GameTextureDataManager()
         {

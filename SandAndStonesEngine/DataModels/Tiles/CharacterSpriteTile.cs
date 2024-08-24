@@ -6,8 +6,8 @@ namespace SandAndStonesEngine.DataModels.Tiles
 {
     public class CharacterSpriteTile : QuadModel
     {
-        public CharacterSpriteTile(QuadData quadData, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
-            base(quadData, quadScale, color, assetId, textureId, tileType)
+        public CharacterSpriteTile(QuadData quadData, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
+            base(quadData, color, assetId, textureId, tileType)
         {
 
         }

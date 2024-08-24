@@ -15,7 +15,7 @@ namespace SandAndStonesEngine.Assets
             lock (lockObject)
             {
                 uint retAssetId = (uint)AssetId++;
-                retAssetId |= (uint)type << 28;
+                retAssetId |= (uint)type << 26;
                 return retAssetId++;
             }
         }

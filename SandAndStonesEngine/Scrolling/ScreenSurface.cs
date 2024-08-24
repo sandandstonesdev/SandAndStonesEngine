@@ -3,6 +3,7 @@ using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
+using System.Collections.Generic;
 using Veldrid;
 
 namespace SandAndStonesEngine.Scrolling
@@ -27,21 +28,21 @@ namespace SandAndStonesEngine.Scrolling
             private set { resourceSet = value; }
         }
 
-        int width;
-        int height;
+        private readonly int width;
+        private readonly int height;
 
-        GameGraphicDevice gameGraphicDevice;
+        private readonly GameGraphicDevice gameGraphicDevice;
 
-        List<GameTextureDataBase> textureDataList;
+        private readonly List<GameTextureDataBase> textureDataList;
         private bool disposedValue;
-        List<GameAssetBase> gameAssets;
+        private readonly List<GameAssetBase> gameAssets;
 
         public ScreenSurface(List<GameAssetBase> gameAssets, int width, int height)
         {
             this.gameAssets = gameAssets;
             this.width = width;
             this.height = height;
-            this.textureDataList = new List<GameTextureDataBase>();
+            this.textureDataList = [];
             this.gameGraphicDevice = Startup.ServiceProvider.GetRequiredService<GameGraphicDevice>();
         }
 
@@ -56,7 +57,7 @@ namespace SandAndStonesEngine.Scrolling
                 }
             }
 
-            TextureDescription texDesc = new TextureDescription()
+            var texDesc = new TextureDescription()
             {
                 Width = (uint)width,
                 Height = (uint)height,
