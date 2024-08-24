@@ -9,12 +9,8 @@ namespace SandAndStonesEngine.DataModels.Quads
 {
     public class QuadGridManager
     {
-        private static readonly Lazy<QuadGridManager> lazyInstance = new Lazy<QuadGridManager>(() => new QuadGridManager());
-        public static QuadGridManager Instance => lazyInstance.Value;
-
-        private Vector3 relativePosition = new Vector3(-1.00f, -1.00f, 0.0f);
         private Vector2[] PointGrid;
-        private ScreenDivisionForQuads screenDivision;
+        public ScreenDivisionForQuads screenDivision;
         private int quadId = 0;
         private int quadBatchId = 0;
 
@@ -23,14 +19,14 @@ namespace SandAndStonesEngine.DataModels.Quads
         public int AbsoluteQuadIndex => quadBatchId * quadId + quadId;
         public Vector3 QuadCount => screenDivision.QuadCount;
 
-        public QuadGridManager()
-        {
-
-        }
-
-        public void Init(ScreenDivisionForQuads screenDivision)
+        public QuadGridManager(ScreenDivisionForQuads screenDivision)
         {
             this.screenDivision = screenDivision;
+            Init(screenDivision);
+        }
+
+        private void Init(ScreenDivisionForQuads screenDivision)
+        {
             IVertexGenerator vertexGenerator = new VertexGenerator((int)screenDivision.QuadPointCount.Y, (int)screenDivision.QuadPointCount.X);
             vertexGenerator.Generate();
             PointGrid = vertexGenerator.Points;
@@ -58,25 +54,25 @@ namespace SandAndStonesEngine.DataModels.Quads
             return (int)idx;
         }
 
-        public QuadData GetQuadData(Vector2 screenVector, Vector3 quadVector, TileType tileType)
+        public QuadData GetQuadData(Vector2 screenPos, Vector3 gridQuadPosition, TileType tileType)
         {
-            Vector2[] texturePoints = new Vector2[4];
+            var texturePoints = new Vector2[4];
             texturePoints[0] = new Vector2(0, 0); // Upper Left => quadPoints[3]
             texturePoints[1] = new Vector2(1, 0); // Upper Right => quadPoints[1]
             texturePoints[2] = new Vector2(0, 1); // Lower Left => quadPoints[2]
             texturePoints[3] = new Vector2(1, 1); // Lower Right => quadPoints[0]
 
             Vector3[] quadPoints = new Vector3[4];
-            int upperLeftPointGridIndex = CalculateQuadGridIndexForScreen(quadVector, screenDivision.QuadPointCount, texturePoints[0]);
-            int upperRightPointGridIndex = CalculateQuadGridIndexForScreen(quadVector, screenDivision.QuadPointCount, texturePoints[1]);
-            int lowerLeftPointGridIndex = CalculateQuadGridIndexForScreen(quadVector, screenDivision.QuadPointCount, texturePoints[2]);
-            int lowerRightPointGridIndex = CalculateQuadGridIndexForScreen(quadVector, screenDivision.QuadPointCount, texturePoints[3]);
+            int upperLeftPointGridIndex = CalculateQuadGridIndexForScreen(gridQuadPosition, screenDivision.QuadPointCount, texturePoints[0]);
+            int upperRightPointGridIndex = CalculateQuadGridIndexForScreen(gridQuadPosition, screenDivision.QuadPointCount, texturePoints[1]);
+            int lowerLeftPointGridIndex = CalculateQuadGridIndexForScreen(gridQuadPosition, screenDivision.QuadPointCount, texturePoints[2]);
+            int lowerRightPointGridIndex = CalculateQuadGridIndexForScreen(gridQuadPosition, screenDivision.QuadPointCount, texturePoints[3]);
 
             // Reverse structure upside down because of difference of Grid and Axes representation:
-            quadPoints[0] = new Vector3(PointGrid[upperRightPointGridIndex], quadVector.Z); // Lower Left
-            quadPoints[1] = new Vector3(PointGrid[upperLeftPointGridIndex], quadVector.Z); // Lower Right
-            quadPoints[2] = new Vector3(PointGrid[lowerRightPointGridIndex], quadVector.Z); // Upper Left
-            quadPoints[3] = new Vector3(PointGrid[lowerLeftPointGridIndex], quadVector.Z); // Upper Right
+            quadPoints[0] = new Vector3(PointGrid[upperRightPointGridIndex], gridQuadPosition.Z); // Lower Left
+            quadPoints[1] = new Vector3(PointGrid[upperLeftPointGridIndex], gridQuadPosition.Z); // Lower Right
+            quadPoints[2] = new Vector3(PointGrid[lowerRightPointGridIndex], gridQuadPosition.Z); // Upper Left
+            quadPoints[3] = new Vector3(PointGrid[lowerLeftPointGridIndex], gridQuadPosition.Z); // Upper Right
 
             if (tileType == TileType.Background)
             {
@@ -84,59 +80,50 @@ namespace SandAndStonesEngine.DataModels.Quads
                 Debug.WriteLine($"{upperLeftPointGridIndex}, {upperRightPointGridIndex}");
                 Debug.WriteLine($"{lowerLeftPointGridIndex}, {lowerRightPointGridIndex}");
             }
-            
+
             IIndexGenerator indexGenerator = new TriangleListIndexGenerator(quadId);
             indexGenerator.Generate();
             var indices = indexGenerator.Points;
 
-            QuadData quadData = new QuadData(quadBatchId, quadId, screenVector, quadPoints, indices, texturePoints);
+            var quadData = new QuadData(quadBatchId, quadId, screenPos, gridQuadPosition, quadPoints, indices, texturePoints);
             quadId = IdManager.GetNextQuadId();
             return quadData;
         }
+    }
 
-        public Vector3 GetQuadSizeInCoordinates()
+    public static class QuadGridCalculator
+    {
+        private static readonly Vector3 relativePosition = new(-1.00f, -1.00f, 0.0f);
+
+        private static Vector3 GetAbsoluteCoord(ScreenDivisionForQuads screenDivisions, Vector3 quadGridPoint, float quadScale)
         {
-            return screenDivision.GetCoordinateUnitsPerQuad();
-        }
-
-        public Vector3 GetPixelSizeInCoordinates()
-        {
-            return screenDivision.GetCoordinateUnitsPerPixel();
-        }
-
-        public Vector2 GetPixelsPerCoordinateUnit()
-        {
-            return screenDivision.GetPixelsPerCoordinateUnit();
-        }
-
-        public Vector3[] GetQuadAbsoluteCoords(Vector3[] quadPointsInGrid, float scale)
-        {
-            var leftUpper = GetAbsoluteCoord(quadPointsInGrid[0], scale);
-            var leftDown = GetAbsoluteCoord(quadPointsInGrid[1], scale);
-            var rightUpper = GetAbsoluteCoord(quadPointsInGrid[2], scale);
-            var rightDown = GetAbsoluteCoord(quadPointsInGrid[3], scale);
-
-            Vector3[] quadAbsoluteCoords = new Vector3[4]
-            {
-                leftDown, leftUpper, rightDown, rightUpper
-            };
-
-            return quadAbsoluteCoords;
-        }
-
-        private Vector3 GetAbsoluteCoord(Vector3 quadGridPoint, float quadScale)
-        {
-            var quadSizeInCoord = GetScaledQuadSizeInCoord(quadScale);
+            var quadSizeInCoord = GetScaledQuadSizeInCoord(screenDivisions, quadScale);
             var scaledPoint = Vector3.Multiply(quadGridPoint, quadSizeInCoord);
             var res = relativePosition + scaledPoint;
             return res;
         }
 
-        private Vector3 GetScaledQuadSizeInCoord(float quadScale)
+        private static Vector3 GetScaledQuadSizeInCoord(ScreenDivisionForQuads screenDivisions, float quadScale)
         {
-            Vector3 quadSizeTemp = GetQuadSizeInCoordinates();
+
+            Vector3 quadSizeTemp = screenDivisions.GetCoordinateUnitsPerQuad();
             var quadSizeInCoord = Vector3.Multiply(quadSizeTemp, new Vector3(quadScale, quadScale, 1));
             return quadSizeInCoord;
+        }
+
+        public static Vector3[] GetQuadAbsoluteCoords(ScreenDivisionForQuads screenDivisions, Vector3[] quadPointsInGrid, float scale)
+        {
+            var leftUpper = GetAbsoluteCoord(screenDivisions, quadPointsInGrid[0], scale);
+            var leftDown = GetAbsoluteCoord(screenDivisions, quadPointsInGrid[1], scale);
+            var rightUpper = GetAbsoluteCoord(screenDivisions, quadPointsInGrid[2], scale);
+            var rightDown = GetAbsoluteCoord(screenDivisions, quadPointsInGrid[3], scale);
+
+            var quadAbsoluteCoords = new Vector3[4]
+            {
+                leftDown, leftUpper, rightDown, rightUpper
+            };
+
+            return quadAbsoluteCoords;
         }
     }
 }

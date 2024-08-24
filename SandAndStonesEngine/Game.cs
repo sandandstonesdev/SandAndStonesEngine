@@ -1,41 +1,49 @@
-﻿using SandAndStonesEngine.DataModels.Quads;
-using SandAndStonesEngine.DataModels.ScreenDivisions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngine
 {
-    public class Game
+    public class Game : IDisposable
     {
-        private static readonly Lazy<Game> lazyFactoryInstance = new Lazy<Game>(() => new Game());
+        private static readonly Lazy<Game> lazyFactoryInstance = new(() => new Game());
         public static Game Instance => lazyFactoryInstance.Value;
 
-        public readonly GameWindow Window;
+        private bool disposedValue;
+
         public Game()
         {
-            Window = GameWindow.Instance;
         }
 
         public void Start()
         {
-            int x = 50;
-            int y = 50;
-            int screenWidth = 800;
-            int screenHeight = 800;
-            int quadCountX = 8;
-            int quadCountY = 8;
-            int quadCountZ = 8;
-            var screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCountX, quadCountY, quadCountZ);
-            QuadGridManager.Instance.Init(screenDivision);
-            Window.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test");
+            var window = Startup.ServiceProvider.GetRequiredService<GameWindow>();
+            window.Loop();
         }
 
-        public void Loop()
+        protected virtual void Dispose(bool disposing)
         {
-            Window.Loop();
-        }
-        public void Stop()
-        {
-            Window.Dispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                var window = Startup.ServiceProvider.GetRequiredService<GameWindow>();
+                window.Dispose();
+
+                disposedValue = true;
+            }
         }
 
+        ~Game()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

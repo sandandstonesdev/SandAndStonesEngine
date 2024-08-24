@@ -1,11 +1,10 @@
-﻿using System.Diagnostics;
-using SandAndStonesEngine.Assets.Assets;
+﻿using SandAndStonesEngine.Assets.Assets;
 
 namespace SandAndStonesEngine.Assets
 {
     public class IdManager
     {
-        static object lockObject = new object(); 
+        static object lockObject = new object();
         static int AssetId = 0;
         static int QuadBatchId = 0;
         static int QuadId = 0;

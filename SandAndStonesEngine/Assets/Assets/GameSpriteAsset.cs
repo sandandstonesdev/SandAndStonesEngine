@@ -1,9 +1,9 @@
-﻿using System.Numerics;
-using SandAndStonesEngine.Animation;
+﻿using SandAndStonesEngine.Animation;
 using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
 using SandAndStonesEngine.GameFactories;
+using System.Numerics;
 using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 
 namespace SandAndStonesEngine.Assets.Assets
@@ -22,7 +22,7 @@ namespace SandAndStonesEngine.Assets.Assets
             AssetBatchType = assetBatchType;
         }
 
-        public override void Init(AssetInfo assetInfo)
+        public override void Init(QuadGridManager quadGridManager, AssetInfo assetInfo)
         {
             Animation = assetInfo.Animation;
             GameTextureData = AssetFactory.Instance.CreateTexture(Id, assetInfo.Textures[0].Name, TextureType.Standard);
@@ -34,8 +34,9 @@ namespace SandAndStonesEngine.Assets.Assets
                 {
                     var positionInQuadCount = new Vector3(i, j, Depth);
                     //var screenPosition = new Vector2((int)i / 8, 0);
-                    var quadModel = AssetFactory.Instance.CreateTile(new Vector2(0, 0), positionInQuadCount, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Sprite);
-                    quadModel.Init();
+                    var quadData = quadGridManager.GetQuadData(new Vector2(0, 0), positionInQuadCount, TileType.Sprite);
+                    var quadModel = AssetFactory.Instance.CreateTile(quadData, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Sprite);
+                    quadModel.Init(quadGridManager.screenDivision);
                     QuadModelList.Add(quadModel);
                 }
             }

@@ -1,5 +1,5 @@
-﻿using SandAndStonesEngine.Assets.Assets;
-using SandAndStonesEngine.Buffers;
+﻿using SandAndStonesEngine.Buffers;
+using SandAndStonesEngine.DataModels.ScreenDivisions;
 using SandAndStonesEngine.DataModels.Tiles;
 using System.Numerics;
 using Veldrid;
@@ -8,15 +8,15 @@ namespace SandAndStonesEngine.DataModels.Quads
 {
     public class QuadModel : IQuadModel, IVisibleModel
     {
-        int quadId;
-        int quadBatchId;
-        private RgbaFloat color;
-        private Vector3[] quadPointsInGrid;
-        private Vector2[] quadTextureCoords;
-        private Vector2 screenInfo;
-        private ushort[] quadIndexesInGrid;
-        private int textureId;
-        private uint assetId;
+        private readonly int quadId;
+        private readonly int quadBatchId;
+        private readonly RgbaFloat color;
+        private readonly Vector3[] quadPointsInGrid;
+        private readonly Vector2[] quadTextureCoords;
+        private readonly Vector2 screenInfo;
+        private readonly ushort[] quadIndexesInGrid;
+        private readonly int textureId;
+        private readonly uint assetId;
         protected VertexDataFormat[] verticesPositions = new VertexDataFormat[4];
 
         public Vector2 ScreenInfo
@@ -40,10 +40,9 @@ namespace SandAndStonesEngine.DataModels.Quads
         }
         public float scale;
 
-        public QuadModel(Vector2 screenPosition, Vector3 gridQuadPosition, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType)
+        public QuadModel(QuadData quadData, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType)
         {
-            QuadData quadData = QuadGridManager.Instance.GetQuadData(screenPosition, gridQuadPosition, tileType);
-            screenInfo = screenPosition;
+            screenInfo = quadData.ScreenPos;
             quadPointsInGrid = quadData.Points;
             quadIndexesInGrid = quadData.Indexes;
             quadTextureCoords = quadData.TextureCoords;
@@ -55,11 +54,11 @@ namespace SandAndStonesEngine.DataModels.Quads
             scale = quadScale;
         }
 
-        public void Init()
+        public void Init(ScreenDivisionForQuads screenDivision)
         {
-            var quadAbsoluteCoords = QuadGridManager.Instance.GetQuadAbsoluteCoords(quadPointsInGrid, scale);
+            var quadAbsoluteCoords = QuadGridCalculator.GetQuadAbsoluteCoords(screenDivision, quadPointsInGrid, scale);
             var screenOffset = new Vector3(screenInfo.X * 2.0f, screenInfo.Y * 2.0f, 0);
-            
+
             verticesPositions[0] = new VertexDataFormat(screenOffset + quadAbsoluteCoords[0], color, quadTextureCoords[0], assetId, textureId);
             verticesPositions[1] = new VertexDataFormat(screenOffset + quadAbsoluteCoords[1], color, quadTextureCoords[1], assetId, textureId);
             verticesPositions[2] = new VertexDataFormat(screenOffset + quadAbsoluteCoords[2], color, quadTextureCoords[2], assetId, textureId);

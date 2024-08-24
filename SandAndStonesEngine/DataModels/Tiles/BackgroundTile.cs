@@ -1,13 +1,13 @@
-﻿using System.Numerics;
-using SandAndStonesEngine.DataModels.Quads;
+﻿using SandAndStonesEngine.DataModels.Quads;
+using System.Numerics;
 using Veldrid;
 
 namespace SandAndStonesEngine.DataModels.Tiles
 {
     public class BackgroundTile : QuadModel
     {
-        public BackgroundTile(Vector2 screenId, Vector3 gridQuadPosition, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
-            base(screenId, gridQuadPosition, quadScale, color, assetId, textureId, tileType)
+        public BackgroundTile(QuadData quadData, float quadScale, RgbaFloat color, uint assetId, int textureId, TileType tileType) :
+            base(quadData, quadScale, color, assetId, textureId, tileType)
         {
 
         }

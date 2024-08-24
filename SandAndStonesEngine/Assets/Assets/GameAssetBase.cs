@@ -35,7 +35,7 @@ namespace SandAndStonesEngine.Assets.Assets
             Scale = scale;
         }
 
-        public abstract void Init(AssetInfo assetInfo);
+        public abstract void Init(QuadGridManager quadGridManager, AssetInfo assetInfo);
 
         public void Animate(string param = "", int skipFrames = 5)
         {

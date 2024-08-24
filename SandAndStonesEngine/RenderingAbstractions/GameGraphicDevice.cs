@@ -1,9 +1,5 @@
-﻿using SandAndStonesEngine.GameFactories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SandAndStonesEngine.GameFactories;
 using Veldrid;
 using Veldrid.StartupUtilities;
 
@@ -11,14 +7,6 @@ namespace SandAndStonesEngine.GraphicAbstractions
 {
     public class GameGraphicDevice : IDisposable
     {
-        private static readonly Lazy<GameGraphicDevice> lazyInstance = new Lazy<GameGraphicDevice>(() => 
-        {   
-            GameGraphicDevice gameGraphicDevice = new GameGraphicDevice();
-            gameGraphicDevice.Init();
-            return gameGraphicDevice;
-        });
-        public static GameGraphicDevice Instance => lazyInstance.Value;
-
         public GraphicsDevice GraphicsDevice;
 
         public Framebuffer SwapChain
@@ -32,15 +20,16 @@ namespace SandAndStonesEngine.GraphicAbstractions
 
         public bool Initialized = false;
         private bool disposedValue;
+        private readonly GameWindow window;
 
-        public GameGraphicDevice()
+        public GameGraphicDevice(GameWindow window)
         {
+            this.window = window;
         }
+
         public void Init()
         {
-            GraphicsDeviceOptions options = new GraphicsDeviceOptions(true);
-            GameWindow gameWindow = Factory.Instance.GetGameWindow();
-            GraphicsDevice = VeldridStartup.CreateGraphicsDevice(gameWindow.SDLWindow, options);
+            GraphicsDevice = VeldridStartup.CreateGraphicsDevice(window.SDLWindow, new GraphicsDeviceOptions(true));
             Initialized = true;
         }
 
@@ -65,7 +54,7 @@ namespace SandAndStonesEngine.GraphicAbstractions
                 }
 
                 GraphicsDevice.Dispose();
-                GameWindow gameWindow = Factory.Instance.GetGameWindow();
+                GameWindow gameWindow = Startup.ServiceProvider.GetRequiredService<GameWindow>();
                 gameWindow.Dispose();
                 disposedValue = true;
             }

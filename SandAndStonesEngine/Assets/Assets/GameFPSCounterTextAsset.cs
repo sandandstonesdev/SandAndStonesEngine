@@ -1,5 +1,4 @@
 ﻿using SandAndStonesEngine.Assets.Batches;
-using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Assets
 {

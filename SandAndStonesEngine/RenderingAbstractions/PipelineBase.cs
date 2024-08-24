@@ -1,15 +1,8 @@
-﻿using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.GameTextures;
+﻿using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.Shaders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Veldrid;
-using Vortice.DXGI;
 
 namespace SandAndStonesEngine.RenderingAbstractions
 {
@@ -19,25 +12,25 @@ namespace SandAndStonesEngine.RenderingAbstractions
         private GameShaderSet shaderSet;
         private GameTextureSurface gameTextureSurface;
         public Pipeline Pipeline;
-        protected GameGraphicDevice gameGraphicDevice;
+        protected GameGraphicDevice graphicDevice;
         private bool disposedValue;
         protected Framebuffer Framebuffer
         {
-            get { return gameGraphicDevice.SwapChain; }
+            get { return graphicDevice.SwapChain; }
         }
         public abstract Viewport Viewport { get; }
 
-        public PipelineBase(GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
+        public PipelineBase(GameGraphicDevice graphicDevice, GameShaderSet shaderSet, GameTextureSurface gameTextureSurface, Matrices matrices)
         {
             this.gameTextureSurface = gameTextureSurface;
             this.matrices = matrices;
             this.shaderSet = shaderSet;
-            this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+            this.graphicDevice = graphicDevice;
         }
 
         public virtual void Init()
         {
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
+            ResourceFactory factory = graphicDevice.ResourceFactory;
 
             GraphicsPipelineDescription pipelineDescription = new()
             {
@@ -59,7 +52,7 @@ namespace SandAndStonesEngine.RenderingAbstractions
                 ResourceLayouts = new ResourceLayout[] { gameTextureSurface.TextureLayout, matrices.MatricesLayout, matrices.WorldLayout },
                 ShaderSet = shaderSet.ShaderSet,
 
-                Outputs = gameGraphicDevice.SwapChain.OutputDescription
+                Outputs = graphicDevice.SwapChain.OutputDescription
             };
             Pipeline = factory.CreateGraphicsPipeline(pipelineDescription);
         }

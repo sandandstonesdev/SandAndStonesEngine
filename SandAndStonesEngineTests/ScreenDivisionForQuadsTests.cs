@@ -20,8 +20,7 @@ namespace SandAndStonesEngineTests
             int screenHeight = 400;
             int quadCount = 4;
             this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
-            this.quadGridManager = QuadGridManager.Instance;
-            quadGridManager.Init(screenDivision);
+            this.quadGridManager = new QuadGridManager(screenDivision);
             quadGridManager.StartNewBatch();
         }
 
@@ -39,7 +38,7 @@ namespace SandAndStonesEngineTests
         public void ShouldGetCoordinateUnitsPerPixel()
         {
             // <-1, 1> czyli 2.0Coord/400Pix = 0,005Coord/Pix
-            var res = screenDivision.GetCoordinateUnitsPerPixel();
+            var res = ScreenDivisionForQuads.GetCoordinateUnitsPerPixel(400, 400, 400);
             Assert.AreEqual(res.X, 0.005f);
             Assert.AreEqual(res.Y, 0.005f);
             Assert.AreEqual(res.Z, 0.005f);

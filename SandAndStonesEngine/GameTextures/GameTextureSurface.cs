@@ -1,9 +1,8 @@
-﻿using Veldrid;
-using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.Managers;
-using SandAndStonesEngine.Assets.Assets;
+﻿using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
+using SandAndStonesEngine.GraphicAbstractions;
+using SandAndStonesEngine.Managers;
+using Veldrid;
 
 namespace SandAndStonesEngine.GameTextures
 {
@@ -15,34 +14,33 @@ namespace SandAndStonesEngine.GameTextures
         private Texture Texture;
 
         private ResourceLayout textureLayout;
-        public ResourceLayout TextureLayout 
-        { 
+        public ResourceLayout TextureLayout
+        {
             get { return textureLayout; }
             private set { textureLayout = value; }
         }
         private ResourceSet resourceSet;
         public ResourceSet ResourceSet
-        { 
+        {
             get { return resourceSet; }
             private set { resourceSet = value; }
         }
-        
+
         int width;
         int height;
-
-        GameGraphicDevice gameGraphicDevice;
 
         List<GameTextureDataBase> textureDataList;
         private bool disposedValue;
         List<GameAssetBase> gameAssets;
+        private readonly GameGraphicDevice graphicDevice;
 
-        public GameTextureSurface(int width, int height)
+        public GameTextureSurface(GameGraphicDevice graphicDevice, int width, int height)
         {
             //this.gameAssets = AssetDataManager.Instance.Assets;
             this.width = width;
             this.height = height;
             this.textureDataList = AssetDataManager.Instance.TexturesData;
-            this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+            this.graphicDevice = graphicDevice;
         }
 
         public void Init()
@@ -59,11 +57,11 @@ namespace SandAndStonesEngine.GameTextures
                 Type = Veldrid.TextureType.Texture2D,
             };
 
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
+            ResourceFactory factory = graphicDevice.ResourceFactory;
 
             Texture = factory.CreateTexture(texDesc);
             TextureView = factory.CreateTextureView(Texture);
-            
+
             TextureLayout = factory.CreateResourceLayout(
                     new ResourceLayoutDescription(
                     new ResourceLayoutElementDescription("SurfaceTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
@@ -73,13 +71,13 @@ namespace SandAndStonesEngine.GameTextures
             ResourceSet = factory.CreateResourceSet(new ResourceSetDescription(
                 TextureLayout,
                 TextureView,
-                gameGraphicDevice.GraphicsDevice.Aniso4xSampler));
+                graphicDevice.GraphicsDevice.Aniso4xSampler));
         }
         public void Update()
         {
             foreach (var texture in textureDataList)
             {
-                gameGraphicDevice.GraphicsDevice.UpdateTexture(Texture, texture.PinnedImageBytes, (uint)texture.BytesCount, 0, 0, 0, (uint)texture.Width, (uint)texture.Height, 1, 0, (uint)texture.Id);
+                graphicDevice.GraphicsDevice.UpdateTexture(Texture, texture.PinnedImageBytes, (uint)texture.BytesCount, 0, 0, 0, (uint)texture.Width, (uint)texture.Height, 1, 0, (uint)texture.Id);
             }
         }
 

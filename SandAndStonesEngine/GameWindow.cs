@@ -1,47 +1,28 @@
-﻿using SandAndStonesEngine.Assets;
-using SandAndStonesEngine.DataModels;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.GameCamera;
+using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GameInput;
+using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
+using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.Shaders;
+using System.Diagnostics;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
-using SandAndStonesEngine.GameInput;
-using SandAndStonesEngine.GameCamera;
-using System.Diagnostics;
-using SandAndStonesEngine.MathModule;
-using System.Numerics;
-using SandAndStonesEngine.RenderingAbstractions;
-using SandAndStonesEngine.GameTextures;
-using SandAndStonesEngine.DataModels.Quads;
-using SandAndStonesEngine.Assets.Batches;
 
 namespace SandAndStonesEngine
 {
     public class GameWindow : IDisposable
     {
-        private static readonly Lazy<GameWindow> lazyInstance = new Lazy<GameWindow>(() => new GameWindow());
-        public static GameWindow Instance => lazyInstance.Value;
-
         public bool resized = true;
-        List<GameAssetBatchBase> assetBatchList;
-        private GameShaderSet shaderSet;
         public Sdl2Window SDLWindow;
-        private GameCommandList gameCommandList;
-        private List<PipelineBase> pipelineList;
-        private InputDevicesState inputDevicesState;
-        private Camera gameCamera;
-        private Matrices matrices;
-        public GameTextureSurface gameTextureSurface;
-
-        ViewTransformator viewTransformator;
-        WorldTransformator worldTransformator;
-        CameraInputMotionMapper inputMotionMapper;
-        ScrollableViewport scrollableViewport;
 
         private bool disposedValue;
 
-        private GameWindow()
+        public GameWindow()
         {
-            
+
         }
 
         public void Start(int x, int y, int width, int height, string title)
@@ -56,51 +37,22 @@ namespace SandAndStonesEngine
             };
 
             SDLWindow = VeldridStartup.CreateWindow(ref windowCI);
-            var clientRegionPos =  new Vector2(SDLWindow.Bounds.X, SDLWindow.Bounds.Y);
             SDLWindow.Resized += () => resized = true;
-            inputDevicesState = new InputDevicesState(clientRegionPos);
-            inputMotionMapper = new CameraInputMotionMapper(inputDevicesState);
-            scrollableViewport = new ScrollableViewport(0, 0, width, height);
-
-            var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.03f, 1.0f);
-            this.viewTransformator = new ViewTransformator(scrollableViewport, inputMotionMapper, transformatorData);
-            this.worldTransformator = new WorldTransformator(inputMotionMapper, transformatorData);
-
-            matrices = new Matrices(worldTransformator, viewTransformator);
-            matrices.Init();
-
-            
-            gameCamera = new Camera(matrices, scrollableViewport);
-
-            assetBatchList = new List<GameAssetBatchBase>
-            {
-                new GameAssetBatch(viewTransformator, scrollableViewport),
-                new GameStatusBarAssetBatch(scrollableViewport)
-            };
-            assetBatchList.ForEach(e => e.Init(scrollableViewport));
-
-            shaderSet = new GameShaderSet(assetBatchList[0], matrices);
-            shaderSet.Init();
-
-            gameTextureSurface = new GameTextureSurface(256, 256);
-            gameTextureSurface.Init();
-
-            pipelineList = new List<PipelineBase>()
-            {
-                new GamePipeline(shaderSet, gameTextureSurface, matrices),
-                new StatusBarPipeline(shaderSet, gameTextureSurface, matrices)
-            };
-            pipelineList.ForEach(e => e.Init());
-
-            gameCommandList = new GameCommandList(matrices, gameTextureSurface, assetBatchList, pipelineList);
-            gameCommandList.Init();
         }
 
         public void Loop()
         {
-            Stopwatch sw = new Stopwatch();
+            var inputDevicesState = Startup.ServiceProvider.GetRequiredService<InputDevicesState>();
+            var viewTransformator = Startup.ServiceProvider.GetRequiredService<ViewTransformator>();
+            var worldTransformator = Startup.ServiceProvider.GetRequiredService<WorldTransformator>();
+            var gameCamera = Startup.ServiceProvider.GetRequiredService<Camera>();
+            var gridManager = Startup.ServiceProvider.GetRequiredService<QuadGridManager>();
+            var gameTextureSurface = Startup.ServiceProvider.GetRequiredService<GameTextureSurface>();
+            var gameCommandList = Startup.ServiceProvider.GetRequiredService<GameCommandList>();
+
+            var sw = new Stopwatch();
             sw.Start();
-            
+
             long newElapsedTime = Math.Max(0, sw.Elapsed.Milliseconds);
             long previousElapsedTime = 0;
             long deltaElapsedTime = newElapsedTime - previousElapsedTime;
@@ -121,12 +73,12 @@ namespace SandAndStonesEngine
                     if (resized)
                     {
                         gameCamera.WindowResized(SDLWindow.Width, SDLWindow.Height);
-                        QuadGridManager.Instance.Resize(SDLWindow.Width, SDLWindow.Height);
+                        gridManager.Resize(SDLWindow.Width, SDLWindow.Height);
                         resized = false;
                     }
 
                     gameCamera.Update(deltaElapsedTime);
-                    assetBatchList.ForEach(e => e.Update(deltaElapsedTime));
+                    gameCommandList.assetBatchList.ForEach(e => e.Update(deltaElapsedTime));
                     gameTextureSurface.Update();
 
                     Draw((float)deltaElapsedTime);
@@ -138,22 +90,30 @@ namespace SandAndStonesEngine
 
         private void Draw(float deltaTime)
         {
+            var gameCommandList = Startup.ServiceProvider.GetRequiredService<GameCommandList>();
             gameCommandList.Draw(deltaTime);
         }
 
         protected virtual void Dispose(bool disposing)
         {
+            var matrices = Startup.ServiceProvider.GetRequiredService<Matrices>();
+            var gameCamera = Startup.ServiceProvider.GetRequiredService<Camera>();
+            var gameCommandList = Startup.ServiceProvider.GetRequiredService<GameCommandList>();
+            var shaderSet = Startup.ServiceProvider.GetRequiredService<GameShaderSet>();
+            var gameTextureSurface = Startup.ServiceProvider.GetRequiredService<GameTextureSurface>();
+
             if (!disposedValue)
             {
                 if (disposing)
                 {
                 }
+
                 matrices.Dispose();
                 gameCamera.Dispose();
-                pipelineList.ForEach(e=> e.Dispose());
+                gameCommandList.pipelineList.ForEach(e => e.Dispose());
                 gameCommandList.Dispose();
 
-                assetBatchList.ForEach(e => e.Dispose());
+                gameCommandList.assetBatchList.ForEach(e => e.Dispose());
                 shaderSet.Dispose();
                 gameTextureSurface.Dispose();
                 disposedValue = true;

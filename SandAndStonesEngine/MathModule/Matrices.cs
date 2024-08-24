@@ -1,11 +1,5 @@
-﻿using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.GraphicAbstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SandAndStonesEngine.GraphicAbstractions;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Veldrid;
 
 namespace SandAndStonesEngine.MathModule
@@ -27,9 +21,11 @@ namespace SandAndStonesEngine.MathModule
         private bool disposedValue;
         public WorldTransformator worldTransformator;
         public ViewTransformator viewTransformator;
+        public readonly GameGraphicDevice gameGraphicDevice;
 
-        public Matrices(WorldTransformator worldTransformator, ViewTransformator viewTransformator)
+        public Matrices(GameGraphicDevice gameGraphicDevice, WorldTransformator worldTransformator, ViewTransformator viewTransformator)
         {
+            this.gameGraphicDevice = gameGraphicDevice;
             this.worldTransformator = worldTransformator;
             this.viewTransformator = viewTransformator;
             UpdateViewWorld();
@@ -37,7 +33,8 @@ namespace SandAndStonesEngine.MathModule
 
         public void Init() // Prepare shader binding
         {
-            var factory = Factory.Instance.GetResourceFactory();
+            var factory = gameGraphicDevice.ResourceFactory;
+
             ProjectionBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
             ViewBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
             WorldBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
@@ -73,12 +70,12 @@ namespace SandAndStonesEngine.MathModule
             WorldMatrix = Matrix4x4.CreateWorld(-worldTransformatorData.Position, worldTransformatorData.Forward, worldTransformatorData.Up);
             //DebugUtilities.DebugUtilities.DisplayMatrix4x4(WorldMatrix, "WorldMatrix");
         }
-        
-        public void UpdateScroll()
-        {
-            var viewTransformatorData = viewTransformator.TransformatorData;
-            //DebugUtilities.DebugUtilities.DisplayVector2(viewTransformatorData.ScrollMovement, "Scroll");
-        }
+
+        //public void UpdateScroll()
+        //{
+        //    //var viewTransformatorData = viewTransformator.TransformatorData;
+        //    //DebugUtilities.DebugUtilities.DisplayVector2(viewTransformatorData.ScrollMovement, "Scroll");
+        //}
 
 
         public void UpdateViewWorld()

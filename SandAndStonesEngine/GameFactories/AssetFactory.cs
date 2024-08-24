@@ -1,8 +1,8 @@
 ﻿using SandAndStonesEngine.Assets.Textures;
-using SandAndStonesEngine.DataModels.Tiles;
-using Veldrid;
 using SandAndStonesEngine.DataModels.Quads;
+using SandAndStonesEngine.DataModels.Tiles;
 using System.Numerics;
+using Veldrid;
 using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 
 namespace SandAndStonesEngine.GameFactories
@@ -26,20 +26,20 @@ namespace SandAndStonesEngine.GameFactories
             return texture;
         }
 
-        public IQuadModel CreateTile(Vector2 screenPosition, Vector3 gridQuadPosition, float fontSize, RgbaFloat color, uint assetId, int textureId, TileType type)
+        public IQuadModel CreateTile(QuadData quadData, float fontSize, RgbaFloat color, uint assetId, int textureId, TileType type)
         {
             IQuadModel quadModel = null!;
-            
+
             if (type == TileType.Font)
-                quadModel = new FontTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
+                quadModel = new FontTile(quadData, fontSize, color, assetId, textureId, type);
             else if (type == TileType.StatusBarBackground)
-                quadModel = new BackgroundTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
+                quadModel = new BackgroundTile(quadData, fontSize, color, assetId, textureId, type);
             else if (type == TileType.Background)
-                quadModel = new BackgroundTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
+                quadModel = new BackgroundTile(quadData, fontSize, color, assetId, textureId, type);
             else if (type == TileType.Sprite)
-                quadModel = new SpriteTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
+                quadModel = new SpriteTile(quadData, fontSize, color, assetId, textureId, type);
             else if (type == TileType.Character)
-                quadModel = new CharacterSpriteTile(screenPosition, gridQuadPosition, fontSize, color, assetId, textureId, type);
+                quadModel = new CharacterSpriteTile(quadData, fontSize, color, assetId, textureId, type);
 
             return quadModel;
         }

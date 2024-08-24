@@ -17,7 +17,7 @@ namespace SandAndStonesEngine.Managers
 
         public AssetDataManager()
         {
-            
+
         }
 
         static uint lastAssetId = 0;
@@ -28,7 +28,7 @@ namespace SandAndStonesEngine.Managers
                 QuadModelManager.Instance.AddRange(asset.QuadModelList);
             if (asset.AssetBatchType == AssetBatchType.StatusBarBatch)
                 QuadModelManager.Instance.AddStatusBarModelsRange(asset.QuadModelList);
-            
+
             GameTextureDataManager.Instance.Add(asset.GameTextureData);
         }
     }

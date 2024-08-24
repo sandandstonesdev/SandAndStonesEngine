@@ -1,7 +1,7 @@
 ﻿using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
-using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.Managers;
 using Veldrid;
 
@@ -38,25 +38,26 @@ namespace SandAndStonesEngine.Assets.Batches
 
         private bool disposedValue;
 
-        protected ScrollableViewport scrollableViewport;
+        protected readonly ScrollableViewport scrollableViewport;
 
-        protected virtual void InitGameAssets()
+        private readonly GameGraphicDevice graphicDevice;
+
+        protected GameAssetBatchBase(GameGraphicDevice graphicDevice, ScrollableViewport scrollableViewport)
         {
-            var gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
-
-            VertexBuffer = new VertexBuffer(gameGraphicDevice.GraphicsDevice, Assets, scrollableViewport);
-            VertexBuffer.Init();
-
-            IndexBuffer = new IndexBuffer(gameGraphicDevice.GraphicsDevice, Assets, scrollableViewport);
-            IndexBuffer.Init();
-        }
-
-        public GameAssetBatchBase(ScrollableViewport scrollableViewport)
-        {
+            this.graphicDevice = graphicDevice;
             this.scrollableViewport = scrollableViewport;
         }
 
-        public virtual void Init(ScrollableViewport scrollableViewport)
+        protected virtual void InitGameAssets()
+        {
+            VertexBuffer = new VertexBuffer(graphicDevice.GraphicsDevice, Assets, scrollableViewport);
+            VertexBuffer.Init();
+
+            IndexBuffer = new IndexBuffer(graphicDevice.GraphicsDevice, Assets, scrollableViewport);
+            IndexBuffer.Init();
+        }
+
+        public virtual void Init(GameGraphicDevice device, ScrollableViewport scrollableViewport)
         {
             InitGameAssets();
         }
@@ -85,14 +86,11 @@ namespace SandAndStonesEngine.Assets.Batches
 
                 AssetDataManager.Instance.Assets.ForEach(e =>
                 {
-                    var disposableAssets = e as IDisposable;
-                    disposableAssets?.Dispose();
+                    e?.Dispose();
                 });
 
-                var disposableVertexBuffer = VertexBuffer as IDisposable;
-                disposableVertexBuffer?.Dispose();
-                var disposableIndexBuffer = IndexBuffer as IDisposable;
-                disposableIndexBuffer?.Dispose();
+                VertexBuffer?.Dispose();
+                IndexBuffer?.Dispose();
                 disposedValue = true;
             }
         }

@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SandAndStonesEngine.Assets.Batches;
-using SandAndStonesEngine.Buffers;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.RenderingAbstractions;
 using Veldrid;
-using Vulkan;
-using Vulkan.Xlib;
 
 namespace SandAndStonesEngine.GraphicAbstractions
 {
@@ -23,14 +12,16 @@ namespace SandAndStonesEngine.GraphicAbstractions
     {
         private CommandList CommandList;
         private bool disposedValue;
-        private readonly List<GameAssetBatchBase> assetBatchList;
-        private readonly List<PipelineBase> pipelineList;
+        public readonly List<GameAssetBatchBase> assetBatchList;
+        public readonly List<PipelineBase> pipelineList;
         private readonly Matrices matrices;
         private readonly GameTextureSurface gameTextureSurface;
-        public RgbaFloat ClearColor;
-        public GameCommandList(Matrices matrices, GameTextureSurface gameTextureSurface, List<GameAssetBatchBase> assetBatchList, List<PipelineBase> pipelineList)
+        private readonly RgbaFloat ClearColor;
+        private readonly GameGraphicDevice graphicDevice;
+        public GameCommandList(GameGraphicDevice graphicDevice, Matrices matrices, GameTextureSurface gameTextureSurface, List<GameAssetBatchBase> assetBatchList, List<PipelineBase> pipelineList)
         {
             this.ClearColor = RgbaFloat.Black;
+            this.graphicDevice = graphicDevice;
             this.matrices = matrices;
             this.gameTextureSurface = gameTextureSurface;
             this.assetBatchList = assetBatchList;
@@ -39,13 +30,13 @@ namespace SandAndStonesEngine.GraphicAbstractions
 
         public void Init()
         {
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
+            ResourceFactory factory = graphicDevice.ResourceFactory;
             CommandList = factory.CreateCommandList();
         }
 
         public void Draw(float deltaTime)
         {
-            GameGraphicDevice gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+            GameGraphicDevice gameGraphicDevice = Startup.ServiceProvider.GetRequiredService<GameGraphicDevice>();
 
             CommandList.Begin();
 

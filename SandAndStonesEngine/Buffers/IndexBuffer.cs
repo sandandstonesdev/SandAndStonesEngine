@@ -1,6 +1,5 @@
 ﻿using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
-using SandAndStonesEngine.Utils;
 using Veldrid;
 
 namespace SandAndStonesEngine.Buffers
@@ -33,7 +32,7 @@ namespace SandAndStonesEngine.Buffers
 
         private uint GetNeededBufSize(ushort[] quadIndexes)
         {
-            uint bufSize = (uint)quadIndexes.Length * sizeof (ushort);
+            uint bufSize = (uint)quadIndexes.Length * sizeof(ushort);
             return bufSize;
         }
 

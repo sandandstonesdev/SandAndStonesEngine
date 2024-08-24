@@ -8,7 +8,7 @@ namespace SandAndStonesEngine.Utils
         int rows;
         int cols;
         public Vector2[] Points { get; private set; }
-        
+
         public VertexGenerator(int rows, int cols)
         {
             this.rows = rows;
@@ -44,7 +44,7 @@ namespace SandAndStonesEngine.Utils
                     oneQuadData.Add(Points[i]);
                     j++;
                 }
-                
+
             }
             ColorRandomizer colorRandomizer = new ColorRandomizer();
             var color = colorRandomizer.GetColor();
@@ -55,7 +55,7 @@ namespace SandAndStonesEngine.Utils
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string filepath = Path.Combine(path, "plik.txt");
-            
+
             for (int i = 1; i < rows; i++)
             {
                 for (int j = 1; j < cols; j++)
@@ -63,7 +63,7 @@ namespace SandAndStonesEngine.Utils
                     int index = i * rows + j;
                     Debug.Write($"[{index}]= {Points[index]} ");
                 }
-                Debug.Write("\n");   
+                Debug.Write("\n");
             }
 
             Debug.Flush();

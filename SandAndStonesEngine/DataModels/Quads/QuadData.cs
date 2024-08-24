@@ -6,17 +6,19 @@ namespace SandAndStonesEngine.DataModels.Quads
     {
         public int Id;
         public Vector2 ScreenPos;
+        public Vector3 GridQuadPosition;
         public Vector3[] Points;
         public Vector2[] TextureCoords;
         public ushort[] Indexes = new ushort[6];
         public int TextureId = 0;
         public int BatchId;
-        public QuadData(int batchId, int id, Vector2 screenPos, Vector3[] points, ushort[] indexes, Vector2[] textureCoords)
+        public QuadData(int batchId, int id, Vector2 screenPos, Vector3 gridQuadPosition, Vector3[] points, ushort[] indexes, Vector2[] textureCoords)
         {
             BatchId = batchId;
             Id = id;
             TextureId = id;
             ScreenPos = screenPos;
+            GridQuadPosition = gridQuadPosition;
             Points = points;
             Indexes = indexes;
             TextureCoords = textureCoords;

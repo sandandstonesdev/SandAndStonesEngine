@@ -1,6 +1,5 @@
-﻿using System.Numerics;
-using Veldrid;
-using SandAndStonesEngine.GameInput;
+﻿using SandAndStonesEngine.GameInput;
+using System.Numerics;
 
 namespace SandAndStonesEngine.GameCamera
 {
@@ -29,7 +28,7 @@ namespace SandAndStonesEngine.GameCamera
             if (motionDir != Vector3.Zero)
             {
                 motionDir = ApplyRotationOnMotionDir(motionDir, yaw, pitch);
-            }   
+            }
             return motionDir;
         }
 

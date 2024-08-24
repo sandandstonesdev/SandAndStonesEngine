@@ -10,8 +10,8 @@
         // Pattern [1, 6, 2, 7, 3, 8, 4, 9, 5, 10, ..., 6, 11, 7, 12, 8, 13, 9, 14, 10, 15]
 
         ushort[] indexesPattern = new ushort[] { 0, 1, 2, 1, 3, 2 }; // 1 (For idx 3 2 1 0)
-        //ushort[] indexesPattern = new ushort[] { 3, 2, 1, 2, 0, 1 }; // upside down 1
-        
+                                                                     //ushort[] indexesPattern = new ushort[] { 3, 2, 1, 2, 0, 1 }; // upside down 1
+
         public TriangleListIndexGenerator(int quadId)
         {
             this.quadId = quadId;

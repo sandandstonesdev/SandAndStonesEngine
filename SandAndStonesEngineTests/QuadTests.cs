@@ -3,6 +3,7 @@ using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.ScreenDivisions;
 using SandAndStonesEngine.DataModels.Tiles;
+using SandAndStonesEngine.GameFactories;
 using System.Numerics;
 using System.Runtime.Intrinsics;
 
@@ -23,8 +24,7 @@ namespace SandAndStonesEngineTests
             int screenHeight = 400;
             int quadCount = 4;
             this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
-            this.quadGridManager = QuadGridManager.Instance;
-            quadGridManager.Init(screenDivision);
+            this.quadGridManager = new QuadGridManager(screenDivision);
             quadGridManager.StartNewBatch();
         }
 

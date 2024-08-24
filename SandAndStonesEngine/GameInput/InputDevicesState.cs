@@ -33,7 +33,7 @@ namespace SandAndStonesEngine.GameInput
             bool keyAdded = false;
             currentKeys.Clear();
             var keyEvents = snapshot.KeyEvents;
-            foreach(var keyEvent in keyEvents)
+            foreach (var keyEvent in keyEvents)
             {
                 keyAdded = keyEvent.Down ? KeyDown(keyEvent.Key) : KeyUp(keyEvent.Key);
             }
@@ -57,7 +57,7 @@ namespace SandAndStonesEngine.GameInput
             MouseDelta = MousePosition - lastMousePosition;
             if (MouseDelta != Vector2.Zero)
             {
-                
+
             }
             var mouseEvents = snapshot.MouseEvents;
             foreach (var mouseEvent in mouseEvents)

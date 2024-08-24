@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Vortice.D3DCompiler;
 
 namespace SandAndStonesEngine.GameTextures
 {

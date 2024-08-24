@@ -1,6 +1,4 @@
-﻿using SandAndStonesEngine;
-using SandAndStonesEngine.GameFactories;
-using Veldrid.OpenGLBinding;
+﻿using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngineSample
 {
@@ -8,10 +6,7 @@ namespace SandAndStonesEngineSample
     {
         static void Main()
         {
-            var game = Factory.Instance.GetGame();
-            game.Start();
-            game.Loop();
-            game.Stop();
+            Factory.Instance.GetGame().Start();
         }
     }
 }

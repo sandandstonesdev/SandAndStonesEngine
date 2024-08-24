@@ -1,5 +1,4 @@
-﻿using SandAndStonesEngine.DataModels.Quads;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace SandAndStonesEngine.DataModels.ScreenDivisions
 {
@@ -36,7 +35,7 @@ namespace SandAndStonesEngine.DataModels.ScreenDivisions
             return new Vector3(xCount, yCount, zCount);
         }
 
-        public Vector3 GetCoordinateUnitsPerPixel()
+        public static Vector3 GetCoordinateUnitsPerPixel(int screenWidth, int screenHeight, int screenDepth)
         {
             float xCount = 2.0f / screenWidth;
             float yCount = 2.0f / screenHeight;
@@ -44,7 +43,7 @@ namespace SandAndStonesEngine.DataModels.ScreenDivisions
             return new Vector3(xCount, yCount, zCount);
         }
 
-        public Vector2 GetPixelsPerCoordinateUnit()
+        public static Vector2 GetPixelsPerCoordinateUnit(int screenWidth, int screenHeight)
         {
             int xPixels = screenWidth / 2;
             int yPixels = screenHeight / 2;

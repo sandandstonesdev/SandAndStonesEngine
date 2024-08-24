@@ -1,14 +1,12 @@
 ﻿using SandAndStonesEngine.GameCamera;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace SandAndStonesEngine.MathModule
 {
     public class WorldTransformator
     {
-        InputMotionMapperBase inputMotionMapper;
-        Matrices matrices;
-        public TransformatorData TransformatorData;
+        private readonly InputMotionMapperBase inputMotionMapper;
+        public readonly TransformatorData TransformatorData;
 
         public WorldTransformator(InputMotionMapperBase inputMotionMapper, TransformatorData transformatorData)
         {

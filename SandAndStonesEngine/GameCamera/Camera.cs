@@ -1,7 +1,9 @@
-﻿using System.Numerics;
-using SandAndStonesEngine.MathModule;
-using SandAndStonesEngine.GameFactories;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SandAndStonesEngine.DataModels;
+using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GraphicAbstractions;
+using SandAndStonesEngine.MathModule;
+using System.Numerics;
 
 namespace SandAndStonesEngine.GameCamera
 {
@@ -24,7 +26,7 @@ namespace SandAndStonesEngine.GameCamera
             {
                 var transformator = matrices.viewTransformator;
                 var data = transformator?.TransformatorData;
-                if (data==null)
+                if (data == null)
                 {
                     return new Vector2(0, 0);
                 }
@@ -32,17 +34,17 @@ namespace SandAndStonesEngine.GameCamera
             }
         }
 
-        readonly ScrollableViewport scrollableViewport;
+        private readonly ScrollableViewport scrollableViewport;
 
-        public Camera(Matrices matrices, ScrollableViewport scrollableViewport)
+        public Camera(GameWindow gameWindow, Matrices matrices, ScrollableViewport scrollableViewport)
         {
             this.matrices = matrices;
             this.scrollableViewport = scrollableViewport;
 
-            windowWidth = GameWindow.Instance.SDLWindow.Width;
-            windowHeight = GameWindow.Instance.SDLWindow.Height;
+            windowWidth = gameWindow.SDLWindow.Width;
+            windowHeight = gameWindow.SDLWindow.Height;
             aspectRatio = windowWidth / windowHeight;
-            fov = (float)(fovInDegrees * (Math.PI /180.0f));
+            fov = (float)(fovInDegrees * (Math.PI / 180.0f));
             matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);
         }
 
@@ -54,16 +56,16 @@ namespace SandAndStonesEngine.GameCamera
                 windowWidth = width;
                 changed = true;
             }
-            
+
             if (windowHeight != height)
             {
                 windowHeight = height;
                 changed = true;
             }
-            
+
             if (changed)
             {
-                var graphicDevice = Factory.Instance.GetGameGraphicDevice();
+                var graphicDevice = Startup.ServiceProvider.GetRequiredService<GameGraphicDevice>();
                 matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);
                 graphicDevice.ResizeWindow((uint)windowWidth, (uint)windowHeight);
             }

@@ -16,7 +16,7 @@ namespace SandAndStonesEngine.DataModels
             get
             {
                 ScrollProcessed = true;
-                return ScreenCartesianConverter.ScreenToCartesianScrollMovement(ScrollX, ScrollY);
+                return ScreenCartesianConverter.ScreenToCartesianScrollMovement(ScrollX, ScrollY, Width, Height, 0);
             }
         }
 
@@ -63,7 +63,7 @@ namespace SandAndStonesEngine.DataModels
             var coords = ScreenCartesianConverter.CartesianToScreen(vertexPosition.X, vertexPosition.Y, Width, Height);
             var x = coords.Item1;
             var y = coords.Item2;
-            
+
             // x Tests
             var leftBound = X + Math.Abs(ScrollX);
             var rightBound = X + Width + Math.Abs(ScrollX);

@@ -1,8 +1,4 @@
-﻿using SandAndStonesEngine.GameTextures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine;
-using SandAndStonesEngine.Assets.Textures;
+﻿using SandAndStonesEngine.Assets.Textures;
 
 namespace SandAndStonesEngineTests
 {

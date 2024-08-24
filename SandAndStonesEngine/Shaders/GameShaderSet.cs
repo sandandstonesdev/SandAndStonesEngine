@@ -1,5 +1,5 @@
 ﻿using SandAndStonesEngine.Assets.Batches;
-using SandAndStonesEngine.GameFactories;
+using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using Veldrid;
 using Veldrid.SPIRV;
@@ -18,18 +18,20 @@ namespace SandAndStonesEngine.Shaders
             { "PS", "pixelShader.ps" }
         };
 
-        readonly Matrices matrices;
-        public GameShaderSet(GameAssetBatchBase assets, Matrices matrices)
+        protected readonly Matrices matrices;
+        protected readonly GameGraphicDevice gameGraphicDevice;
+
+        public GameShaderSet(GameGraphicDevice gameGraphicDevice, GameAssetBatchBase assets, Matrices matrices)
         {
             this.assets = assets;
             this.matrices = matrices;
+            this.gameGraphicDevice = gameGraphicDevice;
         }
 
         public void Init()
         {
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
-            
-            
+            ResourceFactory factory = gameGraphicDevice.ResourceFactory;
+
             ShaderProgram vertexShader = new ShaderProgram(shaderFileNames["VS"], ShaderStages.Vertex);
             vertexShader.Init();
             ShaderProgram pixelShader = new ShaderProgram(shaderFileNames["PS"], ShaderStages.Fragment);

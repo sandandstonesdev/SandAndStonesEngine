@@ -17,8 +17,9 @@ namespace SandAndStonesEngine.Assets.Assets
         public override bool IsText { get { return false; } }
         public override IAnimation Animation { get; set; }
         public ScrollableViewport scrollableViewport;
-        bool scrollMoving = false;
-        ViewTransformator viewTransformator;
+
+        private bool scrollMoving = false;
+        private readonly ViewTransformator viewTransformator;
 
         public GameBackgroundAsset(string name, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport, AssetBatchType assetBatchType, float depth, float scale = 1.0f) :
             base(name, depth, scale)
@@ -35,9 +36,9 @@ namespace SandAndStonesEngine.Assets.Assets
             scrollMoving = true;
         }
 
-        public override void Init(AssetInfo assetInfo)
+        public override void Init(QuadGridManager quadGridManager, AssetInfo assetInfo)
         {
-            var quadCount = QuadGridManager.Instance.QuadCount;
+            var quadCount = assetInfo.QuadGridCount;
             Animation = assetInfo.Animation;
             GameTextureData = AssetFactory.Instance.CreateTexture(Id, assetInfo.Textures[0].Name, TextureType.Standard);
             GameTextureData.Init();
@@ -46,16 +47,17 @@ namespace SandAndStonesEngine.Assets.Assets
             {
                 for (int j = (int)assetInfo.StartPos.Y; j < assetInfo.EndPos.Y; j++)
                 {
-                    var positionInQuadCount = new Vector3(i % 8, j % 8, Depth);
+                    var gridQuadPosition = new Vector3(i % 8, j % 8, Depth);
                     var screenPosition = new Vector2(i / 8, j / 8);
-                    var quadModel = AssetFactory.Instance.CreateTile(screenPosition, positionInQuadCount, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Background);
-                    quadModel.Init();
+                    var quadData = quadGridManager.GetQuadData(screenPosition, gridQuadPosition, TileType.Background);
+                    var quadModel = AssetFactory.Instance.CreateTile(quadData, Scale, assetInfo.Textures[0].Color, Id, TextureId, TileType.Background);
+                    quadModel.Init(quadGridManager.screenDivision);
                     QuadModelList.Add(quadModel);
                 }
             }
         }
 
-        public void Scroll(ScrollableViewport scrollableViewport, ViewTransformator viewTransformator)
+        public void Scroll(ScrollableViewport scrollableViewport)
         {
             QuadModelList.ForEach(x =>
             {
@@ -71,7 +73,7 @@ namespace SandAndStonesEngine.Assets.Assets
         {
             if (AssetBatchType == AssetBatchType.ClientRectBatch && scrollMoving)
             {
-                Scroll(scrollableViewport, viewTransformator);
+                Scroll(scrollableViewport);
 
                 scrollMoving = false;
             }

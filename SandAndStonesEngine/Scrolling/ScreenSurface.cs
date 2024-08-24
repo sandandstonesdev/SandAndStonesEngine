@@ -1,4 +1,5 @@
-﻿using SandAndStonesEngine.Assets.Assets;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
@@ -41,7 +42,7 @@ namespace SandAndStonesEngine.Scrolling
             this.width = width;
             this.height = height;
             this.textureDataList = new List<GameTextureDataBase>();
-            this.gameGraphicDevice = Factory.Instance.GetGameGraphicDevice();
+            this.gameGraphicDevice = Startup.ServiceProvider.GetRequiredService<GameGraphicDevice>();
         }
 
         public void Init()
@@ -67,7 +68,7 @@ namespace SandAndStonesEngine.Scrolling
                 Type = Veldrid.TextureType.Texture2D,
             };
 
-            ResourceFactory factory = Factory.Instance.GetResourceFactory();
+            ResourceFactory factory = Startup.ServiceProvider.GetRequiredService<GameGraphicDevice>().ResourceFactory;
 
             Texture = factory.CreateTexture(texDesc);
             TextureView = factory.CreateTextureView(Texture);

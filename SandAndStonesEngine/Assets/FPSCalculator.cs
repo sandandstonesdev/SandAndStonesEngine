@@ -1,6 +1,4 @@
-﻿using SandAndStonesEngine.DataModels;
-
-namespace SandAndStonesEngine.Assets
+﻿namespace SandAndStonesEngine.Assets
 {
     public class FPSCalculator
     {
@@ -34,9 +32,9 @@ namespace SandAndStonesEngine.Assets
         {
             long result = 0;
             long sampleSum = 0;
-            foreach(var deltaSample in deltasBuffer)
+            foreach (var deltaSample in deltasBuffer)
             {
-                sampleSum += deltaSample; 
+                sampleSum += deltaSample;
             }
 
             result = sampleSum != 0 ? (sampleCount * 1000) / sampleSum : 0;

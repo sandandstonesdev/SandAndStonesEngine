@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace SandAndStonesEngine.Utils
 {
@@ -23,7 +17,7 @@ namespace SandAndStonesEngine.Utils
 
         public void Generate()
         {
-            List<int> indices = new List<int>(); 
+            List<int> indices = new List<int>();
             for (int i = 0; i < rows; i++)
             {
                 if (i != 0) indices.Add((i) * rows); // col=1 row=next (triangle degeneration)

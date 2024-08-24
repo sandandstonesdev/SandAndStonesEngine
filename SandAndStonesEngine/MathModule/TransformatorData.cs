@@ -18,7 +18,7 @@ namespace SandAndStonesEngine.MathModule
             get
             {
                 Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z);
-                
+
                 Vector3 lookDir = Vector3.Transform(Forward, lookRotation);
                 return lookDir;
             }

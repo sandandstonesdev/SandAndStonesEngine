@@ -54,7 +54,7 @@
 
 //            Texture = factory.CreateTexture(texDesc);
 //            TextureView = factory.CreateTextureView(Texture);
-            
+
 //            TextureLayout = factory.CreateResourceLayout(
 //                    new ResourceLayoutDescription(
 //                    new ResourceLayoutElementDescription("SurfaceTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),

@@ -1,15 +1,13 @@
 ﻿using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameCamera;
 using System.Numerics;
-using Vortice.Mathematics;
 
 namespace SandAndStonesEngine.MathModule
 {
     public class ViewTransformator
     {
-        InputMotionMapperBase inputMotionMapper;
-        Matrices matrices;
-        ScrollableViewport scrollableViewport;
+        private readonly InputMotionMapperBase inputMotionMapper;
+        private readonly ScrollableViewport scrollableViewport;
         public TransformatorData TransformatorData;
         public event EventHandler PositionChanged;
 
@@ -31,14 +29,14 @@ namespace SandAndStonesEngine.MathModule
             var motionDir = inputMotionMapper.GetRotatedMotionDir(TransformatorData.Rotation.X, TransformatorData.Rotation.Y);
             if (motionDir != Vector3.Zero)
             {
-                TransformatorData.Movement = Vector3.Negate(motionDir)* TransformatorData.MoveSpeed * (float)(deltaElapsedTime / 2);
+                TransformatorData.Movement = Vector3.Negate(motionDir) * TransformatorData.MoveSpeed * (float)(deltaElapsedTime / 2);
                 PositionChanged?.Invoke(this, EventArgs.Empty); // This call should be moved to class managing Character
             }
 
             var scrollDir = inputMotionMapper.GetScrollDir();
             if (scrollDir != Vector2.Zero)
             {
-                TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels * (float)(deltaElapsedTime/2);
+                TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels * (float)(deltaElapsedTime / 2);
                 scrollableViewport.Scroll((int)TransformatorData.ScrollMovement.X,
                                       (int)TransformatorData.ScrollMovement.Y);
             }

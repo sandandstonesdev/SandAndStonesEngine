@@ -22,22 +22,17 @@ namespace SandAndStonesEngine.Clients
 
                 var obj = await response.Content.ReadAsStringAsync();
 
-                var serializeOptions = new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-
-                var assetInfo = JsonSerializer.Deserialize<List<Vector3DTO>>(obj, serializeOptions);
+                var assetInfo = JsonSerializer.Deserialize<List<Vector3DTO>>(obj, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
                 return assetInfo ?? [];
             }
-            catch(HttpRequestException exc)
+            catch (HttpRequestException exc)
             {
-                Debug.WriteLine($"Asset info connection error.");
+                Debug.WriteLine($"Asset info connection error: {exc.Message}");
             }
             catch (Exception exc)
             {
-                Debug.WriteLine($"Asset info error.");
+                Debug.WriteLine($"Asset info error: {exc.Message}");
             }
 
             return [];
