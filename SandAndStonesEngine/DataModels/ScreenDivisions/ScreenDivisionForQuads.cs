@@ -2,21 +2,19 @@
 
 namespace SandAndStonesEngine.DataModels.ScreenDivisions
 {
-    public class ScreenDivisionForQuads
+    public class ScreenQuadCalculator
     {
         private int screenWidth;
         private int screenHeight;
         private readonly int screenDepth;
         public Vector3 QuadCount { get; init; }
-        public Vector3 QuadPointCount { get; init; }
-
+        public Vector3 QuadPointCount => QuadCount + Vector3.One;
         public float aspect;
-        public ScreenDivisionForQuads(int screenWidth, int screenHeight, int quadCountX, int quadCountY, int quadCountZ = 10)
+        public ScreenQuadCalculator(int screenWidth, int screenHeight, int quadCountX, int quadCountY, int quadCountZ = 10)
         {
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             this.QuadCount = new Vector3(quadCountX, quadCountY, quadCountZ);
-            this.QuadPointCount = new Vector3(quadCountX + 1, quadCountY + 1, quadCountZ + 1);
             aspect = screenWidth / screenHeight;
             screenDepth = screenWidth;
         }

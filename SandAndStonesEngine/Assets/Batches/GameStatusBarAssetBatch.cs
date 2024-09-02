@@ -1,26 +1,22 @@
-﻿using SandAndStonesEngine.Animation;
-using SandAndStonesEngine.Assets.Assets;
+﻿using SandAndStonesEngine.Assets.AssetConfig;
 using SandAndStonesEngine.Assets.DTOs;
-using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.Managers;
-using SandAndStonesEngine.MathModule;
-using System.Numerics;
+using SandAndStonesEngine.MemoryStore;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches
 {
     public class GameStatusBarAssetBatch : GameAssetBatchBase
     {
-        public override List<IQuadModel> Assets => assetFactory.StatusBarModels;
+        public override List<IQuadModel> Assets => assetMemoryStore.GetStatusBarModels();
         public override AssetBatchType AssetBatchType => AssetBatchType.StatusBarBatch;
 
         public readonly QuadGridManager quadGridManager;
-        
-        public GameStatusBarAssetBatch(AssetFactory assetFactory, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ScrollableViewport scrollableViewport) : base(assetFactory, graphicDevice, scrollableViewport)
+
+        public GameStatusBarAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
         {
             this.quadGridManager = quadGridManager;
         }
@@ -29,8 +25,25 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             quadGridManager.StartNewBatch();
 
-            assetFactory.Add(assetFactory.CreateGameAsset("status_tiles", new AssetPosInfo(new Vector2(0, 0), new Vector2(8, 2)), assetFactory, scrollableViewport, quadGridManager, null!, AssetBatchType, AssetType.Background, RgbaFloat.CornflowerBlue, string.Empty, ["status.png"], 1.0f, 1.0f));
-            assetFactory.Add(assetFactory.CreateGameAsset("point_info", new AssetPosInfo(new Vector2(0, 0), new Vector2(1, 1)), assetFactory, scrollableViewport, quadGridManager, null!, AssetBatchType, AssetType.PointsText, RgbaFloat.Blue, "Points: 0", ["letters.png"], 1.0f, 1.0f));
+            var assetsReader = new InputAssetReader("./Assets/AssetConfig/statusBarAssets.json");
+            var assetsData = await assetsReader.ReadAsync();
+
+            foreach(var assetData in assetsData.InputAssets)
+            {
+                assetMemoryStore.Add(assetFactory.CreateGameAsset(
+                    assetData.Name,
+                    new AssetPosInfo(assetData.StartPos, assetData.EndPos),
+                    assetFactory, scrollableViewport, quadGridManager,
+                    null!,
+                    assetData.AssetBatchType,
+                    assetData.AssetType,
+                    new RgbaFloat(assetData.Color),
+                    assetData.Text,
+                    assetData.AnimationTextureFiles,
+                    assetData.Depth,
+                    assetData.Scale
+                    ));
+            }
 
             base.InitGameAssets();
         }

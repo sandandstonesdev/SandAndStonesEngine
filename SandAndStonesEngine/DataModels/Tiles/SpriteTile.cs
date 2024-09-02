@@ -1,5 +1,4 @@
 ﻿using SandAndStonesEngine.DataModels.Quads;
-using System.Numerics;
 using Veldrid;
 
 namespace SandAndStonesEngine.DataModels.Tiles

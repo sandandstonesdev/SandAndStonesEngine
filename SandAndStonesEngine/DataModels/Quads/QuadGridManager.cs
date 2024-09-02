@@ -10,7 +10,7 @@ namespace SandAndStonesEngine.DataModels.Quads
     public class QuadGridManager
     {
         private Vector2[] PointGrid;
-        public ScreenDivisionForQuads screenDivision;
+        public ScreenQuadCalculator screenDivision;
         private int quadId = 0;
         private int quadBatchId = 0;
 
@@ -19,13 +19,13 @@ namespace SandAndStonesEngine.DataModels.Quads
         public int AbsoluteQuadIndex => quadBatchId * quadId + quadId;
         public Vector3 QuadCount => screenDivision.QuadCount;
 
-        public QuadGridManager(ScreenDivisionForQuads screenDivision)
+        public QuadGridManager(ScreenQuadCalculator screenDivision)
         {
             this.screenDivision = screenDivision;
             Init(screenDivision);
         }
 
-        private void Init(ScreenDivisionForQuads screenDivision)
+        private void Init(ScreenQuadCalculator screenDivision)
         {
             IVertexGenerator vertexGenerator = new VertexGenerator((int)screenDivision.QuadPointCount.Y, (int)screenDivision.QuadPointCount.X);
             vertexGenerator.Generate();

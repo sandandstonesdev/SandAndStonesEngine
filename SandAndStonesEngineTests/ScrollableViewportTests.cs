@@ -8,7 +8,7 @@ namespace SandAndStonesEngineTests
     [TestClass]
     public class ScrollableViewportTests
     {
-        ScreenDivisionForQuads screenDivision;
+        ScreenQuadCalculator screenDivision;
         QuadGridManager quadGridManager;
         public ScrollableViewportTests()
         {
@@ -19,7 +19,7 @@ namespace SandAndStonesEngineTests
             int screenWidth = 400;
             int screenHeight = 400;
             int quadCount = 4;
-            this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
+            this.screenDivision = new ScreenQuadCalculator(screenWidth, screenHeight, quadCount, quadCount);
             this.quadGridManager = new QuadGridManager(screenDivision);
             quadGridManager.StartNewBatch();
         }

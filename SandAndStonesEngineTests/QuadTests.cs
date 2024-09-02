@@ -1,18 +1,14 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.ScreenDivisions;
 using SandAndStonesEngine.DataModels.Tiles;
-using SandAndStonesEngine.GameFactories;
 using System.Numerics;
-using System.Runtime.Intrinsics;
 
 namespace SandAndStonesEngineTests
 {
     [TestClass]
     public class QuadTests
     {
-        ScreenDivisionForQuads screenDivision;
+        ScreenQuadCalculator screenDivision;
         QuadGridManager quadGridManager;
         public QuadTests()
         {
@@ -23,7 +19,7 @@ namespace SandAndStonesEngineTests
             int screenWidth = 400;
             int screenHeight = 400;
             int quadCount = 4;
-            this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
+            this.screenDivision = new ScreenQuadCalculator(screenWidth, screenHeight, quadCount, quadCount);
             this.quadGridManager = new QuadGridManager(screenDivision);
             quadGridManager.StartNewBatch();
         }
@@ -37,7 +33,7 @@ namespace SandAndStonesEngineTests
             QuadData quadData1 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 1, 0), 1, TileType.Background);
             QuadData quadData2 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 2, 0), 1, TileType.Background);
             QuadData quadData3 = quadGridManager.GetQuadData(Vector2.Zero, new Vector3(1, 3, 0), 1, TileType.Background);
-            
+
             Assert.AreEqual(quadData1.Indexes.Length, indexesPattern1.Length);
             bool isEqual = Enumerable.SequenceEqual(quadData1.Indexes, indexesPattern1);
             Assert.IsTrue(isEqual);

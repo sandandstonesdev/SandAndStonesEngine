@@ -3,7 +3,7 @@ using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.Managers;
+using SandAndStonesEngine.MemoryStore;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches
@@ -42,11 +42,14 @@ namespace SandAndStonesEngine.Assets.Batches
         protected readonly ScrollableViewport scrollableViewport;
 
         private readonly GameGraphicDevice graphicDevice;
+        protected readonly AssetMemoryStore assetMemoryStore;
         protected readonly AssetFactory assetFactory;
-        protected GameAssetBatchBase(AssetFactory assetFactory, GameGraphicDevice graphicDevice, ScrollableViewport scrollableViewport)
+
+        protected GameAssetBatchBase(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameGraphicDevice graphicDevice, ScrollableViewport scrollableViewport)
         {
             this.graphicDevice = graphicDevice;
             this.scrollableViewport = scrollableViewport;
+            this.assetMemoryStore = assetMemoryStore;
             this.assetFactory = assetFactory;
         }
 
@@ -66,7 +69,7 @@ namespace SandAndStonesEngine.Assets.Batches
 
         public virtual void Update(long delta)
         {
-            assetFactory.Assets.ForEach(e =>
+            assetMemoryStore.Assets.ForEach(e =>
             {
                 if (e.AssetBatchType == AssetBatchType)
                     e.Update(delta);
@@ -86,7 +89,7 @@ namespace SandAndStonesEngine.Assets.Batches
                 {
                 }
 
-                assetFactory.Assets.ForEach(e =>
+                assetMemoryStore.Assets.ForEach(e =>
                 {
                     e?.Dispose();
                 });

@@ -1,13 +1,13 @@
 ﻿using SandAndStonesEngine.DataModels.Quads;
 
-namespace SandAndStonesEngine.Managers
+namespace SandAndStonesEngine.MemoryStore
 {
-    public class QuadModelManager
+    public class QuadModelMemoryStore
     {
         public List<IQuadModel> Models { get; } = [];
         public List<IQuadModel> StatusBarModels { get; } = [];
 
-        public QuadModelManager()
+        public QuadModelMemoryStore()
         {
 
         }

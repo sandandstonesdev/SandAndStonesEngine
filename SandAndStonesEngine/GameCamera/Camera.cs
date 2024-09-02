@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
@@ -34,12 +33,12 @@ namespace SandAndStonesEngine.GameCamera
             }
         }
 
-        public Camera(GameWindow gameWindow, Matrices matrices)
+        public Camera(int width, int height, Matrices matrices)
         {
             this.matrices = matrices;
 
-            windowWidth = gameWindow.SDLWindow.Width;
-            windowHeight = gameWindow.SDLWindow.Height;
+            windowWidth = width;
+            windowHeight = height;
             aspectRatio = windowWidth / windowHeight;
             fov = (float)(fovInDegrees * (Math.PI / 180.0f));
             matrices.UpdateOrtographic(windowWidth, windowHeight, near, far);

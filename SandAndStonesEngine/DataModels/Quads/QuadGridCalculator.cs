@@ -7,7 +7,7 @@ namespace SandAndStonesEngine.DataModels.Quads
     {
         private static readonly Vector3 relativePosition = new(-1.00f, -1.00f, 0.0f);
 
-        private static Vector3 GetAbsoluteCoord(ScreenDivisionForQuads screenDivisions, Vector3 quadGridPoint, float quadScale)
+        private static Vector3 GetAbsoluteCoord(ScreenQuadCalculator screenDivisions, Vector3 quadGridPoint, float quadScale)
         {
             var quadSizeInCoord = GetScaledQuadSizeInCoord(screenDivisions, quadScale);
             var scaledPoint = Vector3.Multiply(quadGridPoint, quadSizeInCoord);
@@ -15,7 +15,7 @@ namespace SandAndStonesEngine.DataModels.Quads
             return res;
         }
 
-        private static Vector3 GetScaledQuadSizeInCoord(ScreenDivisionForQuads screenDivisions, float quadScale)
+        private static Vector3 GetScaledQuadSizeInCoord(ScreenQuadCalculator screenDivisions, float quadScale)
         {
 
             Vector3 quadSizeTemp = screenDivisions.GetCoordinateUnitsPerQuad();
@@ -23,7 +23,7 @@ namespace SandAndStonesEngine.DataModels.Quads
             return quadSizeInCoord;
         }
 
-        public static Vector3[] GetQuadAbsoluteCoords(ScreenDivisionForQuads screenDivisions, Vector3[] quadPointsInGrid, float scale)
+        public static Vector3[] GetQuadAbsoluteCoords(ScreenQuadCalculator screenDivisions, Vector3[] quadPointsInGrid, float scale)
         {
             var leftUpper = GetAbsoluteCoord(screenDivisions, quadPointsInGrid[0], scale);
             var leftDown = GetAbsoluteCoord(screenDivisions, quadPointsInGrid[1], scale);

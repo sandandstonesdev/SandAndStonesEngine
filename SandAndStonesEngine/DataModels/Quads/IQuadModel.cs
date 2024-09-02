@@ -6,7 +6,7 @@ namespace SandAndStonesEngine.DataModels.Quads
 {
     public interface IQuadModel
     {
-        void Init(ScreenDivisionForQuads screenDivisions);
+        void Init(ScreenQuadCalculator screenDivisions);
         VertexDataFormat[] VerticesPositions { get; }
         ushort[] QuadIndexes { get; }
         public void Move(Vector4 pixelMovementVector);

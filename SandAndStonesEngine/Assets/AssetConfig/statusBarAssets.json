@@ -1,0 +1,28 @@
+{
+  "assets": [
+    {
+      "name": "status_tiles",
+      "startPos": [ 0, 0 ],
+      "endPos": [ 8, 2 ],
+      "assetBatchType": "StatusBarBatch",
+      "assetType": "Background",
+      "color": [ 0.3921, 0.5843, 0.9294, 1 ],
+      "text": "",
+      "animationTextureFiles": [ "status.png" ],
+      "depth": 1.0,
+      "scale": 1.0
+    },
+    {
+      "name": "point_info",
+      "startPos": [ 0, 0 ],
+      "endPos": [ 1, 1 ],
+      "assetBatchType": "StatusBarBatch",
+      "assetType": "PointsText",
+      "color": [ 0, 0, 1, 1 ],
+      "text": "Points: 0",
+      "animationTextureFiles": [ "letters.png" ],
+      "depth": 1.0,
+      "scale": 1.0
+    }
+  ]
+}

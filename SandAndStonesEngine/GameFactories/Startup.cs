@@ -8,8 +8,8 @@ using SandAndStonesEngine.GameCamera;
 using SandAndStonesEngine.GameInput;
 using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.Managers;
 using SandAndStonesEngine.MathModule;
+using SandAndStonesEngine.MemoryStore;
 using SandAndStonesEngine.RenderingAbstractions;
 using SandAndStonesEngine.Shaders;
 using System.Numerics;
@@ -23,7 +23,7 @@ namespace SandAndStonesEngine.GameFactories
         private static ServiceProvider BuildProvider()
         {
             var serviceCollection = new ServiceCollection();
-            
+
             var configurationRoot = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
@@ -46,10 +46,9 @@ namespace SandAndStonesEngine.GameFactories
             int quadCountY = 8;
             int quadCountZ = 8;
 
-            var screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCountX, quadCountY, quadCountZ);
-            services.AddSingleton(
-                new ScreenDivisionForQuads(screenWidth, screenHeight, quadCountX, quadCountY, quadCountZ));
-            var gridManager = new QuadGridManager(screenDivision);
+            var screenQuadCalculator = new ScreenQuadCalculator(screenWidth, screenHeight, quadCountX, quadCountY, quadCountZ);
+            services.AddSingleton(screenQuadCalculator);
+            var gridManager = new QuadGridManager(screenQuadCalculator);
             services.AddSingleton(gridManager);
             var gameWindow = new GameWindow();
             gameWindow.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test");
@@ -79,20 +78,23 @@ namespace SandAndStonesEngine.GameFactories
             services.AddSingleton(viewTransformator);
             services.AddSingleton(matrices);
 
-            services.AddSingleton(new Camera(gameWindow, matrices));
+            services.AddSingleton(new Camera(screenWidth, screenHeight, matrices));
 
-            var quadModelManager = new QuadModelManager();
-            services.AddSingleton(quadModelManager);
-            var gameTextureDataManager = new GameTextureDataManager();
-            services.AddSingleton(gameTextureDataManager);
+            var quadModelMemoryStore = new QuadModelMemoryStore();
+            services.AddSingleton(quadModelMemoryStore);
+            var gameTextureMemoryStore = new GameTextureMemoryStore();
+            services.AddSingleton(gameTextureMemoryStore);
 
-            var assetFactory = new AssetFactory(quadModelManager, gameTextureDataManager);
+            var assetMemoryStore = new AssetMemoryStore(quadModelMemoryStore, gameTextureMemoryStore);
+            services.AddSingleton(assetMemoryStore);
+
+            var assetFactory = new AssetFactory();
             services.AddSingleton(assetFactory);
 
             var assetBatchList = new List<GameAssetBatchBase>()
             {
-                new GameAssetBatch(assetFactory, gameGraphicDevice, gridManager, viewTransformator, scrollableViewport),
-                new GameStatusBarAssetBatch(assetFactory, gameGraphicDevice, gridManager, scrollableViewport)
+                new GameAssetBatch(assetFactory, assetMemoryStore, gameGraphicDevice, gridManager, viewTransformator, scrollableViewport),
+                new GameStatusBarAssetBatch(assetFactory, assetMemoryStore, gameGraphicDevice, gridManager, scrollableViewport)
             };
 
             assetBatchList.ForEach(e => e.Init(gameGraphicDevice, scrollableViewport));
@@ -101,7 +103,9 @@ namespace SandAndStonesEngine.GameFactories
             shaderSet.Init();
             services.AddSingleton(shaderSet);
 
-            var gameTextureSurface = new GameTextureSurface(assetFactory, gameGraphicDevice, 256, 256);
+            int textureWidth = 256;
+            int textureHeight = 256;
+            var gameTextureSurface = new GameTextureSurface(assetMemoryStore, gameGraphicDevice, textureWidth, textureHeight);
             gameTextureSurface.Init();
             services.AddSingleton(gameTextureSurface);
 

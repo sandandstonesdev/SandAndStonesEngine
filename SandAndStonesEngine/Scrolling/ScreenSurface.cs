@@ -3,7 +3,6 @@ using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
-using System.Collections.Generic;
 using Veldrid;
 
 namespace SandAndStonesEngine.Scrolling

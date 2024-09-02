@@ -5,8 +5,8 @@ namespace SandAndStonesEngine.Utils
 {
     public class VertexGenerator : IVertexGenerator
     {
-        int rows;
-        int cols;
+        private readonly int rows;
+        private readonly int cols;
         public Vector2[] Points { get; private set; }
 
         public VertexGenerator(int rows, int cols)
@@ -30,7 +30,7 @@ namespace SandAndStonesEngine.Utils
 
         public void AddColors()
         {
-            List<Vector2> oneQuadData = new List<Vector2>();
+            var oneQuadData = new List<Vector2>();
             int j = 0;
             for (int i = 0; i > Points.Length; i++)
             {
@@ -53,8 +53,8 @@ namespace SandAndStonesEngine.Utils
 
         public void Display()
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string filepath = Path.Combine(path, "plik.txt");
+            //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //string filepath = Path.Combine(path, "plik.txt");
 
             for (int i = 1; i < rows; i++)
             {

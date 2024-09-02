@@ -6,7 +6,7 @@ namespace SandAndStonesEngineTests
     [TestClass]
     public class ScreenDivisionForQuadsTests
     {
-        private ScreenDivisionForQuads screenDivision;
+        private ScreenQuadCalculator screenDivision;
         private QuadGridManager quadGridManager;
 
         public ScreenDivisionForQuadsTests()
@@ -19,7 +19,7 @@ namespace SandAndStonesEngineTests
             int screenWidth = 400;
             int screenHeight = 400;
             int quadCount = 4;
-            this.screenDivision = new ScreenDivisionForQuads(screenWidth, screenHeight, quadCount, quadCount);
+            this.screenDivision = new ScreenQuadCalculator(screenWidth, screenHeight, quadCount, quadCount);
             this.quadGridManager = new QuadGridManager(screenDivision);
             quadGridManager.StartNewBatch();
         }
@@ -38,7 +38,7 @@ namespace SandAndStonesEngineTests
         public void ShouldGetCoordinateUnitsPerPixel()
         {
             // <-1, 1> czyli 2.0Coord/400Pix = 0,005Coord/Pix
-            var res = ScreenDivisionForQuads.GetCoordinateUnitsPerPixel(400, 400, 400);
+            var res = ScreenQuadCalculator.GetCoordinateUnitsPerPixel(400, 400, 400);
             Assert.AreEqual(res.X, 0.005f);
             Assert.AreEqual(res.Y, 0.005f);
             Assert.AreEqual(res.Z, 0.005f);

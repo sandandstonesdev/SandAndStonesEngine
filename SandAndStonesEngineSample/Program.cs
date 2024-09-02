@@ -1,5 +1,4 @@
 ﻿using SandAndStonesEngine;
-using SandAndStonesEngine.GameFactories;
 
 namespace SandAndStonesEngineSample
 {

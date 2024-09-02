@@ -1,15 +1,14 @@
-﻿using SandAndStonesEngine.Animation;
+﻿using SandAndStonesEngine.Assets.AssetConfig;
 using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.DTOs;
-using SandAndStonesEngine.Assets.Textures;
-using SandAndStonesEngine.Clients;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.Managers;
 using SandAndStonesEngine.MathModule;
+using SandAndStonesEngine.MemoryStore;
 using System.Numerics;
+using System.Text.Json;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches
@@ -17,13 +16,13 @@ namespace SandAndStonesEngine.Assets.Batches
     public class GameAssetBatch : GameAssetBatchBase
     {
         public override AssetBatchType AssetBatchType => AssetBatchType.ClientRectBatch;
-        public override List<IQuadModel> Assets => assetFactory.ModelData;
+        public override List<IQuadModel> Assets => assetMemoryStore.GetModels();
 
         private readonly ViewTransformator viewTransformator;
 
         private readonly QuadGridManager quadGridManager;
 
-        public GameAssetBatch(AssetFactory assetFactory, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base(assetFactory, graphicDevice, scrollableViewport)
+        public GameAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
         {
             this.quadGridManager = quadGridManager;
             this.viewTransformator = viewTransformator;
@@ -33,18 +32,37 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             quadGridManager.StartNewBatch();
 
+            var assetsReader = new InputAssetReader("./Assets/AssetConfig/assets.json");
+            var assetsData = await assetsReader.ReadAsync();
             //var client = new AssetInfoClient(new HttpClient());
             //var assetInfo = client.GetAssetInfo().Result;
 
-            assetFactory.Add(assetFactory.CreateGameAsset("wall", new AssetPosInfo(new Vector2(0, 0), new Vector2(16, 8)), assetFactory, scrollableViewport, quadGridManager, viewTransformator, AssetBatchType, AssetType.Background, RgbaFloat.White, string.Empty, ["wall.png"], 2, 1));
-            assetFactory.Add(assetFactory.CreateGameAsset("character", new AssetPosInfo(new Vector2(0, 7), new Vector2(1, 8)), assetFactory, scrollableViewport, quadGridManager, viewTransformator, AssetBatchType, AssetType.CharacterSprite, RgbaFloat.Green, string.Empty,["char2.png", "char2_move.png"], 0.5f, 1));
 
-            for (int i = 1; i < 16; i += 2)
+            foreach (var assetData in assetsData.InputAssets)
             {
-                assetFactory.Add(assetFactory.CreateGameAsset("torch", new AssetPosInfo(new Vector2(i, 6), new Vector2(i + 1, 7)), assetFactory, scrollableViewport, quadGridManager, viewTransformator, AssetBatchType, AssetType.Background, RgbaFloat.White, string.Empty, ["torch.png", "torch2.png"], 1, 1));
+                Vector4 startPos = assetData.StartPos;
+                Vector4 endPos = assetData.EndPos;
+
+                for (int i = 0; i < assetData.Instances; i++)
+                {
+                    assetMemoryStore.Add(assetFactory.CreateGameAsset(
+                    assetData.Name,
+                    new AssetPosInfo(startPos, endPos),
+                    assetFactory, scrollableViewport, quadGridManager,
+                    viewTransformator,
+                    assetData.AssetBatchType,
+                    assetData.AssetType,
+                    new RgbaFloat(assetData.Color),
+                    assetData.Text,
+                    assetData.AnimationTextureFiles,
+                    assetData.Depth,
+                    assetData.Scale
+                    ));
+
+                    startPos = Vector4.Add(startPos, assetData.InstancePosOffset);
+                    endPos = Vector4.Add(endPos, assetData.InstancePosOffset);
+                }
             }
-            
-            assetFactory.Add(assetFactory.CreateGameAsset("fps_info", new AssetPosInfo(new Vector2(0, 0), new Vector2(1, 1)), assetFactory, scrollableViewport, quadGridManager, viewTransformator, AssetBatchType, AssetType.FPSText, RgbaFloat.Blue, "FPS: 0", ["letters.png"], 1.0f, 1.0f));
 
             base.InitGameAssets();
         }

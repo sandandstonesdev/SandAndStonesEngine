@@ -1,8 +1,8 @@
 ﻿namespace SandAndStonesEngine.Assets.Batches
 {
-    public enum AssetBatchType
+    public enum AssetBatchType : uint
     {
-        ClientRectBatch,
-        StatusBarBatch
+        ClientRectBatch = 0,
+        StatusBarBatch = 1
     }
 }

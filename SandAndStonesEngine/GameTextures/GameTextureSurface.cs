@@ -1,8 +1,5 @@
-﻿using SandAndStonesEngine.Assets.Assets;
-using SandAndStonesEngine.Assets.Textures;
-using SandAndStonesEngine.GameFactories;
-using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.Managers;
+﻿using SandAndStonesEngine.GraphicAbstractions;
+using SandAndStonesEngine.MemoryStore;
 using Veldrid;
 
 namespace SandAndStonesEngine.GameTextures
@@ -30,15 +27,15 @@ namespace SandAndStonesEngine.GameTextures
         private readonly int width;
         private readonly int height;
 
-        private readonly List<GameTextureDataBase> textureDataList;
+        private readonly AssetMemoryStore assetMemoryStore;
         private bool disposedValue;
         private readonly GameGraphicDevice graphicDevice;
 
-        public GameTextureSurface(AssetFactory assetFactory, GameGraphicDevice graphicDevice, int width, int height)
+        public GameTextureSurface(AssetMemoryStore assetMemoryStore, GameGraphicDevice graphicDevice, int width, int height)
         {
             this.width = width;
             this.height = height;
-            this.textureDataList = assetFactory.TexturesData;
+            this.assetMemoryStore = assetMemoryStore;
             this.graphicDevice = graphicDevice;
         }
 
@@ -50,7 +47,7 @@ namespace SandAndStonesEngine.GameTextures
                 Height = (uint)height,
                 Depth = 1,
                 MipLevels = 1,
-                ArrayLayers = (uint)textureDataList.Count,
+                ArrayLayers = (uint)assetMemoryStore.GetTextureCount(),
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
                 Type = Veldrid.TextureType.Texture2D,
@@ -74,7 +71,7 @@ namespace SandAndStonesEngine.GameTextures
         }
         public void Update()
         {
-            foreach (var texture in textureDataList)
+            foreach (var texture in assetMemoryStore.GetTextureData())
             {
                 graphicDevice.GraphicsDevice.UpdateTexture(Texture, texture.PinnedImageBytes, (uint)texture.BytesCount, 0, 0, 0, (uint)texture.Width, (uint)texture.Height, 1, 0, (uint)texture.Id);
             }

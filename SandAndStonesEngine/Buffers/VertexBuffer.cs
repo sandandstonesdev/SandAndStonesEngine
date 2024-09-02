@@ -33,7 +33,7 @@ namespace SandAndStonesEngine.Buffers
 
         private VertexDataFormat[] CollectAllVerticesFromQuads()
         {
-            var quadModelCount = quadModelList.Count();
+            var quadModelCount = quadModelList.Length;
             var verticesDataLength = quadModelCount * 4;
             VertexDataFormat[] quadsVerticesData = new VertexDataFormat[verticesDataLength];
             int destinationIdx = 0;

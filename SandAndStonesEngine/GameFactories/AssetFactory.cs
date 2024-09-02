@@ -6,7 +6,6 @@ using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
-using SandAndStonesEngine.Managers;
 using SandAndStonesEngine.MathModule;
 using Veldrid;
 using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
@@ -15,29 +14,9 @@ namespace SandAndStonesEngine.GameFactories
 {
     public class AssetFactory
     {
-        public readonly List<GameAssetBase> Assets = [];
-        public List<IQuadModel> ModelData => quadModelManager.Models;
-        public List<IQuadModel> StatusBarModels => quadModelManager.StatusBarModels;
-        public List<GameTextureDataBase> TexturesData => gameTextureDataManager.TexturesData;
 
-        private readonly QuadModelManager quadModelManager;
-        private readonly GameTextureDataManager gameTextureDataManager;
-
-        public AssetFactory(QuadModelManager quadModelManager, GameTextureDataManager gameTextureDataManager)
+        public AssetFactory()
         {
-            this.quadModelManager = quadModelManager;
-            this.gameTextureDataManager = gameTextureDataManager;
-        }
-
-        public void Add(GameAssetBase asset)
-        {
-            Assets.Add(asset);
-            if (asset.AssetBatchType == AssetBatchType.ClientRectBatch)
-                quadModelManager.AddRange(asset.QuadModelList);
-            if (asset.AssetBatchType == AssetBatchType.StatusBarBatch)
-                quadModelManager.AddStatusBarModelsRange(asset.QuadModelList);
-
-            gameTextureDataManager.Add(asset.GameTextureData);
         }
 
         public GameAssetBase CreateGameAsset(

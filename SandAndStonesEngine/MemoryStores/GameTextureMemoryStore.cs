@@ -1,12 +1,13 @@
 ﻿using SandAndStonesEngine.Assets.Textures;
 
-namespace SandAndStonesEngine.Managers
+namespace SandAndStonesEngine.MemoryStore
 {
-    public class GameTextureDataManager
+    public class GameTextureMemoryStore
     {
+        public uint Count { get; private set; }
         public List<GameTextureDataBase> TexturesData { get; } = [];
 
-        public GameTextureDataManager()
+        public GameTextureMemoryStore()
         {
 
         }
@@ -14,11 +15,13 @@ namespace SandAndStonesEngine.Managers
         public void Add(GameTextureDataBase model)
         {
             TexturesData.Add(model);
+            Count++;
         }
 
         public void AddRange(List<GameTextureDataBase> models)
         {
             TexturesData.AddRange(models);
+            Count++;
         }
     }
 }

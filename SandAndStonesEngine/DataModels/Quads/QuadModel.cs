@@ -54,7 +54,7 @@ namespace SandAndStonesEngine.DataModels.Quads
             scale = quadData.Scale;
         }
 
-        public void Init(ScreenDivisionForQuads screenDivision)
+        public void Init(ScreenQuadCalculator screenDivision)
         {
             var quadAbsoluteCoords = QuadGridCalculator.GetQuadAbsoluteCoords(screenDivision, quadPointsInGrid, scale);
             var screenOffset = new Vector3(screenInfo.X * 2.0f, screenInfo.Y * 2.0f, 0);
