@@ -7,7 +7,7 @@ Simple Engine to render 2D sprites in C# based on Veldrid library: https://githu
 Run build, run tests for app in docker:
 
 1. docker build -t sandengine .
-2. docker run --rm -v ${pwd}:/src -w /src/SandAndStonesEngineTests mcr.microsoft.com/dotnet/sdk:7.0 dotnet test
+2. docker run --rm -v ${pwd}:/src -w /src/SandAndStonesEngineTests mcr.microsoft.com/dotnet/sdk:8.0 dotnet test
 
 
 ## Author
