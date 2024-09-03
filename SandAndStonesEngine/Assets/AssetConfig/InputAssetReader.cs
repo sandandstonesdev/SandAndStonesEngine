@@ -2,7 +2,7 @@
 
 namespace SandAndStonesEngine.Assets.AssetConfig
 {
-    public class InputAssetReader
+    public class InputAssetReader : IAsyncAssetReader
     {
         private readonly string fileName;
         public InputAssetReader(string fileName)
@@ -10,7 +10,7 @@ namespace SandAndStonesEngine.Assets.AssetConfig
             this.fileName = fileName;
         }
 
-        public async Task<InputAssetBatch> ReadAsync()
+        public async Task<InputAssetBatch> ReadBatchAsync()
         {
             using FileStream openStream = File.OpenRead(fileName);
             var inputAssetBatch =

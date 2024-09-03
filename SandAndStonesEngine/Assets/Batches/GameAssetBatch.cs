@@ -1,6 +1,7 @@
 ﻿using SandAndStonesEngine.Assets.AssetConfig;
 using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.DTOs;
+using SandAndStonesEngine.Clients;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
@@ -32,12 +33,9 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             quadGridManager.StartNewBatch();
 
-            var assetsReader = new InputAssetReader("./Assets/AssetConfig/assets.json");
-            var assetsData = await assetsReader.ReadAsync();
-            //var client = new AssetInfoClient(new HttpClient());
-            //var assetInfo = client.GetAssetInfo().Result;
-
-
+            var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/assets.json", false);
+            var assetsData = await assetsReader.ReadBatchAsync();
+            
             foreach (var assetData in assetsData.InputAssets)
             {
                 Vector4 startPos = assetData.StartPos;

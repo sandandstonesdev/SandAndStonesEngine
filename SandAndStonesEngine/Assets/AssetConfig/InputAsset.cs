@@ -8,6 +8,8 @@ namespace SandAndStonesEngine.Assets.AssetConfig
     public class InputAsset
     {
         [JsonRequired]
+        public int Id { get; set; }
+        [JsonRequired]
         public string Name { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Instances { get; set; } = 1;

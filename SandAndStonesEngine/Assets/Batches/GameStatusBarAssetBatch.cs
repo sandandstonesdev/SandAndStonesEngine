@@ -1,5 +1,6 @@
 ﻿using SandAndStonesEngine.Assets.AssetConfig;
 using SandAndStonesEngine.Assets.DTOs;
+using SandAndStonesEngine.Clients;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
@@ -25,10 +26,10 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             quadGridManager.StartNewBatch();
 
-            var assetsReader = new InputAssetReader("./Assets/AssetConfig/statusBarAssets.json");
-            var assetsData = await assetsReader.ReadAsync();
+            var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/statusBarAssets.json", false);
+            var assetsData = await assetsReader.ReadBatchAsync();
 
-            foreach(var assetData in assetsData.InputAssets)
+            foreach (var assetData in assetsData.InputAssets)
             {
                 assetMemoryStore.Add(assetFactory.CreateGameAsset(
                     assetData.Name,

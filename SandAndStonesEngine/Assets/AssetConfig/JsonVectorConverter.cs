@@ -13,7 +13,7 @@ namespace SandAndStonesEngine.Assets.AssetConfig
         {
             var list = JsonSerializer.Deserialize<List<float>>(ref reader, options);
             _ = list ?? throw new Exception();
-            return new Vector4(list[0], list[1], 
+            return new Vector4(list[0], list[1],
                             list.Count > 2 ? list[2] : 0,
                             list.Count > 3 ? list[3] : 0);
         }
@@ -21,11 +21,11 @@ namespace SandAndStonesEngine.Assets.AssetConfig
 
         public override void Write(
             Utf8JsonWriter writer,
-            Vector4 dateTimeValue,
+            Vector4 vectorValue,
             JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
-        }
 
+            writer.WriteStringValue($"[{vectorValue.X}, {vectorValue.Y}, {vectorValue.Z}]");
+        }
     }
 }

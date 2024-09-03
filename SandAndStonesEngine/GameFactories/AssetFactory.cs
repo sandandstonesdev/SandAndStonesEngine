@@ -1,8 +1,10 @@
 ﻿using SandAndStonesEngine.Animation;
+using SandAndStonesEngine.Assets.AssetConfig;
 using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Assets.DTOs;
 using SandAndStonesEngine.Assets.Textures;
+using SandAndStonesEngine.Clients;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
@@ -111,6 +113,11 @@ namespace SandAndStonesEngine.GameFactories
             quadModel.Init(gridManager.screenDivision);
 
             return quadModel;
+        }
+
+        public IAsyncAssetReader CreateAssetReader(string path, bool externalService)
+        {
+            return externalService ? new InputAssetServiceReader(new HttpClient(), path) : new InputAssetReader(path);
         }
     }
 }

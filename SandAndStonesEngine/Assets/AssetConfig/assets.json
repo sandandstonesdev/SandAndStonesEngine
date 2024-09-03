@@ -1,6 +1,8 @@
 {
+  "id": 0,
   "assets": [
     {
+      "id": 0,
       "name": "wall",
       "startPos": [ 0, 0 ],
       "endPos": [ 16, 8 ],
@@ -13,6 +15,7 @@
       "scale": 1.0
     },
     {
+      "id": 1,
       "name": "character",
       "startPos": [ 0, 7 ],
       "endPos": [ 1, 8 ],
@@ -25,6 +28,7 @@
       "scale": 1.0
     },
     {
+      "id": 2,
       "name": "torch",
       "instances": 8,
       "startPos": [ 0, 6 ],
@@ -39,6 +43,7 @@
       "scale": 1.0
     },
     {
+      "id": 3,
       "name": "fps_info",
       "startPos": [ 0, 0 ],
       "endPos": [ 1, 1 ],

@@ -1,6 +1,8 @@
 {
+  "id": 1,
   "assets": [
     {
+      "id": 0,
       "name": "status_tiles",
       "startPos": [ 0, 0 ],
       "endPos": [ 8, 2 ],
@@ -13,6 +15,7 @@
       "scale": 1.0
     },
     {
+      "id": 1,
       "name": "point_info",
       "startPos": [ 0, 0 ],
       "endPos": [ 1, 1 ],
