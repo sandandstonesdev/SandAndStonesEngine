@@ -33,9 +33,13 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             quadGridManager.StartNewBatch();
 
-            var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/assets.json", false);
-            var assetsData = await assetsReader.ReadBatchAsync();
-            
+            //var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/assets.json", false);
+            //var assetsData = await assetsReader.ReadBatchAsync();
+
+
+            var assetsReader = assetFactory.CreateAssetReader("assetBatch/0", true);
+            var assetsData = assetsReader.ReadBatchAsync().Result;
+
             foreach (var assetData in assetsData.InputAssets)
             {
                 Vector4 startPos = assetData.StartPos;

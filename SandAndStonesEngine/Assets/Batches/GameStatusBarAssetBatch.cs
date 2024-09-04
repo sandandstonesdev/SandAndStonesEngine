@@ -26,8 +26,11 @@ namespace SandAndStonesEngine.Assets.Batches
         {
             quadGridManager.StartNewBatch();
 
-            var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/statusBarAssets.json", false);
-            var assetsData = await assetsReader.ReadBatchAsync();
+            //var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/statusBarAssets.json", false);
+            //var assetsData = await assetsReader.ReadBatchAsync();
+
+            var assetsReader = assetFactory.CreateAssetReader("assetBatch/1", true);
+            var assetsData = assetsReader.ReadBatchAsync().Result;
 
             foreach (var assetData in assetsData.InputAssets)
             {

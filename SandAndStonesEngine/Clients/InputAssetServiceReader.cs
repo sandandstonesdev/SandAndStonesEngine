@@ -6,7 +6,7 @@ namespace SandAndStonesEngine.Clients
 {
     public class InputAssetServiceReader : IAsyncAssetReader
     {
-        private readonly string _assetServiceAddress = "http://localhost:4200/";
+        private readonly string _assetServiceAddress = "http://localhost:42000/";
         private readonly string _path;
         private readonly HttpClient _httpClient;
         public InputAssetServiceReader(HttpClient httpClient, string path)

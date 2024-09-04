@@ -50,7 +50,7 @@ namespace SandAndStonesEngine.GameTextures
                 ArrayLayers = (uint)assetMemoryStore.GetTextureCount(),
                 Format = PixelFormat.B8_G8_R8_A8_UNorm,
                 Usage = TextureUsage.Sampled,
-                Type = Veldrid.TextureType.Texture2D,
+                Type = TextureType.Texture2D,
             };
 
             ResourceFactory factory = graphicDevice.ResourceFactory;
