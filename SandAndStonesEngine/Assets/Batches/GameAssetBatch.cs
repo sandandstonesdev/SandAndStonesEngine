@@ -1,15 +1,12 @@
-﻿using SandAndStonesEngine.Assets.AssetConfig;
-using SandAndStonesEngine.Assets.Assets;
-using SandAndStonesEngine.Assets.DTOs;
-using SandAndStonesEngine.Clients;
+﻿using SandAndStonesEngine.Assets.DTOs;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.MemoryStore;
+using SandAndStonesLibrary.AssetConfig;
 using System.Numerics;
-using System.Text.Json;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches

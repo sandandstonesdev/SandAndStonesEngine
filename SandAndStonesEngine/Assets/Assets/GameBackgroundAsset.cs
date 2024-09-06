@@ -3,6 +3,7 @@ using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
+using SandAndStonesLibrary.AssetConfig;
 using System.Numerics;
 using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 

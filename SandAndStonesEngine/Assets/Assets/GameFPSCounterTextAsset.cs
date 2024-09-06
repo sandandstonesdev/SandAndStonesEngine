@@ -1,4 +1,5 @@
 ﻿using SandAndStonesEngine.Assets.Batches;
+using SandAndStonesLibrary.AssetConfig;
 
 namespace SandAndStonesEngine.Assets.Assets
 {

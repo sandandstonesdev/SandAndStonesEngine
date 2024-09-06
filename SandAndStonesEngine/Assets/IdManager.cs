@@ -1,4 +1,5 @@
 ﻿using SandAndStonesEngine.Assets.Assets;
+using SandAndStonesLibrary.AssetConfig;
 
 namespace SandAndStonesEngine.Assets
 {

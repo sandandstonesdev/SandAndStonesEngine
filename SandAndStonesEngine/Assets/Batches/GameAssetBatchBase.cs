@@ -4,6 +4,7 @@ using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MemoryStore;
+using SandAndStonesLibrary.AssetConfig;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches

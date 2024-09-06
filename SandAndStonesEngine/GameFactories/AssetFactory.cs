@@ -1,7 +1,5 @@
 ﻿using SandAndStonesEngine.Animation;
-using SandAndStonesEngine.Assets.AssetConfig;
 using SandAndStonesEngine.Assets.Assets;
-using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Assets.DTOs;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.Clients;
@@ -9,6 +7,7 @@ using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
 using SandAndStonesEngine.MathModule;
+using SandAndStonesLibrary.AssetConfig;
 using Veldrid;
 using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 
