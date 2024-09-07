@@ -22,7 +22,6 @@ namespace SandAndStonesEngine.MathModule
         {
             var coordX = screenX * ScreenQuadCalculator.GetCoordinateUnitsPerPixel(screenWidth, screenHeight, screenDepth).X - cartesianWidth / 2;
             var coordY = cartesianHeight / 2 - screenY * ScreenQuadCalculator.GetCoordinateUnitsPerPixel(screenWidth, screenHeight, screenDepth).Y;
-            //Debug.WriteLine("ScreenToCartesian {0}", (coordX, coordY));
             return (coordX, coordY);
         }
 
@@ -30,7 +29,6 @@ namespace SandAndStonesEngine.MathModule
         {
             var coordX = screenMovementX * ScreenQuadCalculator.GetCoordinateUnitsPerPixel(screenWidth, screenHeight, screenDepth).X;
             var coordY = screenMovementY * ScreenQuadCalculator.GetCoordinateUnitsPerPixel(screenWidth, screenHeight, screenDepth).Y;
-            //Debug.WriteLine("ScreenToCartesian {0}", (coordX, coordY));
             return (coordX, coordY);
         }
     }

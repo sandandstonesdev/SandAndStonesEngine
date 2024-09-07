@@ -54,12 +54,6 @@ namespace SandAndStonesEngine.Buffers
             }
 
             return indexData;
-            //List<ushort> indexData = new List<ushort>();
-            //foreach (var quadModel in quadModelList)
-            //{
-            //    indexData.AddRange(quadModel.QuadIndexes);
-            //}
-            //return indexData.ToArray();
         }
 
         public void Init()

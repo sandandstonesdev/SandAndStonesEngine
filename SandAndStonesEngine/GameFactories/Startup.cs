@@ -80,21 +80,22 @@ namespace SandAndStonesEngine.GameFactories
 
             services.AddSingleton(new Camera(screenWidth, screenHeight, matrices));
 
-            var quadModelMemoryStore = new QuadModelMemoryStore();
-            services.AddSingleton(quadModelMemoryStore);
-            var gameTextureMemoryStore = new GameTextureMemoryStore();
-            services.AddSingleton(gameTextureMemoryStore);
-
-            var assetMemoryStore = new AssetMemoryStore(quadModelMemoryStore, gameTextureMemoryStore);
-            services.AddSingleton(assetMemoryStore);
-
             var assetFactory = new AssetFactory();
             services.AddSingleton(assetFactory);
 
+            var quadModelMemoryStore = new QuadModelMemoryStore();
+            services.AddSingleton(quadModelMemoryStore);
+            var gameTextureInfoStore = new GameTextureInfoStore(assetFactory);
+            services.AddSingleton(gameTextureInfoStore);
+
+            var assetMemoryStore = new AssetMemoryStore(quadModelMemoryStore, gameTextureInfoStore);
+            services.AddSingleton(assetMemoryStore);
+
+
             var assetBatchList = new List<GameAssetBatchBase>()
             {
-                new GameAssetBatch(assetFactory, assetMemoryStore, gameGraphicDevice, gridManager, viewTransformator, scrollableViewport),
-                new GameStatusBarAssetBatch(assetFactory, assetMemoryStore, gameGraphicDevice, gridManager, scrollableViewport)
+                new GameAssetBatch(assetFactory, assetMemoryStore, gameTextureInfoStore, gameGraphicDevice, gridManager, viewTransformator, scrollableViewport),
+                new GameStatusBarAssetBatch(assetFactory, assetMemoryStore, gameTextureInfoStore, gameGraphicDevice, gridManager, scrollableViewport)
             };
 
             assetBatchList.ForEach(e => e.Init(gameGraphicDevice, scrollableViewport));

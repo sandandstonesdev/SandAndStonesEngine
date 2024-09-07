@@ -53,9 +53,6 @@ namespace SandAndStonesEngine.Utils
 
         public void Display()
         {
-            //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            //string filepath = Path.Combine(path, "plik.txt");
-
             for (int i = 1; i < rows; i++)
             {
                 for (int j = 1; j < cols; j++)

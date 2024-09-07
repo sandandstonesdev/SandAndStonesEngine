@@ -1,27 +1,46 @@
-﻿using SandAndStonesEngine.Assets.Textures;
+﻿using SandAndStonesEngine.Assets;
+using SandAndStonesEngine.Assets.Textures;
+using SandAndStonesEngine.GameFactories;
+using SandAndStonesLibrary.AssetConfig;
+using Veldrid;
 
 namespace SandAndStonesEngine.MemoryStore
 {
-    public class GameTextureMemoryStore
+    public class GameTextureInfoStore
     {
+        private readonly AssetFactory assetFactory;
         public uint Count { get; private set; }
-        public List<GameTextureDataBase> TexturesData { get; } = [];
+        public Dictionary<string, TextureInfo> TexturesInfo { get; } = [];
 
-        public GameTextureMemoryStore()
+        public GameTextureInfoStore(AssetFactory assetFactory)
         {
-
+            this.assetFactory = assetFactory;
         }
 
-        public void Add(GameTextureDataBase model)
+        public TextureInfo GetTextureInfo(string name, RgbaFloat color, int assetId, AssetType assetType)
         {
-            TexturesData.Add(model);
-            Count++;
+            const string fontTextureName = "letters.png";
+            TextureInfo texInfo = null!;
+            if (!TexturesInfo.ContainsKey(name))
+            {
+                texInfo = CreateTextureInfo(name, color, assetId, assetType);
+            }
+            else
+            {
+                texInfo = name != fontTextureName ?
+                    TexturesInfo[name] : CreateTextureInfo($"{name} {Guid.NewGuid().ToString()}", color, assetId, assetType);
+            }
+
+            return texInfo;
         }
 
-        public void AddRange(List<GameTextureDataBase> models)
+        private TextureInfo CreateTextureInfo(string name, RgbaFloat color, int assetId, AssetType assetType)
         {
-            TexturesData.AddRange(models);
-            Count++;
+            var texInfo = TextureInfo.CreateTextureInfo(IdManager.GetTextureDataId(), name, color, assetType);
+            texInfo.SetTextureData(assetFactory.CreateTexture(texInfo.TextureDataId, (uint)assetId, name, texInfo.TextureType));
+            TexturesInfo.Add(name, texInfo);
+            ++Count;
+            return texInfo;
         }
     }
 }

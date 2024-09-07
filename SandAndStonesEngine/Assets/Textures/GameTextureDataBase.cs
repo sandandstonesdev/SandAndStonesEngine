@@ -6,6 +6,7 @@ namespace SandAndStonesEngine.Assets.Textures
     {
         public uint AssetId { get; private set; }
         public int Id { get; private set; }
+        public abstract TextureType Type { get; }
 
         private bool disposedValue;
 
@@ -15,9 +16,9 @@ namespace SandAndStonesEngine.Assets.Textures
         public int Width { get; protected set; }
         public int Height { get; protected set; }
 
-        public GameTextureDataBase(uint assetId)
+        public GameTextureDataBase(int id, uint assetId)
         {
-            Id = IdManager.GetTextureId();
+            Id = id;
             AssetId = assetId;
         }
 

@@ -1,11 +1,8 @@
-﻿using SandAndStonesEngine.Animation;
-using SandAndStonesEngine.Assets.Batches;
-using SandAndStonesEngine.DataModels;
+﻿using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
 using SandAndStonesLibrary.AssetConfig;
 using System.Numerics;
-using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 
 namespace SandAndStonesEngine.Assets.Assets
 {
@@ -14,7 +11,6 @@ namespace SandAndStonesEngine.Assets.Assets
         public override AssetType AssetType => AssetType.Background;
         public override AssetBatchType AssetBatchType { get; init; }
         public override bool IsText { get { return false; } }
-        public override IAnimation Animation { get; set; }
         public ScrollableViewport scrollableViewport;
 
         private bool scrollMoving = false;
@@ -36,7 +32,7 @@ namespace SandAndStonesEngine.Assets.Assets
         public override GameAssetBase Init(QuadGridManager quadGridManager, AssetInfo assetInfo)
         {
             Animation = assetInfo.Animation;
-            GameTextureData = assetInfo.AssetFactory.CreateTexture(Id, assetInfo.Textures[0].Name, TextureType.Standard);
+            TextureInfo = assetInfo.Textures[0];
 
             for (int i = (int)assetInfo.StartPos.X; i < assetInfo.EndPos.X; i++)
             {

@@ -1,23 +1,17 @@
-﻿using SandAndStonesEngine.Animation;
-using SandAndStonesEngine.Assets.Batches;
-using SandAndStonesEngine.DataModels.Quads;
+﻿using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesLibrary.AssetConfig;
 using System.Numerics;
-using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 
 namespace SandAndStonesEngine.Assets.Assets
 {
     public class GameCharacterSpriteAsset : GameSpriteAsset
     {
         public override AssetType AssetType => AssetType.CharacterSprite;
-
         public override AssetBatchType AssetBatchType { get; init; }
-
         public override bool IsText => false;
 
-        public override IAnimation Animation { get; set; }
         bool characterMoving = false;
         private readonly ViewTransformator viewTransformator;
 
@@ -38,7 +32,7 @@ namespace SandAndStonesEngine.Assets.Assets
         public override GameAssetBase Init(QuadGridManager quadGridManager, AssetInfo assetInfo)
         {
             Animation = assetInfo.Animation;
-            GameTextureData = assetInfo.AssetFactory.CreateTexture(Id, assetInfo.Textures[0].Name, TextureType.Standard);
+            TextureInfo = assetInfo.Textures[0];
 
             for (int i = (int)assetInfo.StartPos.X; i < assetInfo.EndPos.X; i++)
             {

@@ -1,5 +1,4 @@
 ﻿using SandAndStonesEngine.Animation;
-using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
@@ -13,23 +12,15 @@ namespace SandAndStonesEngine.Assets.Assets
         public uint Id { get; protected set; }
         public abstract AssetType AssetType { get; }
         public abstract AssetBatchType AssetBatchType { get; init; }
-
-        public int TextureId
-        {
-            get
-            {
-                return GameTextureData.Id;
-            }
-        }
         public List<IQuadModel> QuadModelList { get; private set; }
 
-        public GameTextureDataBase GameTextureData { get; protected set; }
+        public TextureInfo TextureInfo;
         protected float Scale;
         protected float Depth;
         private bool disposedValue;
         public string Name { get; private set; }
         public abstract bool IsText { get; }
-        public abstract IAnimation Animation { get; set; }
+        protected IAnimation Animation { get; set; }
         public GameAssetBase(string name, float depth, float scale)
         {
             QuadModelList = [];
@@ -43,7 +34,7 @@ namespace SandAndStonesEngine.Assets.Assets
         protected virtual void CreateAssetQuad(QuadGridManager gridManager, AssetInfo assetInfo, Vector2 screenPos, Vector3 positionInQuadCount, TileType tileType)
         {
             var quadData = gridManager.GetQuadData(screenPos, positionInQuadCount, Scale, tileType);
-            var quadModel = assetInfo.AssetFactory.CreateTile(gridManager, quadData, assetInfo.Textures[0].Color, Id, TextureId, tileType);
+            var quadModel = assetInfo.AssetFactory.CreateTile(gridManager, quadData, assetInfo.Textures[0].Color, Id, assetInfo.Textures[0].Id, tileType);
             QuadModelList.Add(quadModel);
         }
 
@@ -55,7 +46,7 @@ namespace SandAndStonesEngine.Assets.Assets
         public virtual void Update(long delta)
         {
             if (Animation?.Changed ?? false)
-                GameTextureData.Update(Animation.GetCurrent());
+                TextureInfo.Update(Animation.GetCurrent());
         }
 
         protected virtual void Dispose(bool disposing)
@@ -67,8 +58,7 @@ namespace SandAndStonesEngine.Assets.Assets
 
                 }
 
-                IDisposable? toDispose = GameTextureData as IDisposable;
-                toDispose?.Dispose();
+                TextureInfo?.Dispose();
                 disposedValue = true;
             }
         }

@@ -29,11 +29,11 @@ namespace SandAndStonesEngine.GameFactories
             ViewTransformator viewTransformator,
             AssetBatchType assetBatchType,
             AssetType assetType,
-            RgbaFloat color,
             string text,
-            string[] animationTextureFilename,
+            string[] animationTextureFilenames,
             float depth,
-            float scale)
+            float scale,
+            TextureInfo textureInfo)
         {
             GameAssetBase asset = null!;
             IAnimation animation = null!;
@@ -41,17 +41,17 @@ namespace SandAndStonesEngine.GameFactories
             if (assetType == AssetType.Background)
             {
                 asset = new GameBackgroundAsset(name, scrollableViewport, assetBatchType, depth, scale);
-                animation = new TextureAnimation(animationTextureFilename);
+                animation = new TextureAnimation(animationTextureFilenames);
             }
             else if (assetType == AssetType.CharacterSprite)
             {
                 asset = new GameCharacterSpriteAsset(name, viewTransformator, assetBatchType, depth, scale);
-                animation = new TextureAnimation(animationTextureFilename);
+                animation = new TextureAnimation(animationTextureFilenames);
             }
             else if (assetType == AssetType.Sprite)
             {
                 asset = new GameSpriteAsset(name, assetBatchType, depth, scale);
-                animation = new TextureAnimation(animationTextureFilename);
+                animation = new TextureAnimation(animationTextureFilenames);
             }
             else if (assetType == AssetType.FPSText)
             {
@@ -78,17 +78,17 @@ namespace SandAndStonesEngine.GameFactories
                 (int)posInfo.EndPos.X,
                 (int)posInfo.EndPos.Y,
                 animation,
-                TextureInfo.CreateTextureInfo(animationTextureFilename[0], color))
+                textureInfo)
             );
         }
 
-        public GameTextureDataBase CreateTexture(uint assetId, string fileName, TextureType type)
+        public GameTextureDataBase CreateTexture(int id, uint assetId, string fileName, TextureType type)
         {
             GameTextureDataBase texture = null!;
             if (type == TextureType.Standard)
-                texture = new GameTextureData(assetId, fileName);
+                texture = new GameTextureData(id, assetId, fileName);
             else if (type == TextureType.Text)
-                texture = new FontTextureData(assetId);
+                texture = new FontTextureData(id, assetId);
 
             texture.Init();
             return texture;

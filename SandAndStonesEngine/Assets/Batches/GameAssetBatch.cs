@@ -19,20 +19,18 @@ namespace SandAndStonesEngine.Assets.Batches
         private readonly ViewTransformator viewTransformator;
 
         private readonly QuadGridManager quadGridManager;
+        private readonly GameTextureInfoStore gameTextureInfoStore;
 
-        public GameAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
+        public GameAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameTextureInfoStore gameTextureInfoStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
         {
             this.quadGridManager = quadGridManager;
             this.viewTransformator = viewTransformator;
+            this.gameTextureInfoStore = gameTextureInfoStore;
         }
 
         protected override async void InitGameAssets()
         {
             quadGridManager.StartNewBatch();
-
-            //var assetsReader = assetFactory.CreateAssetReader("./Assets/AssetConfig/assets.json", false);
-            //var assetsData = await assetsReader.ReadBatchAsync();
-
 
             var assetsReader = assetFactory.CreateAssetReader("assetBatch/0", true);
             var assetsData = assetsReader.ReadBatchAsync().Result;
@@ -44,19 +42,20 @@ namespace SandAndStonesEngine.Assets.Batches
 
                 for (int i = 0; i < assetData.Instances; i++)
                 {
-                    assetMemoryStore.Add(assetFactory.CreateGameAsset(
-                    assetData.Name,
-                    new AssetPosInfo(startPos, endPos),
-                    assetFactory, scrollableViewport, quadGridManager,
-                    viewTransformator,
-                    assetData.AssetBatchType,
-                    assetData.AssetType,
-                    new RgbaFloat(assetData.Color),
-                    assetData.Text,
-                    assetData.AnimationTextureFiles,
-                    assetData.Depth,
-                    assetData.Scale
-                    ));
+                    assetMemoryStore.Add(assetFactory.CreateGameAsset
+                    (
+                        assetData.Name,
+                        new AssetPosInfo(startPos, endPos),
+                        assetFactory, scrollableViewport, quadGridManager,
+                        viewTransformator,
+                        assetData.AssetBatchType,
+                        assetData.AssetType,
+                        assetData.Text,
+                        assetData.AnimationTextureFiles,
+                        assetData.Depth,
+                        assetData.Scale,
+                        gameTextureInfoStore.GetTextureInfo(assetData.AnimationTextureFiles[0], new RgbaFloat(assetData.Color), assetData.Id, assetData.AssetType))
+                    );
 
                     startPos = Vector4.Add(startPos, assetData.InstancePosOffset);
                     endPos = Vector4.Add(endPos, assetData.InstancePosOffset);

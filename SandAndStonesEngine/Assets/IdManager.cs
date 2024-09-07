@@ -1,5 +1,4 @@
-﻿using SandAndStonesEngine.Assets.Assets;
-using SandAndStonesLibrary.AssetConfig;
+﻿using SandAndStonesLibrary.AssetConfig;
 
 namespace SandAndStonesEngine.Assets
 {
@@ -10,6 +9,7 @@ namespace SandAndStonesEngine.Assets
         static int QuadBatchId = 0;
         static int QuadId = 0;
         static int TextureId = 0;
+        static int TextureDataId = 0;
 
         public static uint GetAssetId(AssetType type)
         {
@@ -28,6 +28,15 @@ namespace SandAndStonesEngine.Assets
                 return TextureId++;
             }
         }
+
+        public static int GetTextureDataId()
+        {
+            lock (lockObject)
+            {
+                return TextureDataId++;
+            }
+        }
+
 
         public static int GetNextQuadBatchId()
         {

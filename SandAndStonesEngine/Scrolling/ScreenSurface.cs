@@ -33,6 +33,8 @@ namespace SandAndStonesEngine.Scrolling
         private readonly GameGraphicDevice gameGraphicDevice;
 
         private readonly List<GameTextureDataBase> textureDataList;
+        private readonly List<TextureInfo> textureInfoList;
+
         private bool disposedValue;
         private readonly List<GameAssetBase> gameAssets;
 
@@ -49,11 +51,7 @@ namespace SandAndStonesEngine.Scrolling
         {
             foreach (var asset in gameAssets)
             {
-                var textureData = asset.GameTextureData;
-                if (textureDataList.All(e => e.Id != textureData.Id))
-                {
-                    textureDataList.Add(asset.GameTextureData);
-                }
+                textureInfoList.Add(asset.TextureInfo);
             }
 
             var texDesc = new TextureDescription()

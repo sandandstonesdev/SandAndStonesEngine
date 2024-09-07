@@ -5,7 +5,8 @@ namespace SandAndStonesEngine.Assets.Textures
 {
     public class FontTextureData : GameTextureDataBase, IDisposable
     {
-        public FontTextureData(uint assetId) : base(assetId)
+        public override TextureType Type => TextureType.Text;
+        public FontTextureData(int id, uint assetId) : base(id, assetId)
         {
         }
 

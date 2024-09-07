@@ -1,5 +1,4 @@
 ﻿using SandAndStonesEngine.Assets.Assets;
-using SandAndStonesEngine.Assets.Batches;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesLibrary.AssetConfig;
@@ -10,12 +9,12 @@ namespace SandAndStonesEngine.MemoryStore
     {
         public readonly List<GameAssetBase> Assets = [];
         public readonly QuadModelMemoryStore quadModelMemoryStore;
-        public readonly GameTextureMemoryStore gameTextureMemoryStore;
+        public readonly GameTextureInfoStore gameTextureInfoStore;
 
-        public AssetMemoryStore(QuadModelMemoryStore quadModelMemoryStore, GameTextureMemoryStore gameTextureMemoryStore)
+        public AssetMemoryStore(QuadModelMemoryStore quadModelMemoryStore, GameTextureInfoStore gameTextureInfoStore)
         {
             this.quadModelMemoryStore = quadModelMemoryStore;
-            this.gameTextureMemoryStore = gameTextureMemoryStore;
+            this.gameTextureInfoStore = gameTextureInfoStore;
         }
 
         public void Add(GameAssetBase asset)
@@ -25,8 +24,6 @@ namespace SandAndStonesEngine.MemoryStore
                 quadModelMemoryStore.AddRange(asset.QuadModelList);
             if (asset.AssetBatchType == AssetBatchType.StatusBarBatch)
                 quadModelMemoryStore.AddStatusBarModelsRange(asset.QuadModelList);
-
-            gameTextureMemoryStore.Add(asset.GameTextureData);
         }
 
         public List<IQuadModel> GetModels()
@@ -39,14 +36,20 @@ namespace SandAndStonesEngine.MemoryStore
             return quadModelMemoryStore.StatusBarModels;
         }
 
-        public List<GameTextureDataBase> GetTextureData()
+
+        public IReadOnlyCollection<GameTextureDataBase> GetTextureData()
         {
-            return gameTextureMemoryStore.TexturesData;
+            var texturesData = new List<GameTextureDataBase>();
+            foreach (var tex in gameTextureInfoStore.TexturesInfo)
+            {
+                texturesData.Add(tex.Value.GameTextureData);
+            }
+            return texturesData;
         }
 
         public uint GetTextureCount()
         {
-            return gameTextureMemoryStore.Count;
+            return gameTextureInfoStore.Count;
         }
     }
 }
