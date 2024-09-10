@@ -51,7 +51,7 @@ namespace SandAndStonesEngine.GameFactories
             var gridManager = new QuadGridManager(screenQuadCalculator);
             services.AddSingleton(gridManager);
             var gameWindow = new GameWindow();
-            gameWindow.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine Test");
+            gameWindow.Start(x, y, screenWidth, screenHeight, "Sand and Stones Engine");
             services.AddSingleton(gameWindow);
 
             var gameGraphicDevice = new GameGraphicDevice(gameWindow);
