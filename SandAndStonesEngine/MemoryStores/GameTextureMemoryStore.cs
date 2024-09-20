@@ -1,7 +1,7 @@
 ﻿using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.GameFactories;
-using SandAndStonesLibrary.AssetConfig;
+using SandAndStones.Shared.AssetConfig;
 using Veldrid;
 
 namespace SandAndStonesEngine.MemoryStore

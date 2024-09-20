@@ -1,4 +1,4 @@
-﻿using SandAndStonesLibrary.AssetConfig;
+﻿using SandAndStones.Shared.AssetConfig;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Textures
