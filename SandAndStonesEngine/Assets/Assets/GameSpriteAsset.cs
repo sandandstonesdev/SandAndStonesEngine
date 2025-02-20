@@ -2,6 +2,7 @@
 using SandAndStonesEngine.DataModels.Tiles;
 using System.Numerics;
 using SandAndStonesLibrary.AssetConfig;
+using SandAndStonesLibrary.Assets;
 
 namespace SandAndStonesEngine.Assets.Assets
 {

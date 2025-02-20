@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TextureConfig\" />
+    <Folder Include="Textures\" />
   </ItemGroup>
 
   <ItemGroup>
