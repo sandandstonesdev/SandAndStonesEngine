@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace SandAndStonesLibrary.AssetConfig
+namespace SandAndStonesLibrary.Assets
 {
     public class JsonColorVectorConverter : JsonConverter<Vector4>
     {

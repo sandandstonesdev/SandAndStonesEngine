@@ -1,7 +1,8 @@
-﻿using System.Numerics;
+﻿using SandAndStonesLibrary.AssetConfig;
+using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace SandAndStonesLibrary.AssetConfig
+namespace SandAndStonesLibrary.Assets
 {
     public class InputAsset
     {

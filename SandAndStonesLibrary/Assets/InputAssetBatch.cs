@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SandAndStonesLibrary.AssetConfig
+namespace SandAndStonesLibrary.Assets
 {
-    public  class InputAssetBatch
+    public class InputAssetBatch
     {
         [JsonRequired]
         [JsonPropertyName("id")]

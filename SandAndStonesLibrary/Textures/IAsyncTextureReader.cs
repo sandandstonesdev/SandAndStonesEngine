@@ -1,4 +1,4 @@
-﻿namespace InputTextureService.TextureConfig
+﻿namespace SandAndStonesLibrary.Textures
 {
     public interface IAsyncTextureReader
     {

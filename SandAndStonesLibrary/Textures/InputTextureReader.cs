@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 using System.Runtime.InteropServices;
 
-namespace InputTextureService.TextureConfig
+namespace SandAndStonesLibrary.Textures
 {
     public class InputTextureReader : IAsyncTextureReader
     {

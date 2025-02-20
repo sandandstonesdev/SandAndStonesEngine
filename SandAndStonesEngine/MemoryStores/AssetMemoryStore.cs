@@ -2,7 +2,7 @@
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.MemoryStore;
-using SandAndStonesLibrary.AssetConfig;
+using SandAndStonesLibrary.Assets;
 
 namespace SandAndStonesEngine.MemoryStores
 {

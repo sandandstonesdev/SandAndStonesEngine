@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SandAndStonesLibrary.AssetConfig
+namespace SandAndStonesLibrary.Assets
 {
     public class JsonPosVectorConverter : JsonConverter<Vector4>
     {
@@ -13,7 +13,7 @@ namespace SandAndStonesLibrary.AssetConfig
         {
             var list = JsonSerializer.Deserialize<List<float>>(ref reader, options);
             _ = list ?? throw new Exception();
-            return new Vector4(list[0], list[1], 
+            return new Vector4(list[0], list[1],
                             list.Count > 2 ? list[2] : 0,
                             list.Count > 3 ? list[3] : 0);
         }

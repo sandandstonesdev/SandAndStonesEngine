@@ -1,4 +1,4 @@
-﻿using SandAndStonesLibrary.AssetConfig;
+﻿using SandAndStonesLibrary.Assets;
 using System.Diagnostics;
 using System.Text.Json;
 

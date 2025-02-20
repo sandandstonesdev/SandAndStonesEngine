@@ -5,7 +5,7 @@ using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.MemoryStores;
-using SandAndStonesLibrary.AssetConfig;
+using SandAndStonesLibrary.Assets;
 using System.Numerics;
 using Veldrid;
 
