@@ -3,15 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace SandAndStonesLibrary.Textures
 {
-    public class InputTextureReader : IAsyncTextureReader
+    public class InputTextureReader(string fileName) : IAsyncTextureReader
     {
-        private readonly string fileName;
-
-        public InputTextureReader(string fileName)
-        {
-            this.fileName = fileName;
-        }
-
         public async Task<InputTexture> ReadTextureAsync()
         {
             string path = GetTextureImageFilePath(fileName);

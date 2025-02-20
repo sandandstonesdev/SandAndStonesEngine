@@ -2,14 +2,9 @@
 
 namespace SandAndStonesLibrary.Assets
 {
-    public class InputAssetReader : IAsyncAssetReader
+    public class InputAssetReader(string fileName) : IAsyncAssetReader
     {
-        private readonly string fileName;
-        public InputAssetReader(string fileName)
-        {
-            this.fileName = fileName;
-        }
-
+        
         public async Task<InputAssetBatch> ReadBatchAsync()
         {
             using FileStream openStream = File.OpenRead(fileName);
