@@ -7,7 +7,7 @@ using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
 using SandAndStonesEngine.MathModule;
-using SandAndStones.Shared.AssetConfig;
+using SandAndStonesLibrary.AssetConfig;
 using Veldrid;
 using TextureType = SandAndStonesEngine.Assets.Textures.TextureType;
 

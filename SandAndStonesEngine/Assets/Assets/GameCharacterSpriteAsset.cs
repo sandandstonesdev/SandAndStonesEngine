@@ -1,7 +1,7 @@
 ﻿using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.DataModels.Tiles;
 using SandAndStonesEngine.MathModule;
-using SandAndStones.Shared.AssetConfig;
+using SandAndStonesLibrary.AssetConfig;
 using System.Numerics;
 
 namespace SandAndStonesEngine.Assets.Assets

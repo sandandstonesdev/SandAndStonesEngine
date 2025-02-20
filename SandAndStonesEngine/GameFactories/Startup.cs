@@ -10,6 +10,7 @@ using SandAndStonesEngine.GameTextures;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
 using SandAndStonesEngine.MemoryStore;
+using SandAndStonesEngine.MemoryStores;
 using SandAndStonesEngine.RenderingAbstractions;
 using SandAndStonesEngine.Shaders;
 using System.Numerics;
@@ -63,7 +64,7 @@ namespace SandAndStonesEngine.GameFactories
 
             var inputMotionMapper = new CameraInputMotionMapper(inputDevicesState);
             services.AddSingleton(inputMotionMapper);
-            var scrollableViewport = new ScrollableViewport(0, 0, screenWidth, screenHeight);
+            var scrollableViewport = new ScrollableViewport(0, 0, screenWidth, screenHeight, screenQuadCalculator);
             services.AddSingleton(scrollableViewport);
 
             var transformatorData = new TransformatorData(new Vector3(0, 0, 1.0f), new Vector3(0, 0, -1), new Vector3(0, 1, 0), new Vector3(0, 0, 0), 0.03f, 1.0f);
@@ -85,7 +86,7 @@ namespace SandAndStonesEngine.GameFactories
 
             var quadModelMemoryStore = new QuadModelMemoryStore();
             services.AddSingleton(quadModelMemoryStore);
-            var gameTextureInfoStore = new GameTextureInfoStore(assetFactory);
+            var gameTextureInfoStore = new GameTextureMemoryStore(assetFactory);
             services.AddSingleton(gameTextureInfoStore);
 
             var assetMemoryStore = new AssetMemoryStore(quadModelMemoryStore, gameTextureInfoStore);

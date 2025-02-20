@@ -1,5 +1,5 @@
 ﻿using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.MemoryStore;
+using SandAndStonesEngine.MemoryStores;
 using Veldrid;
 
 namespace SandAndStonesEngine.GameTextures

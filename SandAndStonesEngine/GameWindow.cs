@@ -78,7 +78,7 @@ namespace SandAndStonesEngine
                     }
 
                     gameCamera.Update(deltaElapsedTime);
-                    gameCommandList.assetBatchList.ForEach(e => e.Update(deltaElapsedTime));
+                    gameCommandList.Update(deltaElapsedTime);
                     gameTextureSurface.Update();
 
                     Draw((float)deltaElapsedTime);

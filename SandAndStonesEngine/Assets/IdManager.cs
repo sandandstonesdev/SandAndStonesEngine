@@ -1,10 +1,10 @@
-﻿using SandAndStones.Shared.AssetConfig;
+﻿using SandAndStonesLibrary.AssetConfig;
 
 namespace SandAndStonesEngine.Assets
 {
     public class IdManager
     {
-        static object lockObject = new object();
+        readonly static object lockObject = new();
         static int AssetId = 0;
         static int QuadBatchId = 0;
         static int QuadId = 0;

@@ -35,8 +35,8 @@ namespace SandAndStonesEngine.GameCamera
         {
             { scrollRightKey, -Vector2.UnitX},
             { scrollLeftKey, Vector2.UnitX},
-            { scrollUpKey, Vector2.UnitY},
-            { scrollDownKey, -Vector2.UnitY}
+            { scrollUpKey, -Vector2.UnitY},
+            { scrollDownKey, Vector2.UnitY}
         };
 
         protected Dictionary<MouseButton, bool> mouseButtonPressedMap = new Dictionary<MouseButton, bool>

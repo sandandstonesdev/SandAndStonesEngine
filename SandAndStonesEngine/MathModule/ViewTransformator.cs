@@ -36,6 +36,7 @@ namespace SandAndStonesEngine.MathModule
             var scrollDir = inputMotionMapper.GetScrollDir();
             if (scrollDir != Vector2.Zero)
             {
+                TransformatorData.ScrollSpeedPixels = 1;
                 TransformatorData.ScrollMovement = scrollDir * TransformatorData.ScrollSpeedPixels * (float)(deltaElapsedTime / 2);
                 scrollableViewport.Scroll((int)TransformatorData.ScrollMovement.X,
                                       (int)TransformatorData.ScrollMovement.Y);

@@ -20,7 +20,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="SandAndStones.Shared" Version="1.1.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <PackageReference Include="Veldrid" Version="4.9.0" />
     <PackageReference Include="Veldrid.SDL2" Version="4.9.0" />
@@ -69,6 +68,10 @@
 
   <ItemGroup>
     <Folder Include="GameTextures\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SandAndStonesLibrary\SandAndStonesLibrary.csproj" />
   </ItemGroup>
 
 </Project>

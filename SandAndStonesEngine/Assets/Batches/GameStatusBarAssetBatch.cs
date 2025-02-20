@@ -3,8 +3,8 @@ using SandAndStonesEngine.DataModels;
 using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
-using SandAndStonesEngine.MemoryStore;
-using SandAndStones.Shared.AssetConfig;
+using SandAndStonesEngine.MemoryStores;
+using SandAndStonesLibrary.AssetConfig;
 using Veldrid;
 
 namespace SandAndStonesEngine.Assets.Batches
@@ -15,19 +15,19 @@ namespace SandAndStonesEngine.Assets.Batches
         public override AssetBatchType AssetBatchType => AssetBatchType.StatusBarBatch;
 
         public readonly QuadGridManager quadGridManager;
-        private readonly GameTextureInfoStore gameTextureInfoStore;
+        private readonly GameTextureMemoryStore gameTextureMemoryStore;
 
-        public GameStatusBarAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameTextureInfoStore gameTextureInfoStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
+        public GameStatusBarAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameTextureMemoryStore gameTextureMemoryStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
         {
             this.quadGridManager = quadGridManager;
-            this.gameTextureInfoStore = gameTextureInfoStore;
+            this.gameTextureMemoryStore = gameTextureMemoryStore;
         }
 
         protected async override void InitGameAssets()
         {
             quadGridManager.StartNewBatch();
 
-            var assetsReader = assetFactory.CreateAssetReader("assetBatch/1", true);
+            var assetsReader = assetFactory.CreateAssetReader("statusBarAssets.json", false);
             var assetsData = assetsReader.ReadBatchAsync().Result;
 
             foreach (var assetData in assetsData.InputAssets)
@@ -43,7 +43,7 @@ namespace SandAndStonesEngine.Assets.Batches
                         assetData.AnimationTextureFiles,
                         assetData.Depth,
                         assetData.Scale,
-                        gameTextureInfoStore.GetTextureInfo(assetData.AnimationTextureFiles[0], new RgbaFloat(assetData.Color), assetData.Id, assetData.AssetType))
+                        gameTextureMemoryStore.GetTextureInfo(assetData.AnimationTextureFiles[0], new RgbaFloat(assetData.Color), assetData.Id, assetData.AssetType))
                     );
             }
 

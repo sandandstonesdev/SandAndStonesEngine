@@ -1,18 +1,18 @@
 ﻿using SandAndStonesEngine.Assets;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.GameFactories;
-using SandAndStones.Shared.AssetConfig;
+using SandAndStonesLibrary.AssetConfig;
 using Veldrid;
 
-namespace SandAndStonesEngine.MemoryStore
+namespace SandAndStonesEngine.MemoryStores
 {
-    public class GameTextureInfoStore
+    public class GameTextureMemoryStore
     {
         private readonly AssetFactory assetFactory;
         public uint Count { get; private set; }
         public Dictionary<string, TextureInfo> TexturesInfo { get; } = [];
 
-        public GameTextureInfoStore(AssetFactory assetFactory)
+        public GameTextureMemoryStore(AssetFactory assetFactory)
         {
             this.assetFactory = assetFactory;
         }

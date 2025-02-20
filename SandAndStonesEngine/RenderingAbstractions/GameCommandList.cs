@@ -34,6 +34,11 @@ namespace SandAndStonesEngine.GraphicAbstractions
             CommandList = factory.CreateCommandList();
         }
 
+        public void Update(long delta)
+        {
+            assetBatchList.ForEach(e => e.Update(delta));
+        }
+
         public void Draw(float deltaTime)
         {
             GameGraphicDevice gameGraphicDevice = Startup.ServiceProvider.GetRequiredService<GameGraphicDevice>();

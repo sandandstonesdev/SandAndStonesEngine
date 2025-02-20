@@ -4,8 +4,8 @@ using SandAndStonesEngine.DataModels.Quads;
 using SandAndStonesEngine.GameFactories;
 using SandAndStonesEngine.GraphicAbstractions;
 using SandAndStonesEngine.MathModule;
-using SandAndStonesEngine.MemoryStore;
-using SandAndStones.Shared.AssetConfig;
+using SandAndStonesEngine.MemoryStores;
+using SandAndStonesLibrary.AssetConfig;
 using System.Numerics;
 using Veldrid;
 
@@ -19,20 +19,20 @@ namespace SandAndStonesEngine.Assets.Batches
         private readonly ViewTransformator viewTransformator;
 
         private readonly QuadGridManager quadGridManager;
-        private readonly GameTextureInfoStore gameTextureInfoStore;
+        private readonly GameTextureMemoryStore gameTextureMemoryStore;
 
-        public GameAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameTextureInfoStore gameTextureInfoStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
+        public GameAssetBatch(AssetFactory assetFactory, AssetMemoryStore assetMemoryStore, GameTextureMemoryStore gameTextureMemoryStore, GameGraphicDevice graphicDevice, QuadGridManager quadGridManager, ViewTransformator viewTransformator, ScrollableViewport scrollableViewport) : base(assetFactory, assetMemoryStore, graphicDevice, scrollableViewport)
         {
             this.quadGridManager = quadGridManager;
             this.viewTransformator = viewTransformator;
-            this.gameTextureInfoStore = gameTextureInfoStore;
+            this.gameTextureMemoryStore = gameTextureMemoryStore;
         }
 
         protected override async void InitGameAssets()
         {
             quadGridManager.StartNewBatch();
 
-            var assetsReader = assetFactory.CreateAssetReader("assetBatch/0", true);
+            var assetsReader = assetFactory.CreateAssetReader("assets.json", false);
             var assetsData = assetsReader.ReadBatchAsync().Result;
 
             foreach (var assetData in assetsData.InputAssets)
@@ -54,7 +54,7 @@ namespace SandAndStonesEngine.Assets.Batches
                         assetData.AnimationTextureFiles,
                         assetData.Depth,
                         assetData.Scale,
-                        gameTextureInfoStore.GetTextureInfo(assetData.AnimationTextureFiles[0], new RgbaFloat(assetData.Color), assetData.Id, assetData.AssetType))
+                        gameTextureMemoryStore.GetTextureInfo(assetData.AnimationTextureFiles[0], new RgbaFloat(assetData.Color), assetData.Id, assetData.AssetType))
                     );
 
                     startPos = Vector4.Add(startPos, assetData.InstancePosOffset);

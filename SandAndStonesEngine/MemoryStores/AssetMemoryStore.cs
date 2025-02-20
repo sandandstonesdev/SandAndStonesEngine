@@ -1,20 +1,21 @@
 ﻿using SandAndStonesEngine.Assets.Assets;
 using SandAndStonesEngine.Assets.Textures;
 using SandAndStonesEngine.DataModels.Quads;
-using SandAndStones.Shared.AssetConfig;
+using SandAndStonesEngine.MemoryStore;
+using SandAndStonesLibrary.AssetConfig;
 
-namespace SandAndStonesEngine.MemoryStore
+namespace SandAndStonesEngine.MemoryStores
 {
     public class AssetMemoryStore
     {
         public readonly List<GameAssetBase> Assets = [];
         public readonly QuadModelMemoryStore quadModelMemoryStore;
-        public readonly GameTextureInfoStore gameTextureInfoStore;
+        public readonly GameTextureMemoryStore gameTextureMemoryStore;
 
-        public AssetMemoryStore(QuadModelMemoryStore quadModelMemoryStore, GameTextureInfoStore gameTextureInfoStore)
+        public AssetMemoryStore(QuadModelMemoryStore quadModelMemoryStore, GameTextureMemoryStore gameTextureMemoryStore)
         {
             this.quadModelMemoryStore = quadModelMemoryStore;
-            this.gameTextureInfoStore = gameTextureInfoStore;
+            this.gameTextureMemoryStore = gameTextureMemoryStore;
         }
 
         public void Add(GameAssetBase asset)
@@ -40,7 +41,7 @@ namespace SandAndStonesEngine.MemoryStore
         public IReadOnlyCollection<GameTextureDataBase> GetTextureData()
         {
             var texturesData = new List<GameTextureDataBase>();
-            foreach (var tex in gameTextureInfoStore.TexturesInfo)
+            foreach (var tex in gameTextureMemoryStore.TexturesInfo)
             {
                 texturesData.Add(tex.Value.GameTextureData);
             }
@@ -49,7 +50,7 @@ namespace SandAndStonesEngine.MemoryStore
 
         public uint GetTextureCount()
         {
-            return gameTextureInfoStore.Count;
+            return gameTextureMemoryStore.Count;
         }
     }
 }
