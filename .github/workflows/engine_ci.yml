@@ -1,7 +1,7 @@
 name: Engine Build and Test
 
 on:
-  push:
+  pull_request:
     branches:
       - master
   workflow_dispatch:
